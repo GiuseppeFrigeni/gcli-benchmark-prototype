@@ -1,0 +1,12 @@
+{
+  "generatedAt": "2026-03-07T00:00:00.000Z",
+  "sampleSize": 8,
+  "overallSuccessRate": 0.6,
+  "overallAverageScore": 68,
+  "categorySuccessRate": {
+    "debugging": 0.5,
+    "refactoring": 0.5,
+    "new-feature": 0.75,
+    "code-review": 0.75
+  }
+}

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "debug-null-guard",
+    "title": "Fix null dereference in parser",
+    "category": "debugging",
+    "difficulty": "easy",
+    "prompt": "A TypeScript parser crashes when `token` is null at `token.value.trim()`. Explain root cause and propose a safe fix.",
+    "expectedKeywords": ["null", "guard", "optional chaining", "test"],
+    "forbiddenKeywords": ["ignore error", "cannot help"],
+    "tags": ["typescript", "bugfix"]
+  },
+  {
+    "id": "debug-race-condition",
+    "title": "Find race condition in file cache",
+    "category": "debugging",
+    "difficulty": "medium",
+    "prompt": "Concurrent requests mutate a shared in-memory cache and return stale data. Describe how to debug and fix this race.",
+    "expectedKeywords": ["race", "lock", "atomic", "reproduce"],
+    "forbiddenKeywords": ["random guess"],
+    "tags": ["nodejs", "concurrency"]
+  },
+  {
+    "id": "refactor-long-function",
+    "title": "Refactor command handler",
+    "category": "refactoring",
+    "difficulty": "medium",
+    "prompt": "A 250-line command handler mixes parsing, validation, and side effects. Provide a refactoring plan.",
+    "expectedKeywords": ["extract", "single responsibility", "module", "tests"],
+    "forbiddenKeywords": ["rewrite everything"],
+    "tags": ["maintainability"]
+  },
+  {
+    "id": "refactor-duplicate-logic",
+    "title": "Remove duplicated validation",
+    "category": "refactoring",
+    "difficulty": "easy",
+    "prompt": "Three services duplicate input validation logic. Suggest a safer shared design.",
+    "expectedKeywords": ["shared", "validator", "schema", "coverage"],
+    "forbiddenKeywords": ["copy paste"],
+    "tags": ["api", "quality"]
+  },
+  {
+    "id": "feature-add-flag",
+    "title": "Add --json output mode",
+    "category": "new-feature",
+    "difficulty": "easy",
+    "prompt": "Design implementation steps to add a `--json` flag to an existing CLI that currently prints text only.",
+    "expectedKeywords": ["parser", "backward compatible", "serialization", "tests"],
+    "forbiddenKeywords": ["breaking change"],
+    "tags": ["cli", "typescript"]
+  },
+  {
+    "id": "feature-batch-runner",
+    "title": "Add batch benchmark execution",
+    "category": "new-feature",
+    "difficulty": "medium",
+    "prompt": "Propose a feature to execute benchmark scenarios in batches with per-scenario timeout and aggregated metrics.",
+    "expectedKeywords": ["queue", "timeout", "aggregation", "report"],
+    "forbiddenKeywords": ["manual only"],
+    "tags": ["benchmark"]
+  },
+  {
+    "id": "review-secrets",
+    "title": "Code review: leaked token",
+    "category": "code-review",
+    "difficulty": "easy",
+    "prompt": "During review, you spot an API token committed in source code. Provide review feedback and remediation actions.",
+    "expectedKeywords": ["secret", "rotate", "history", "pre-commit"],
+    "forbiddenKeywords": ["leave as is"],
+    "tags": ["security", "review"]
+  },
+  {
+    "id": "review-sql-injection",
+    "title": "Code review: unsafe SQL query",
+    "category": "code-review",
+    "difficulty": "medium",
+    "prompt": "Review this pattern: `SELECT * FROM users WHERE name = '\" + input + \"'` and propose a safe alternative.",
+    "expectedKeywords": ["parameterized", "injection", "validate", "test"],
+    "forbiddenKeywords": ["string concatenation"],
+    "tags": ["security", "database"]
+  }
+]
