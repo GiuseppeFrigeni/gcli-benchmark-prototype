@@ -1,0 +1,19 @@
+{
+  "id": "node-slug-shared-normalizer",
+  "title": "Refactor slug generation to use a shared normalizer",
+  "category": "refactoring",
+  "difficulty": "easy",
+  "language": "javascript",
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Preserve the current public function names and output format while making slug behavior consistent.",
+  "verification": {
+    "failToPass": [
+      "node --test test/article-path-trimming.test.js"
+    ],
+    "passToPass": [
+      "node --test test/preview-path.test.js"
+    ]
+  },
+  "policy": "always"
+}

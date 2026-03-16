@@ -1,0 +1,19 @@
+{
+  "id": "node-cli-json-output",
+  "title": "Add JSON output mode to the CLI formatter",
+  "category": "new-feature",
+  "difficulty": "easy",
+  "language": "javascript",
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Keep the default text output exactly as it is today.",
+  "verification": {
+    "failToPass": [
+      "node --test test/json-output.test.js"
+    ],
+    "passToPass": [
+      "node --test test/text-output.test.js"
+    ]
+  },
+  "policy": "always"
+}

@@ -9,6 +9,7 @@
     "list": "npm run build && node dist/cli.js list",
     "dev:run": "tsx src/cli.ts run",
     "dev:list": "tsx src/cli.ts list",
+    "test": "npm run build && node tests/benchmark.test.js",
     "benchmark": "npm run run",
     "baseline:update": "tsx src/cli.ts run --update-baseline"
   },

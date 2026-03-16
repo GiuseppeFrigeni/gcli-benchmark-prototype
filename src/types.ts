@@ -1,97 +1,162 @@
-export type ScenarioCategory =
+export type TaskCategory =
   | "debugging"
   | "refactoring"
   | "new-feature"
   | "code-review";
 
-export type ScenarioDifficulty = "easy" | "medium" | "hard";
+export type TaskDifficulty = "easy" | "medium" | "hard";
 
-export interface Scenario {
+export type TaskPolicy = "always" | "usually";
+
+export type TaskStatus = "passed" | "failed" | "infra_failed" | "invalid_task";
+export type AgentMode = "gemini-cli" | "gold-patch" | "noop";
+
+export interface VerificationConfig {
+  failToPass: string[];
+  passToPass: string[];
+}
+
+export interface WorkspaceTask {
   id: string;
   title: string;
-  category: ScenarioCategory;
-  difficulty: ScenarioDifficulty;
-  prompt: string;
-  expectedKeywords: string[];
-  forbiddenKeywords?: string[];
-  tags?: string[];
-  weight?: number;
+  category: TaskCategory;
+  difficulty: TaskDifficulty;
+  language: string;
   timeoutMs?: number;
+  problemStatementFile: string;
+  promptAddendum?: string;
+  setupCommands?: string[];
+  verification: VerificationConfig;
+  policy: TaskPolicy;
+  taskDir: string;
+  repoDir: string;
+  issuePath: string;
+  goldPatchPath: string;
+}
+
+export interface AgentRunRequest {
+  task: WorkspaceTask;
+  workspaceDir: string;
+  prompt: string;
+  artifactDir: string;
+  timeoutMs: number;
 }
 
 export interface AgentRunResult {
-  output: string;
+  exitCode: number | null;
   durationMs: number;
-  detectedModel?: string;
+  timedOut: boolean;
+  error?: string;
+  stdoutPath: string;
+  stderrPath: string;
+  activityLogPath: string;
 }
 
-export interface ScenarioEvaluation {
-  scenarioId: string;
-  title: string;
-  category: ScenarioCategory;
-  difficulty: ScenarioDifficulty;
-  weight: number;
-  tags?: string[];
-  detectedModel?: string;
+export interface TaskAgent {
+  runTask(request: AgentRunRequest): Promise<AgentRunResult>;
+}
+
+export interface VerificationCommandResult {
+  command: string;
   passed: boolean;
-  score: number;
-  maxScore: number;
-  expectedHits: string[];
-  missingExpected: string[];
-  forbiddenHits: string[];
+  exitCode: number | null;
+  durationMs: number;
+  timedOut: boolean;
+  error?: string;
+  stdoutPath: string;
+  stderrPath: string;
+}
+
+export interface VerificationSnapshot {
+  failToPass: VerificationCommandResult[];
+  passToPass: VerificationCommandResult[];
+}
+
+export interface TaskArtifacts {
+  artifactDir: string;
+  promptPath: string;
+  diffPath: string;
+  agentStdoutPath: string;
+  agentStderrPath: string;
+  activityLogPath: string;
+  workspacePath?: string;
+}
+
+export interface TaskRunResult {
+  taskId: string;
+  title: string;
+  category: TaskCategory;
+  difficulty: TaskDifficulty;
+  language: string;
+  policy: TaskPolicy;
+  status: TaskStatus;
   durationMs: number;
   notes: string[];
+  preflight: VerificationSnapshot;
+  verification?: VerificationSnapshot;
+  artifacts: TaskArtifacts;
+  agent: {
+    exitCode: number | null;
+    timedOut: boolean;
+    error?: string;
+  };
 }
 
 export interface CategorySummary {
-  category: ScenarioCategory;
+  category: TaskCategory;
   total: number;
   passed: number;
-  successRate: number;
-  averageScore: number;
+  failed: number;
+  infraFailed: number;
+  invalidTasks: number;
+  passRate: number;
 }
 
 export interface EvaluationSummary {
   generatedAt: string;
   total: number;
   passed: number;
-  successRate: number;
-  averageScore: number;
+  failed: number;
+  infraFailed: number;
+  invalidTasks: number;
+  passRate: number;
   averageDurationMs: number;
   categories: CategorySummary[];
 }
 
 export interface BaselineMetrics {
   generatedAt: string;
-  sampleSize: number;
-  overallSuccessRate: number;
-  overallAverageScore: number;
-  categorySuccessRate: Partial<Record<ScenarioCategory, number>>;
+  total: number;
+  overallPassRate: number;
+  taskStatuses: Record<string, TaskStatus>;
 }
 
 export interface RegressionFinding {
-  scope: "overall-success" | "overall-score" | "category-success";
+  scope: "overall-pass-rate" | "task-status";
   severity: "medium" | "high";
   message: string;
-  baselineValue: number;
-  currentValue: number;
-  delta: number;
-  category?: ScenarioCategory;
+  baselineValue: number | TaskStatus;
+  currentValue: number | TaskStatus;
+  delta?: number;
+  taskId?: string;
 }
 
 export interface RunConfig {
-  mode: "gemini-cli";
+  mode: AgentMode;
   geminiBin?: string;
   geminiArgs?: string[];
   model?: string;
-  modelSource?: "option" | "gemini-arg" | "cli-default";
-  observedModels?: string[];
+  tasksDir: string;
+  workspaceRoot: string;
+  keepWorkspaces: boolean;
   liveOutput?: boolean;
+  maxTasks?: number;
+  selectedTaskIds?: string[];
 }
 
 export interface EvaluationRun {
   summary: EvaluationSummary;
-  scenarios: ScenarioEvaluation[];
+  tasks: TaskRunResult[];
   regressions: RegressionFinding[];
   baselinePath?: string;
   config?: RunConfig;

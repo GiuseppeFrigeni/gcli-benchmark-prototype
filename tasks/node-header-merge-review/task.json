@@ -1,0 +1,19 @@
+{
+  "id": "node-header-merge-review",
+  "title": "Address code review feedback for header merging",
+  "category": "code-review",
+  "difficulty": "easy",
+  "language": "javascript",
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Do not change the function name, and continue ignoring nullish override values.",
+  "verification": {
+    "failToPass": [
+      "node --test test/non-mutating-merge.test.js"
+    ],
+    "passToPass": [
+      "node --test test/stable-merge-behavior.test.js"
+    ]
+  },
+  "policy": "always"
+}

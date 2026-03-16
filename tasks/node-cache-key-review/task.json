@@ -1,0 +1,19 @@
+{
+  "id": "node-cache-key-review",
+  "title": "Address review feedback for stable cache keys",
+  "category": "code-review",
+  "difficulty": "easy",
+  "language": "javascript",
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Keep the output format unchanged when there are no params or only one param.",
+  "verification": {
+    "failToPass": [
+      "node --test test/stable-param-order.test.js"
+    ],
+    "passToPass": [
+      "node --test test/existing-cache-key-shape.test.js"
+    ]
+  },
+  "policy": "always"
+}

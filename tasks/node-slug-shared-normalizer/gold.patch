@@ -1,0 +1,22 @@
+diff --git a/src/slug.js b/src/slug.js
+--- a/src/slug.js
++++ b/src/slug.js
+@@ -1,10 +1,14 @@
++function slugify(value) {
++  return value.toLowerCase().trim().replace(/\s+/g, "-");
++}
++
+ function articlePath(category, title) {
+-  const normalizedCategory = category.toLowerCase().trim().replace(/\s+/g, "-");
+-  const normalizedTitle = title.toLowerCase().replace(/\s+/g, "-");
++  const normalizedCategory = slugify(category);
++  const normalizedTitle = slugify(title);
+   return `/${normalizedCategory}/${normalizedTitle}`;
+ }
+ 
+ function previewPath(title) {
+-  const normalizedTitle = title.toLowerCase().trim().replace(/\s+/g, "-");
++  const normalizedTitle = slugify(title);
+   return `/preview/${normalizedTitle}`;
+ }
+ 

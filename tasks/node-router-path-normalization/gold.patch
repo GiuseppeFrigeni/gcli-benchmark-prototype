@@ -1,0 +1,12 @@
+diff --git a/src/router.js b/src/router.js
+--- a/src/router.js
++++ b/src/router.js
+@@ -1,6 +1,6 @@
+ function normalizePath(path) {
+   const normalized = path.startsWith("/") ? path : `/${path}`;
+-  return normalized;
++  return normalized.length > 1 && normalized.endsWith("/") ? normalized.slice(0, -1) : normalized;
+ }
+ 
+ class Router {
+   constructor() {

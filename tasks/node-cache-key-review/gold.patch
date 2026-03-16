@@ -1,0 +1,12 @@
+diff --git a/src/cache-key.js b/src/cache-key.js
+--- a/src/cache-key.js
++++ b/src/cache-key.js
+@@ -1,5 +1,7 @@
+ function buildCacheKey(baseKey, params = {}) {
+-  const serialized = Object.entries(params).map(([key, value]) => `${key}=${value}`).join("&");
++  const serialized = Object.entries(params)
++    .sort(([left], [right]) => left.localeCompare(right))
++    .map(([key, value]) => `${key}=${value}`).join("&");
+   return serialized ? `${baseKey}?${serialized}` : baseKey;
+ }
+ 

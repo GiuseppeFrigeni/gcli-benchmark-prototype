@@ -1,0 +1,19 @@
+{
+  "id": "node-config-precedence",
+  "title": "Fix config precedence for explicit CLI values",
+  "category": "debugging",
+  "difficulty": "easy",
+  "language": "javascript",
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Preserve the current fallback behavior for environment values and hard-coded defaults.",
+  "verification": {
+    "failToPass": [
+      "node --test test/config-cli-precedence.test.js"
+    ],
+    "passToPass": [
+      "node --test test/config-fallbacks.test.js"
+    ]
+  },
+  "policy": "always"
+}

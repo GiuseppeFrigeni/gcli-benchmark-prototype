@@ -1,0 +1,23 @@
+diff --git a/src/keywords.js b/src/keywords.js
+--- a/src/keywords.js
++++ b/src/keywords.js
+@@ -1,11 +1,15 @@
++function normalizeKeyword(value) {
++  return value.trim().toLowerCase();
++}
++
+ function parseKeywords(input = "") {
+   return input
+     .split(",")
+-    .filter(Boolean)
+-    .map((part) => part.toLowerCase());
++    .map((part) => normalizeKeyword(part))
++    .filter(Boolean);
+ }
+ 
+ function hasKeyword(input, expected) {
+-  return parseKeywords(input).map((part) => part.trim()).includes(expected.trim().toLowerCase());
++  return parseKeywords(input).includes(normalizeKeyword(expected));
+ }
+ 
+ module.exports = { parseKeywords, hasKeyword };

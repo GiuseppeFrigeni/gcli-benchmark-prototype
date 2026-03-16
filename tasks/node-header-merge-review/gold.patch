@@ -1,0 +1,10 @@
+diff --git a/src/headers.js b/src/headers.js
+--- a/src/headers.js
++++ b/src/headers.js
+@@ -1,5 +1,5 @@
+ function mergeHeaders(defaults, overrides = {}) {
+-  const result = defaults;
++  const result = { ...defaults };
+   for (const [key, value] of Object.entries(overrides)) {
+     if (value == null) {
+       continue;

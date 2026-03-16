@@ -1,30 +1,29 @@
 import { access } from "node:fs/promises";
 import { constants } from "node:fs";
+import { dirname } from "node:path";
 import {
   BaselineMetrics,
   EvaluationSummary,
   RegressionFinding,
-  ScenarioCategory,
+  TaskRunResult,
+  TaskStatus,
 } from "./types";
 import { ensureDir, readJsonFile, writeJsonFile } from "./utils";
-import { dirname } from "node:path";
 
-export interface RegressionOptions {
-  successRateTolerance: number;
-  scoreTolerance: number;
-}
-
-export function makeBaseline(summary: EvaluationSummary): BaselineMetrics {
-  const categorySuccessRate: Partial<Record<ScenarioCategory, number>> = {};
-  for (const category of summary.categories) {
-    categorySuccessRate[category.category] = category.successRate;
+export function makeBaseline(
+  summary: EvaluationSummary,
+  tasks: TaskRunResult[],
+): BaselineMetrics {
+  const taskStatuses: Record<string, TaskStatus> = {};
+  for (const task of tasks) {
+    taskStatuses[task.taskId] = task.status;
   }
+
   return {
     generatedAt: summary.generatedAt,
-    sampleSize: summary.total,
-    overallSuccessRate: summary.successRate,
-    overallAverageScore: summary.averageScore,
-    categorySuccessRate,
+    total: summary.total,
+    overallPassRate: summary.passRate,
+    taskStatuses,
   };
 }
 
@@ -49,54 +48,39 @@ export async function saveBaseline(
 
 export function detectRegressions(
   summary: EvaluationSummary,
+  tasks: TaskRunResult[],
   baseline: BaselineMetrics | null,
-  options: RegressionOptions,
 ): RegressionFinding[] {
   if (!baseline) {
     return [];
   }
 
   const findings: RegressionFinding[] = [];
-
-  const successDelta = summary.successRate - baseline.overallSuccessRate;
-  if (successDelta < -options.successRateTolerance) {
+  const passRateDelta = summary.passRate - baseline.overallPassRate;
+  if (passRateDelta < 0) {
     findings.push({
-      scope: "overall-success",
+      scope: "overall-pass-rate",
       severity: "high",
-      message: "Overall success rate regressed beyond tolerance.",
-      baselineValue: baseline.overallSuccessRate,
-      currentValue: summary.successRate,
-      delta: successDelta,
+      message: "Overall pass rate regressed.",
+      baselineValue: baseline.overallPassRate,
+      currentValue: summary.passRate,
+      delta: passRateDelta,
     });
   }
 
-  const scoreDelta = summary.averageScore - baseline.overallAverageScore;
-  if (scoreDelta < -options.scoreTolerance) {
-    findings.push({
-      scope: "overall-score",
-      severity: "medium",
-      message: "Overall average score regressed beyond tolerance.",
-      baselineValue: baseline.overallAverageScore,
-      currentValue: summary.averageScore,
-      delta: scoreDelta,
-    });
-  }
-
-  for (const category of summary.categories) {
-    const baselineRate = baseline.categorySuccessRate[category.category];
-    if (baselineRate === undefined) {
+  for (const task of tasks) {
+    const previousStatus = baseline.taskStatuses[task.taskId];
+    if (previousStatus !== "passed") {
       continue;
     }
-    const delta = category.successRate - baselineRate;
-    if (delta < -options.successRateTolerance) {
+    if (task.status !== "passed") {
       findings.push({
-        scope: "category-success",
+        scope: "task-status",
         severity: "medium",
-        message: `Category '${category.category}' success rate regressed beyond tolerance.`,
-        baselineValue: baselineRate,
-        currentValue: category.successRate,
-        delta,
-        category: category.category,
+        message: `Task '${task.taskId}' regressed from passed to ${task.status}.`,
+        baselineValue: previousStatus,
+        currentValue: task.status,
+        taskId: task.taskId,
       });
     }
   }

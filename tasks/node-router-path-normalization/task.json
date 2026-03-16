@@ -1,0 +1,19 @@
+{
+  "id": "node-router-path-normalization",
+  "title": "Normalize trailing slashes in router matches",
+  "category": "debugging",
+  "difficulty": "easy",
+  "language": "javascript",
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Keep root path behavior intact and do not change the public Router API.",
+  "verification": {
+    "failToPass": [
+      "node --test test/trailing-slash.test.js"
+    ],
+    "passToPass": [
+      "node --test test/static-routes.test.js"
+    ]
+  },
+  "policy": "always"
+}

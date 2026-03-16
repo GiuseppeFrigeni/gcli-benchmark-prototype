@@ -1,0 +1,19 @@
+{
+  "id": "node-keyword-normalizer-refactor",
+  "title": "Refactor keyword parsing to share normalization logic",
+  "category": "refactoring",
+  "difficulty": "easy",
+  "language": "javascript",
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Keep the existing exports and case-insensitive lookup behavior intact.",
+  "verification": {
+    "failToPass": [
+      "node --test test/parse-keywords.test.js"
+    ],
+    "passToPass": [
+      "node --test test/has-keyword.test.js"
+    ]
+  },
+  "policy": "always"
+}

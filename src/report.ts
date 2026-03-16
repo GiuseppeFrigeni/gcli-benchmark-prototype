@@ -1,7 +1,7 @@
-import { join } from "node:path";
 import { writeFile } from "node:fs/promises";
+import { join } from "node:path";
 import { EvaluationRun } from "./types";
-import { ensureDir, timestampForFile, writeJsonFile } from "./utils";
+import { ensureDir, relativePath, timestampForFile, writeJsonFile } from "./utils";
 
 function formatPct(value: number): string {
   return `${(value * 100).toFixed(2)}%`;
@@ -9,12 +9,14 @@ function formatPct(value: number): string {
 
 export function renderMarkdownReport(run: EvaluationRun): string {
   const lines: string[] = [];
-  lines.push("# Gemini CLI Behavioral Evaluation Report");
+  lines.push("# Workspace Task Evaluation Report");
   lines.push("");
   lines.push(`Generated at: ${run.summary.generatedAt}`);
-  lines.push(`Scenarios: ${run.summary.total}`);
-  lines.push(`Passed: ${run.summary.passed} (${formatPct(run.summary.successRate)})`);
-  lines.push(`Average Score: ${run.summary.averageScore.toFixed(2)}/100`);
+  lines.push(`Tasks: ${run.summary.total}`);
+  lines.push(`Passed: ${run.summary.passed} (${formatPct(run.summary.passRate)})`);
+  lines.push(`Failed: ${run.summary.failed}`);
+  lines.push(`Infra Failed: ${run.summary.infraFailed}`);
+  lines.push(`Invalid Tasks: ${run.summary.invalidTasks}`);
   lines.push(`Average Duration: ${run.summary.averageDurationMs.toFixed(2)}ms`);
   lines.push("");
 
@@ -22,12 +24,16 @@ export function renderMarkdownReport(run: EvaluationRun): string {
     lines.push("## Run Configuration");
     lines.push("");
     lines.push(`Mode: ${run.config.mode}`);
-    lines.push(`Gemini Binary: ${run.config.geminiBin ?? "gemini"}`);
-    lines.push(`Model: ${run.config.model ?? "Gemini CLI default"}`);
-    lines.push(`Model Source: ${run.config.modelSource ?? "cli-default"}`);
-    lines.push(
-      `Observed Models: ${run.config.observedModels && run.config.observedModels.length > 0 ? run.config.observedModels.join(", ") : "none-detected"}`,
-    );
+    if (run.config.mode === "gemini-cli") {
+      lines.push(`Gemini Binary: ${run.config.geminiBin}`);
+      lines.push(`Model: ${run.config.model ?? "Gemini CLI default"}`);
+    }
+    lines.push(`Tasks Dir: ${run.config.tasksDir}`);
+    lines.push(`Workspace Root: ${run.config.workspaceRoot}`);
+    lines.push(`Keep Workspaces: ${run.config.keepWorkspaces ? "yes" : "no"}`);
+    if (run.config.selectedTaskIds && run.config.selectedTaskIds.length > 0) {
+      lines.push(`Selected Tasks: ${run.config.selectedTaskIds.join(", ")}`);
+    }
     if (run.config.geminiArgs && run.config.geminiArgs.length > 0) {
       lines.push(`Gemini Args: \`${run.config.geminiArgs.join(" ")}\``);
     }
@@ -36,11 +42,11 @@ export function renderMarkdownReport(run: EvaluationRun): string {
 
   lines.push("## Category Metrics");
   lines.push("");
-  lines.push("| Category | Passed / Total | Success Rate | Avg Score |");
-  lines.push("| --- | --- | --- | --- |");
+  lines.push("| Category | Passed / Total | Failed | Infra | Invalid | Pass Rate |");
+  lines.push("| --- | --- | --- | --- | --- | --- |");
   for (const category of run.summary.categories) {
     lines.push(
-      `| ${category.category} | ${category.passed}/${category.total} | ${formatPct(category.successRate)} | ${category.averageScore.toFixed(2)} |`,
+      `| ${category.category} | ${category.passed}/${category.total} | ${category.failed} | ${category.infraFailed} | ${category.invalidTasks} | ${formatPct(category.passRate)} |`,
     );
   }
   lines.push("");
@@ -51,22 +57,37 @@ export function renderMarkdownReport(run: EvaluationRun): string {
     lines.push("No regressions detected.");
   } else {
     for (const finding of run.regressions) {
+      const baseline = typeof finding.baselineValue === "number"
+        ? finding.baselineValue.toFixed(4)
+        : finding.baselineValue;
+      const current = typeof finding.currentValue === "number"
+        ? finding.currentValue.toFixed(4)
+        : finding.currentValue;
+      const delta =
+        finding.delta === undefined ? "" : `, delta=${finding.delta.toFixed(4)}`;
       lines.push(
-        `- [${finding.severity}] ${finding.message} (baseline=${finding.baselineValue.toFixed(4)}, current=${finding.currentValue.toFixed(4)}, delta=${finding.delta.toFixed(4)})`,
+        `- [${finding.severity}] ${finding.message} (baseline=${baseline}, current=${current}${delta})`,
       );
     }
   }
   lines.push("");
 
-  lines.push("## Scenario Results");
+  lines.push("## Task Results");
   lines.push("");
-  lines.push(
-    "| Scenario | Category | Model | Weight | Passed | Score | Duration (ms) | Tags | Notes |",
-  );
-  lines.push("| --- | --- | --- | --- | --- | --- | --- | --- | --- |");
-  for (const scenario of run.scenarios) {
+  lines.push("| Task | Category | Language | Policy | Status | Duration (ms) | Artifacts | Notes |");
+  lines.push("| --- | --- | --- | --- | --- | --- | --- | --- |");
+  for (const task of run.tasks) {
+    const artifacts = [
+      task.artifacts.diffPath,
+      task.artifacts.agentStdoutPath,
+      task.artifacts.agentStderrPath,
+      task.artifacts.activityLogPath,
+    ]
+      .filter((value, idx, all) => value && all.indexOf(value) === idx)
+      .map((value) => relativePath(task.artifacts.artifactDir, value))
+      .join(", ");
     lines.push(
-      `| ${scenario.scenarioId} | ${scenario.category} | ${scenario.detectedModel ?? "-"} | ${scenario.weight.toFixed(2)} | ${scenario.passed ? "yes" : "no"} | ${scenario.score}/${scenario.maxScore} | ${scenario.durationMs} | ${(scenario.tags ?? []).join(", ") || "-"} | ${scenario.notes.join("; ")} |`,
+      `| ${task.taskId} | ${task.category} | ${task.language} | ${task.policy} | ${task.status} | ${task.durationMs} | ${artifacts || "-"} | ${task.notes.join("; ") || "-"} |`,
     );
   }
   lines.push("");

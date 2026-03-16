@@ -1,0 +1,16 @@
+diff --git a/src/config.js b/src/config.js
+--- a/src/config.js
++++ b/src/config.js
+@@ -1,9 +1,9 @@
+ function resolveConfig({ env = process.env, args = {} } = {}) {
+   return {
+-    host: env.APP_HOST || args.host || "127.0.0.1",
+-    port: Number(env.APP_PORT || args.port || 3000),
+-    mode: env.APP_MODE || args.mode || "development",
++    host: args.host || env.APP_HOST || "127.0.0.1",
++    port: Number(args.port || env.APP_PORT || 3000),
++    mode: args.mode || env.APP_MODE || "development",
+  };
+ }
+ 
+ module.exports = { resolveConfig };

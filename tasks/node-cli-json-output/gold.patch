@@ -1,0 +1,37 @@
+diff --git a/src/cli.js b/src/cli.js
+--- a/src/cli.js
++++ b/src/cli.js
+@@ -1,24 +1,32 @@
+ function formatSummary(summary) {
+   return `${summary.completed}/${summary.total} tasks completed`;
+ }
+ 
++function formatJson(summary) {
++  return `${JSON.stringify({
++    completed: summary.completed,
++    total: summary.total,
++    remaining: summary.total - summary.completed,
++  })}\n`;
++}
++
+ function renderOutput(summary, options = {}) {
+-  return formatSummary(summary);
++  return options.json ? formatJson(summary) : formatSummary(summary);
+ }
+ 
+ function parseArgs(argv = []) {
+   return {
+     json: argv.includes("--json"),
+   };
+ }
+ 
+ function run(argv = [], summary = { completed: 0, total: 0 }) {
+   return renderOutput(summary, parseArgs(argv));
+ }
+ 
+ module.exports = {
+   formatSummary,
+   renderOutput,
+   parseArgs,
+   run,
+ };

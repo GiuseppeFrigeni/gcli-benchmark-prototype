@@ -1,12 +1,14 @@
 {
-  "generatedAt": "2026-03-07T00:00:00.000Z",
-  "sampleSize": 8,
-  "overallSuccessRate": 0.6,
-  "overallAverageScore": 68,
-  "categorySuccessRate": {
-    "debugging": 0.5,
-    "refactoring": 0.5,
-    "new-feature": 0.75,
-    "code-review": 0.75
+  "generatedAt": "2026-03-15T18:10:02.028Z",
+  "total": 7,
+  "overallPassRate": 0.7143,
+  "taskStatuses": {
+    "node-cache-key-review": "infra_failed",
+    "node-cli-json-output": "passed",
+    "node-config-precedence": "passed",
+    "node-header-merge-review": "passed",
+    "node-keyword-normalizer-refactor": "passed",
+    "node-router-path-normalization": "passed",
+    "node-slug-shared-normalizer": "infra_failed"
   }
 }
