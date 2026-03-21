@@ -1,0 +1,5 @@
+run 1: PASS - "Root cause: output routing bug in src/commands/models.js"
+run 2: PASS - "The bug is in models output routing"
+run 3: FAIL - missing artifact inspection
+
+maintainer note: the agent wording changes, but the real requirement is that it must inspect the diff and activity summary before answering.

@@ -1,0 +1,12 @@
+diff --git a/src/cli.js b/src/cli.js
+--- a/src/cli.js
++++ b/src/cli.js
+@@ -10,7 +10,7 @@ function run(argv = [], models = DEFAULT_MODELS) {
+   const flags = parseArgs(argv);
+   return renderModels(models, {
+     json: flags.json,
+-    announce: true,
++    announce: !flags.json,
+   });
+ }
+ 

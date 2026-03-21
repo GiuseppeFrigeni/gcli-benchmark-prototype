@@ -87,3 +87,43 @@ export function detectRegressions(
 
   return findings;
 }
+
+export function attachBaselineContext(
+  tasks: TaskRunResult[],
+  baseline: BaselineMetrics | null,
+): TaskRunResult[] {
+  if (!baseline) {
+    return tasks.map((task) => ({
+      ...task,
+      failureAnalysis: {
+        ...task.failureAnalysis,
+        baselineDelta: "new-task",
+      },
+    }));
+  }
+
+  return tasks.map((task) => {
+    const previousStatus = baseline.taskStatuses[task.taskId];
+    let baselineDelta: TaskRunResult["failureAnalysis"]["baselineDelta"];
+    if (previousStatus === undefined) {
+      baselineDelta = "new-task";
+    } else if (previousStatus === task.status) {
+      baselineDelta = "unchanged";
+    } else if (previousStatus === "passed" && task.status !== "passed") {
+      baselineDelta = "regressed";
+    } else if (previousStatus !== "passed" && task.status === "passed") {
+      baselineDelta = "improved";
+    } else {
+      baselineDelta = "changed";
+    }
+
+    return {
+      ...task,
+      failureAnalysis: {
+        ...task.failureAnalysis,
+        baselineStatus: previousStatus,
+        baselineDelta,
+      },
+    };
+  });
+}

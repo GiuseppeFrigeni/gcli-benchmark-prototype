@@ -92,6 +92,55 @@ function makeWorkspaceManifest(overrides = {}) {
   };
 }
 
+function escapeXml(value) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+function makeTerminalSvg(title, lines, accent) {
+  const rowHeight = 22;
+  const width = 980;
+  const height = 120 + lines.length * rowHeight;
+  const text = lines
+    .map(
+      (line, index) =>
+        `<text x="36" y="${96 + index * rowHeight}" fill="#d8dee9" font-family="Consolas, 'Courier New', monospace" font-size="16">${escapeXml(line)}</text>`,
+    )
+    .join("");
+
+  return [
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">`,
+    '<rect width="100%" height="100%" rx="24" fill="#0f172a"/>',
+    `<rect x="16" y="16" width="${width - 32}" height="${height - 32}" rx="18" fill="#111827" stroke="${accent}" stroke-width="2"/>`,
+    `<circle cx="42" cy="44" r="8" fill="${accent}"/>`,
+    '<circle cx="66" cy="44" r="8" fill="#f59e0b"/>',
+    '<circle cx="90" cy="44" r="8" fill="#10b981"/>',
+    `<text x="120" y="50" fill="#f8fafc" font-family="Consolas, 'Courier New', monospace" font-size="20">${escapeXml(title)}</text>`,
+    text,
+    "</svg>",
+  ].join("");
+}
+
+async function listTaskArtifacts(artifactRoot) {
+  const taskDirs = (await require("node:fs/promises").readdir(artifactRoot, { withFileTypes: true }))
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort((a, b) => a.localeCompare(b))
+    .slice(0, 5);
+
+  const lines = ["reports/artifacts/<run-id>/"];
+  for (const taskId of taskDirs) {
+    lines.push(`  ${taskId}/`);
+    lines.push("    prompt.txt");
+    lines.push("    agent-stdout.txt");
+    lines.push("    activity-summary.json");
+  }
+  return lines;
+}
+
 async function testTaskLoaderValidation() {
   const repoFiles = {
     "src/value.js": "module.exports = { value: 1 };\n",
@@ -245,6 +294,37 @@ async function testTaskLoaderValidation() {
       },
     });
     await assert.rejects(() => loadTasks(root), /missing gold activity log/);
+  });
+
+  await withTempDir("gcli-loader-tool-expectations", async (root) => {
+    await createTaskFixture(root, "task-a", {
+      manifest: {
+        id: "tool-expectations",
+        title: "Tool task",
+        taskKind: "tool-use",
+        category: "debugging",
+        difficulty: "hard",
+        language: "text",
+        problemStatementFile: "issue.md",
+        toolExpectations: {
+          firstCall: { name: "read_file", targetIncludes: "notes.txt" },
+          requiredCalls: [{ name: "read_file", targetIncludes: "notes.txt" }],
+          orderedCalls: [{ name: "read_file", targetIncludes: "notes.txt" }],
+        },
+        verification: {
+          failToPass: ["node -e \"process.exit(1)\""],
+          passToPass: ["node -e \"process.exit(0)\""],
+        },
+        policy: "always",
+      },
+      goldStdout: "ok\n",
+      goldActivity: "{\"functionCall\":{\"name\":\"read_file\",\"args\":{\"file_path\":\"notes.txt\"}}}\n",
+    });
+    const tasks = await loadTasks(root);
+    assert.deepEqual(tasks[0].toolExpectations.firstCall, {
+      name: "read_file",
+      targetIncludes: "notes.txt",
+    });
   });
 
   await withTempDir("gcli-loader-empty-verification", async (root) => {
@@ -414,6 +494,32 @@ async function testNonWorkspaceTaskKindsAndInterpolation() {
         category: "code-review",
         difficulty: "medium",
         language: "text",
+        toolExpectations: {
+          firstCall: {
+            name: "read_file",
+            targetIncludes: "notes.txt",
+          },
+          requiredCalls: [
+            {
+              name: "read_file",
+              targetIncludes: "notes.txt",
+            },
+            {
+              name: "read_file",
+              targetIncludes: "expected.txt",
+            },
+          ],
+          orderedCalls: [
+            {
+              name: "read_file",
+              targetIncludes: "notes.txt",
+            },
+            {
+              name: "read_file",
+              targetIncludes: "expected.txt",
+            },
+          ],
+        },
         problemStatementFile: "issue.md",
         verification: {
           failToPass: [
@@ -469,6 +575,9 @@ async function testNonWorkspaceTaskKindsAndInterpolation() {
     assert.ok(
       goldRun.tasks.every((taskResult) => existsSync(taskResult.artifacts.activitySummaryPath)),
     );
+    const goldToolTask = goldRun.tasks.find((taskResult) => taskResult.taskId === "tool-task");
+    assert.equal(goldToolTask.failureAnalysis.reason, "passed");
+    assert.equal(goldToolTask.failureAnalysis.toolExpectationFailures.length, 0);
 
     const noopRun = await runTasks(tasks, new NoopAgent(), {
       generatedAt: "2026-03-15T01:10:00.000Z",
@@ -482,17 +591,20 @@ async function testNonWorkspaceTaskKindsAndInterpolation() {
       noopRun.tasks.map((taskResult) => taskResult.status),
       ["failed", "failed"],
     );
+    const noopToolTask = noopRun.tasks.find((taskResult) => taskResult.taskId === "tool-task");
+    assert.equal(noopToolTask.failureAnalysis.reason, "tool-expectation-failed");
+    assert.equal(noopToolTask.failureAnalysis.missingExpectedInspections.length, 2);
   });
 }
 
 async function testMockAgentsDriveRealTasks() {
   const tasksDir = resolve("tasks");
   const tasks = await loadTasks(tasksDir);
-  assert.equal(tasks.length, 18);
+  assert.equal(tasks.length, 26);
   assert.ok(tasks.every((task) => task.taxonomy));
-  assert.equal(tasks.filter((task) => task.taskKind === "workspace-edit").length, 10);
-  assert.equal(tasks.filter((task) => task.taskKind === "prompt-output").length, 5);
-  assert.equal(tasks.filter((task) => task.taskKind === "tool-use").length, 3);
+  assert.equal(tasks.filter((task) => task.taskKind === "workspace-edit").length, 12);
+  assert.equal(tasks.filter((task) => task.taskKind === "prompt-output").length, 7);
+  assert.equal(tasks.filter((task) => task.taskKind === "tool-use").length, 7);
 
   await withTempDir("gcli-runner-tests", async (tempRoot) => {
     const passingRun = await runTasks(tasks, new GoldPatchAgent(), {
@@ -503,18 +615,19 @@ async function testMockAgentsDriveRealTasks() {
       keepWorkspaces: false,
       defaultTaskTimeoutMs: 10000,
     });
-    assert.equal(passingRun.summary.passed, 18);
+    assert.equal(passingRun.summary.passed, 26);
     assert.ok(passingRun.tasks.every((taskResult) => taskResult.status === "passed"));
     assert.deepEqual(passingRun.summary.taskKinds, [
-      { taskKind: "prompt-output", count: 5 },
-      { taskKind: "tool-use", count: 3 },
-      { taskKind: "workspace-edit", count: 10 },
+      { taskKind: "prompt-output", count: 7 },
+      { taskKind: "tool-use", count: 7 },
+      { taskKind: "workspace-edit", count: 12 },
     ]);
     assert.deepEqual(passingRun.summary.taxonomyCoverage.scopes, [
-      { scope: "multi-file", count: 9 },
+      { scope: "multi-file", count: 17 },
       { scope: "single-file", count: 9 },
     ]);
-    assert.equal(passingRun.summary.efficiency.measuredTasks, 18);
+    assert.equal(passingRun.summary.efficiency.measuredTasks, 26);
+    assert.deepEqual(passingRun.summary.failureBreakdown.byReason, []);
     assert.ok(
       passingRun.tasks.every((taskResult) => existsSync(taskResult.artifacts.activitySummaryPath)),
     );
@@ -527,10 +640,11 @@ async function testMockAgentsDriveRealTasks() {
       keepWorkspaces: false,
       defaultTaskTimeoutMs: 10000,
     });
-    assert.equal(failingRun.summary.failed, 18);
+    assert.equal(failingRun.summary.failed, 26);
     assert.ok(failingRun.tasks.every((taskResult) => taskResult.status === "failed"));
-    assert.equal(failingRun.summary.efficiency.measuredTasks, 18);
+    assert.equal(failingRun.summary.efficiency.measuredTasks, 26);
     assert.equal(failingRun.summary.efficiency.averageChangedLines, 0);
+    assert.ok(failingRun.summary.failureBreakdown.byReason.length >= 1);
   });
 }
 
@@ -554,15 +668,21 @@ async function testCliBaselineAndReports() {
   await withTempDir("gcli-cli-tests", async (tempRoot) => {
     const reportsDir = join(tempRoot, "reports");
     const baselinePath = join(tempRoot, "baseline.json");
+    const workspaceRoot = join(tempRoot, "workspaces");
 
     const listResult = await captureCliLogs(["list", "--tasks", tasksDir]);
     assert.equal(listResult.exitCode, 0);
     assert.match(listResult.output, /Task kinds:/);
-    assert.match(listResult.output, /- prompt-output: 5/);
-    assert.match(listResult.output, /- tool-use: 3/);
-    assert.match(listResult.output, /- workspace-edit: 10/);
-    assert.match(listResult.output, /- multi-file: 9/);
+    assert.match(listResult.output, /- prompt-output: 7/);
+    assert.match(listResult.output, /- tool-use: 7/);
+    assert.match(listResult.output, /- workspace-edit: 12/);
+    assert.match(listResult.output, /- hard: 4/);
+    assert.match(listResult.output, /- multi-file: 17/);
     assert.match(listResult.output, /Tasks missing taxonomy: 0/);
+
+    const gapsResult = await captureCliLogs(["gaps", "--tasks", tasksDir]);
+    assert.equal(gapsResult.exitCode, 0);
+    assert.match(gapsResult.output, /Recommended template family:/);
 
     const updateCode = await runCli(
       [
@@ -575,6 +695,8 @@ async function testCliBaselineAndReports() {
         reportsDir,
         "--baseline",
         baselinePath,
+        "--workspace-root",
+        workspaceRoot,
         "--update-baseline",
       ],
       { now: () => new Date("2026-03-15T02:00:00.000Z") },
@@ -583,7 +705,7 @@ async function testCliBaselineAndReports() {
 
     const baseline = await readJsonFile(baselinePath);
     assert.equal(baseline.overallPassRate, 1);
-    assert.equal(Object.keys(baseline.taskStatuses).length, 18);
+    assert.equal(Object.keys(baseline.taskStatuses).length, 26);
     assert.ok(Object.values(baseline.taskStatuses).every((status) => status === "passed"));
 
     const regressionCode = await runCli(
@@ -597,27 +719,42 @@ async function testCliBaselineAndReports() {
         reportsDir,
         "--baseline",
         baselinePath,
+        "--workspace-root",
+        workspaceRoot,
       ],
       { now: () => new Date("2026-03-15T02:10:00.000Z") },
     );
     assert.equal(regressionCode, 2);
 
     const latestResults = await readJsonFile(join(reportsDir, "latest-results.json"));
-    assert.equal(latestResults.summary.failed, 18);
+    assert.equal(latestResults.summary.failed, 26);
     assert.deepEqual(latestResults.summary.taskKinds, [
-      { taskKind: "prompt-output", count: 5 },
-      { taskKind: "tool-use", count: 3 },
-      { taskKind: "workspace-edit", count: 10 },
+      { taskKind: "prompt-output", count: 7 },
+      { taskKind: "tool-use", count: 7 },
+      { taskKind: "workspace-edit", count: 12 },
     ]);
     assert.ok(latestResults.tasks.every((taskResult) => taskResult.taskKind));
     assert.ok(latestResults.tasks.every((taskResult) => taskResult.artifacts.activitySummaryPath));
+    assert.ok(latestResults.tasks.every((taskResult) => taskResult.failureAnalysis));
+    assert.ok(latestResults.summary.failureBreakdown.byReason.length >= 1);
 
     const latestReport = await readFile(join(reportsDir, "latest-report.md"), "utf8");
     assert.match(latestReport, /# Gemini CLI Contributor Eval Report/);
+    assert.match(latestReport, /## Failure Breakdown/);
     assert.match(latestReport, /## Task Kind Coverage/);
-    assert.match(latestReport, /prompt-output=5, tool-use=3, workspace-edit=10/);
+    assert.match(latestReport, /prompt-output=7, tool-use=7, workspace-edit=12/);
     assert.match(latestReport, /activity-summary.json/);
     assert.match(latestReport, /Task 'node-config-precedence' regressed from passed to failed/);
+
+    const compareResult = await captureCliLogs([
+      "compare",
+      "--results",
+      join(reportsDir, "latest-results.json"),
+      "--baseline",
+      baselinePath,
+    ]);
+    assert.equal(compareResult.exitCode, 0);
+    assert.match(compareResult.output, /Most regressed task kinds/);
   });
 }
 
@@ -660,6 +797,90 @@ async function testCliAgentModeValidation() {
   assert.match(invalidLiveOutput.output, /--live-output can only be used with --agent-mode=gemini-cli/);
 }
 
+async function testCliApprovalModeAndContributorCommands() {
+  const tasksDir = resolve("tasks");
+
+  await withTempDir("gcli-contributor-tests", async (tempRoot) => {
+    const reportsDir = join(tempRoot, "reports");
+    const workspaceRoot = join(tempRoot, "workspaces");
+    const baselinePath = join(tempRoot, "baseline.json");
+    const chatLogPath = join(tempRoot, "chat-log.json");
+    await writeJsonFile(chatLogPath, {
+      title: "Draft task from chat log",
+      summary: "Turn this conversation into a task skeleton.",
+      acceptanceCriteria: ["Capture the issue summary", "Keep strict output requirements obvious"],
+      relevantFiles: ["src/cli.ts", "docs/ADDING_TASKS.md"],
+      conversation: [
+        { role: "user", content: "Please turn this bug report into a draft eval." },
+        { role: "assistant", content: "Use a tool-use template and preserve the maintainer wording." },
+      ],
+    });
+
+    const listJson = await captureCliLogs(["list", "--tasks", tasksDir, "--json"]);
+    assert.equal(listJson.exitCode, 0);
+    const listSummary = JSON.parse(listJson.output);
+    assert.equal(listSummary.total, 26);
+    assert.equal(listSummary.taskKinds.find((entry) => entry[0] === "tool-use")[1], 7);
+
+    const gapsJson = await captureCliLogs(["gaps", "--tasks", tasksDir, "--json"]);
+    assert.equal(gapsJson.exitCode, 0);
+    const gapsSummary = JSON.parse(gapsJson.output);
+    assert.equal(typeof gapsSummary.recommendedTemplateFamily, "string");
+
+    const draftResult = await captureCliLogs([
+      "draft-task",
+      "--chat-log",
+      chatLogPath,
+      "--task-id",
+      "draft-chat-task",
+      "--task-kind",
+      "tool-use",
+      "--category",
+      "debugging",
+      "--language",
+      "text",
+      "--out",
+      join(tempRoot, "draft-chat-task"),
+    ]);
+    assert.equal(draftResult.exitCode, 0);
+    const draftManifest = await readJsonFile(join(tempRoot, "draft-chat-task", "task.json"));
+    assert.equal(draftManifest.id, "draft-chat-task");
+    assert.equal(draftManifest.taskKind, "tool-use");
+    assert.equal(existsSync(join(tempRoot, "draft-chat-task", "issue.md")), true);
+    assert.equal(existsSync(join(tempRoot, "draft-chat-task", "chat-log.json")), true);
+
+    let capturedOptions;
+    const approvalExitCode = await runCli(
+      [
+        "run",
+        "--tasks",
+        tasksDir,
+        "--task",
+        "eval-gap-inventory-json",
+        "--agent-mode",
+        "gemini-cli",
+        "--approval-mode",
+        "strict-test",
+        "--reports",
+        reportsDir,
+        "--baseline",
+        baselinePath,
+        "--workspace-root",
+        workspaceRoot,
+      ],
+      {
+        now: () => new Date("2026-03-15T03:00:00.000Z"),
+        createAgent: (options) => {
+          capturedOptions = options;
+          return new NoopAgent();
+        },
+      },
+    );
+    assert.equal(approvalExitCode, 0);
+    assert.equal(capturedOptions.approvalMode, "strict-test");
+  });
+}
+
 async function testDocsExampleArtifactsExist() {
   const requiredPaths = [
     resolve("docs/assets/report-overview.svg"),
@@ -675,6 +896,98 @@ async function testDocsExampleArtifactsExist() {
   }
 }
 
+async function refreshCheckedInArtifacts() {
+  const generatedRoot = resolve("docs/.tmp-examples");
+  const passReports = join(generatedRoot, "pass");
+  const regressionReports = join(generatedRoot, "regression");
+  const docsBaselinePath = join(generatedRoot, "baseline.json");
+  const docsWorkspaceRoot = join(generatedRoot, "workspaces");
+  const repoBaselinePath = resolve("baseline/baseline.json");
+  const repoWorkspaceRoot = join(generatedRoot, "baseline-workspaces");
+  const docsExamplesDir = resolve("docs/examples");
+  const docsAssetsDir = resolve("docs/assets");
+
+  await removeDir(generatedRoot);
+  await mkdir(passReports, { recursive: true });
+  await mkdir(regressionReports, { recursive: true });
+  await mkdir(docsExamplesDir, { recursive: true });
+  await mkdir(docsAssetsDir, { recursive: true });
+
+  const baselineCode = await runCli(
+    [
+      "run",
+      "--agent-mode",
+      "gold-patch",
+      "--reports",
+      resolve("reports"),
+      "--baseline",
+      repoBaselinePath,
+      "--workspace-root",
+      repoWorkspaceRoot,
+      "--update-baseline",
+    ],
+    { now: () => new Date("2026-03-21T08:45:00.000Z") },
+  );
+  assert.equal(baselineCode, 0);
+
+  const passCode = await runCli(
+    [
+      "run",
+      "--agent-mode",
+      "gold-patch",
+      "--reports",
+      passReports,
+      "--baseline",
+      docsBaselinePath,
+      "--workspace-root",
+      docsWorkspaceRoot,
+      "--update-baseline",
+    ],
+    { now: () => new Date("2026-03-21T09:00:00.000Z") },
+  );
+  assert.equal(passCode, 0);
+
+  const regressionCode = await runCli(
+    [
+      "run",
+      "--agent-mode",
+      "noop",
+      "--reports",
+      regressionReports,
+      "--baseline",
+      docsBaselinePath,
+      "--workspace-root",
+      docsWorkspaceRoot,
+    ],
+    { now: () => new Date("2026-03-21T09:10:00.000Z") },
+  );
+  assert.equal(regressionCode, 2);
+
+  const passReport = await readFile(join(passReports, "latest-report.md"), "utf8");
+  const regressionReport = await readFile(join(regressionReports, "latest-report.md"), "utf8");
+  const regressionResults = await readJsonFile(join(regressionReports, "latest-results.json"));
+  const artifactRunId = (await require("node:fs/promises").readdir(join(regressionReports, "artifacts")))[0];
+  const artifactTreeLines = await listTaskArtifacts(join(regressionReports, "artifacts", artifactRunId));
+
+  await writeTextFile(join(docsExamplesDir, "mock-report.md"), passReport);
+  await writeJsonFile(join(docsExamplesDir, "mock-results.json"), regressionResults);
+  await writeTextFile(join(docsExamplesDir, "mock-regression.md"), regressionReport);
+  await writeTextFile(
+    join(docsAssetsDir, "report-overview.svg"),
+    makeTerminalSvg("Mock Report Overview", passReport.split(/\r?\n/).slice(0, 20), "#38bdf8"),
+  );
+  await writeTextFile(
+    join(docsAssetsDir, "artifact-tree.svg"),
+    makeTerminalSvg("Per-Task Artifact Layout", artifactTreeLines, "#22c55e"),
+  );
+  await writeTextFile(
+    join(docsAssetsDir, "regression-pr-view.svg"),
+    makeTerminalSvg("Regression Snapshot", regressionReport.split(/\r?\n/).slice(0, 20), "#f97316"),
+  );
+
+  await removeDir(generatedRoot);
+}
+
 async function runCase(name, fn) {
   try {
     await fn();
@@ -688,6 +1001,12 @@ async function runCase(name, fn) {
 }
 
 async function main() {
+  if (process.argv.includes("--refresh-artifacts") || process.env.REFRESH_ARTIFACTS === "1") {
+    await refreshCheckedInArtifacts();
+    console.log("Refreshed checked-in artifacts.");
+    return;
+  }
+
   const cases = [
     ["task loader validation", testTaskLoaderValidation],
     ["preflight invalidation", testPreflightInvalidation],
@@ -696,6 +1015,7 @@ async function main() {
     ["mock agent task execution", testMockAgentsDriveRealTasks],
     ["cli agent mode validation", testCliAgentModeValidation],
     ["cli baseline and reports", testCliBaselineAndReports],
+    ["cli approval mode and contributor commands", testCliApprovalModeAndContributorCommands],
     ["docs example artifacts", testDocsExampleArtifactsExist],
   ];
 

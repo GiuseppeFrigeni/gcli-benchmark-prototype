@@ -1,0 +1,50 @@
+{
+  "id": "gemini-tool-maintainer-regression-handoff",
+  "title": "Inspect local regression artifacts before writing a maintainer handoff",
+  "taskKind": "tool-use",
+  "category": "code-review",
+  "difficulty": "medium",
+  "language": "text",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "tool-use",
+      "review-feedback",
+      "regression-reporting"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Inspect ${taskDir}/fixtures/run-report.md and ${taskDir}/fixtures/failing-command.stderr.txt before answering.",
+  "toolExpectations": {
+    "requiredCalls": [
+      {
+        "name": "read_file",
+        "targetIncludes": "fixtures/run-report.md"
+      },
+      {
+        "name": "read_file",
+        "targetIncludes": "fixtures/failing-command.stderr.txt"
+      }
+    ],
+    "orderedCalls": [
+      {
+        "name": "read_file",
+        "targetIncludes": "fixtures/run-report.md"
+      },
+      {
+        "name": "read_file",
+        "targetIncludes": "fixtures/failing-command.stderr.txt"
+      }
+    ]
+  },
+  "verification": {
+    "failToPass": [
+      "node \"${taskDir}/verify-output.js\" \"${artifactDir}/agent-stdout.txt\""
+    ],
+    "passToPass": [
+      "node \"${taskDir}/verify-fixtures.js\" \"${taskDir}/fixtures/run-report.md\" \"${taskDir}/fixtures/failing-command.stderr.txt\""
+    ]
+  },
+  "policy": "always"
+}

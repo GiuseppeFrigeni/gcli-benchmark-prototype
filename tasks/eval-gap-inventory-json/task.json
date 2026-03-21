@@ -1,0 +1,28 @@
+{
+  "id": "eval-gap-inventory-json",
+  "title": "Return strict JSON for contributor-facing eval coverage gaps",
+  "taskKind": "prompt-output",
+  "category": "debugging",
+  "difficulty": "medium",
+  "language": "text",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "artifact-triage",
+      "strict-output",
+      "regression-reporting"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Use only ${taskDir}/fixtures/coverage-summary.json and ${taskDir}/fixtures/roadmap.md.",
+  "verification": {
+    "failToPass": [
+      "node \"${taskDir}/verify-json-output.js\" \"${artifactDir}/agent-stdout.txt\" \"${taskDir}/expected.json\""
+    ],
+    "passToPass": [
+      "node \"${taskDir}/verify-fixtures.js\" \"${taskDir}/fixtures/coverage-summary.json\" \"${taskDir}/fixtures/roadmap.md\""
+    ]
+  },
+  "policy": "always"
+}

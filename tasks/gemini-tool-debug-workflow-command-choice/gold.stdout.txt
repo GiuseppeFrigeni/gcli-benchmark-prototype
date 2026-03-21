@@ -1,0 +1,1 @@
+Workflow: Start with `node --test test/repro-json.test.js`; it reproduces that src/render-json.js prepends `Preview:` ahead of the JSON payload in machine mode.

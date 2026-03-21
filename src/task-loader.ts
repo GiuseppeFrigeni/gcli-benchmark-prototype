@@ -8,6 +8,8 @@ import {
   TaskPolicy,
   TaskScope,
   TaskTaxonomy,
+  ToolExpectationCall,
+  ToolExpectations,
   WorkspaceTask,
 } from "./types";
 import { readJsonFile } from "./utils";
@@ -24,6 +26,7 @@ interface TaskManifest {
   problemStatementFile: unknown;
   promptAddendum?: unknown;
   setupCommands?: unknown;
+  toolExpectations?: unknown;
   verification: unknown;
   policy: unknown;
 }
@@ -167,6 +170,91 @@ function parseTaxonomy(value: unknown, location: string): TaskTaxonomy | undefin
   };
 }
 
+function parseToolExpectationCall(
+  value: unknown,
+  fieldName: string,
+  location: string,
+): ToolExpectationCall {
+  if (typeof value !== "object" || value === null) {
+    throw new Error(`${location}: field '${fieldName}' must be an object`);
+  }
+
+  const record = value as Record<string, unknown>;
+  const name = requireString(record.name, `${fieldName}.name`, location);
+  const targetIncludes = asOptionalString(
+    record.targetIncludes,
+    `${fieldName}.targetIncludes`,
+    location,
+  );
+
+  return {
+    name,
+    targetIncludes,
+  };
+}
+
+function parseToolExpectationList(
+  value: unknown,
+  fieldName: string,
+  location: string,
+): ToolExpectationCall[] | undefined {
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+  if (!Array.isArray(value) || value.length === 0) {
+    throw new Error(`${location}: field '${fieldName}' must be a non-empty array`);
+  }
+  return value.map((entry, index) =>
+    parseToolExpectationCall(entry, `${fieldName}[${index}]`, location),
+  );
+}
+
+function parseToolExpectations(
+  value: unknown,
+  taskKind: TaskKind,
+  location: string,
+): ToolExpectations | undefined {
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+  if (taskKind !== "tool-use") {
+    throw new Error(`${location}: field 'toolExpectations' is only valid for tool-use tasks`);
+  }
+  if (typeof value !== "object") {
+    throw new Error(`${location}: field 'toolExpectations' must be an object`);
+  }
+
+  const expectations = value as Record<string, unknown>;
+  const parsed: ToolExpectations = {
+    requiredCalls: parseToolExpectationList(
+      expectations.requiredCalls,
+      "toolExpectations.requiredCalls",
+      location,
+    ),
+    orderedCalls: parseToolExpectationList(
+      expectations.orderedCalls,
+      "toolExpectations.orderedCalls",
+      location,
+    ),
+    firstCall:
+      expectations.firstCall === undefined
+        ? undefined
+        : parseToolExpectationCall(
+            expectations.firstCall,
+            "toolExpectations.firstCall",
+            location,
+          ),
+  };
+
+  if (!parsed.requiredCalls && !parsed.orderedCalls && !parsed.firstCall) {
+    throw new Error(
+      `${location}: field 'toolExpectations' must include requiredCalls, orderedCalls, or firstCall`,
+    );
+  }
+
+  return parsed;
+}
+
 async function assertExists(path: string, description: string, location: string): Promise<void> {
   try {
     await access(path, constants.F_OK);
@@ -231,6 +319,7 @@ async function parseTask(taskDir: string, manifestPath: string): Promise<Workspa
     problemStatementFile,
     promptAddendum,
     setupCommands: setupCommands.length > 0 ? setupCommands : undefined,
+    toolExpectations: parseToolExpectations(raw.toolExpectations, taskKind, location),
     verification: parseVerification(raw.verification, location),
     policy: parsePolicy(raw.policy, location),
     taskDir,

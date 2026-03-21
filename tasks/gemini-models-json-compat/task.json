@@ -1,0 +1,28 @@
+{
+  "id": "gemini-models-json-compat",
+  "title": "Keep Gemini CLI models JSON output machine-readable",
+  "taskKind": "workspace-edit",
+  "category": "debugging",
+  "difficulty": "medium",
+  "language": "javascript",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "api-compat",
+      "output-format",
+      "behavior-preservation"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Keep the default text output exactly the same while making `--json` machine-readable again.",
+  "verification": {
+    "failToPass": [
+      "node --test test/json-mode.test.js"
+    ],
+    "passToPass": [
+      "node --test test/text-mode.test.js"
+    ]
+  },
+  "policy": "always"
+}

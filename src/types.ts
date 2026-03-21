@@ -23,6 +23,30 @@ export interface TaskTaxonomy {
   tags: string[];
 }
 
+export interface ActivityCallSummary {
+  index: number;
+  name: string;
+  target?: string;
+}
+
+export interface ActivitySummary {
+  rawEvents: number;
+  parsedEmbeddedEvents: number;
+  calls: ActivityCallSummary[];
+  counts: Record<string, number>;
+}
+
+export interface ToolExpectationCall {
+  name: string;
+  targetIncludes?: string;
+}
+
+export interface ToolExpectations {
+  requiredCalls?: ToolExpectationCall[];
+  orderedCalls?: ToolExpectationCall[];
+  firstCall?: ToolExpectationCall;
+}
+
 export interface TaskEfficiency {
   agentDurationMs: number;
   filesChanged: number;
@@ -43,6 +67,7 @@ export interface WorkspaceTask {
   problemStatementFile: string;
   promptAddendum?: string;
   setupCommands?: string[];
+  toolExpectations?: ToolExpectations;
   verification: VerificationConfig;
   policy: TaskPolicy;
   taskDir: string;
@@ -103,6 +128,41 @@ export interface TaskArtifacts {
   workspacePath?: string;
 }
 
+export interface FailedVerificationSummary {
+  phase: "failToPass" | "passToPass";
+  command: string;
+  exitCode: number | null;
+  error?: string;
+  stdoutPath: string;
+  stderrPath: string;
+}
+
+export interface ToolExpectationFailure {
+  type: "first-call-mismatch" | "missing-required-call" | "ordered-call-mismatch";
+  expected: ToolExpectationCall;
+  actual?: ActivityCallSummary;
+  message: string;
+}
+
+export interface TaskFailureAnalysis {
+  reason:
+    | "passed"
+    | "verification-failed"
+    | "tool-expectation-failed"
+    | "agent-error"
+    | "workspace-setup-failed"
+    | "task-setup-failed"
+    | "invalid-task";
+  failedVerificationCommands: FailedVerificationSummary[];
+  firstFailedVerification?: FailedVerificationSummary;
+  firstObservedToolCall?: ActivityCallSummary;
+  missingExpectedInspections: ToolExpectationCall[];
+  toolExpectationFailures: ToolExpectationFailure[];
+  firstUnexpectedInspection?: ActivityCallSummary;
+  baselineStatus?: TaskStatus;
+  baselineDelta?: "regressed" | "improved" | "changed" | "unchanged" | "new-task";
+}
+
 export interface TaskRunResult {
   taskId: string;
   title: string;
@@ -116,6 +176,7 @@ export interface TaskRunResult {
   durationMs: number;
   efficiency?: TaskEfficiency;
   notes: string[];
+  failureAnalysis: TaskFailureAnalysis;
   preflight: VerificationSnapshot;
   verification?: VerificationSnapshot;
   artifacts: TaskArtifacts;
@@ -167,6 +228,17 @@ export interface EfficiencySummary {
   totalDeletions: number;
 }
 
+export interface FailureBreakdownEntry {
+  label: string;
+  count: number;
+}
+
+export interface FailureBreakdown {
+  byReason: FailureBreakdownEntry[];
+  byTaskKind: FailureBreakdownEntry[];
+  byCategory: FailureBreakdownEntry[];
+}
+
 export interface EvaluationSummary {
   generatedAt: string;
   total: number;
@@ -180,6 +252,7 @@ export interface EvaluationSummary {
   taskKinds: TaskKindCoverageSummary[];
   taxonomyCoverage: TaxonomyCoverageSummary;
   efficiency: EfficiencySummary;
+  failureBreakdown: FailureBreakdown;
 }
 
 export interface BaselineMetrics {
@@ -204,6 +277,7 @@ export interface RunConfig {
   geminiBin?: string;
   geminiArgs?: string[];
   model?: string;
+  approvalMode?: string;
   tasksDir: string;
   workspaceRoot: string;
   keepWorkspaces: boolean;

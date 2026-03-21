@@ -1,0 +1,62 @@
+{
+  "id": "gemini-tool-debug-workflow-command-choice",
+  "title": "Use the right debug command before reading Gemini CLI JSON routing code",
+  "taskKind": "tool-use",
+  "category": "debugging",
+  "difficulty": "hard",
+  "language": "text",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "tool-use",
+      "artifact-triage",
+      "output-format"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "First reproduce the failure with `node --test test/repro-json.test.js`, then inspect ${workspaceDir}/test/repro-json.test.js and ${workspaceDir}/src/render-json.js.",
+  "toolExpectations": {
+    "firstCall": {
+      "name": "run_shell_command",
+      "targetIncludes": "node --test test/repro-json.test.js"
+    },
+    "requiredCalls": [
+      {
+        "name": "run_shell_command",
+        "targetIncludes": "node --test test/repro-json.test.js"
+      },
+      {
+        "name": "read_file",
+        "targetIncludes": "test/repro-json.test.js"
+      },
+      {
+        "name": "read_file",
+        "targetIncludes": "src/render-json.js"
+      }
+    ],
+    "orderedCalls": [
+      {
+        "name": "run_shell_command",
+        "targetIncludes": "node --test test/repro-json.test.js"
+      },
+      {
+        "name": "read_file",
+        "targetIncludes": "test/repro-json.test.js"
+      },
+      {
+        "name": "read_file",
+        "targetIncludes": "src/render-json.js"
+      }
+    ]
+  },
+  "verification": {
+    "failToPass": [
+      "node \"${taskDir}/verify-output.js\" \"${artifactDir}/agent-stdout.txt\" \"${artifactDir}/activity-summary.json\""
+    ],
+    "passToPass": [
+      "node \"${taskDir}/verify-fixtures.js\" \"${workspaceDir}/test/repro-json.test.js\" \"${workspaceDir}/src/render-json.js\""
+    ]
+  },
+  "policy": "always"
+}

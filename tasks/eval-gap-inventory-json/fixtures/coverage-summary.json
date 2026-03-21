@@ -1,0 +1,19 @@
+{
+  "total": 18,
+  "taskKinds": {
+    "workspace-edit": 10,
+    "prompt-output": 5,
+    "tool-use": 3
+  },
+  "difficulty": {
+    "easy": 10,
+    "medium": 6,
+    "hard": 2
+  },
+  "categories": {
+    "debugging": 8,
+    "code-review": 5,
+    "refactoring": 3,
+    "new-feature": 2
+  }
+}

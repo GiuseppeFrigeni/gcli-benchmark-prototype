@@ -1,0 +1,3 @@
+Severity: medium
+Owner: src/commands/models.js
+Next step: Block the change until `--json` output stops emitting the `Loaded 7 models` banner ahead of the serialized payload.

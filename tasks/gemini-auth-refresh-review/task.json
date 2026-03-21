@@ -1,0 +1,28 @@
+{
+  "id": "gemini-auth-refresh-review",
+  "title": "Preserve refresh-token behavior while restoring Gemini auth fallback",
+  "taskKind": "workspace-edit",
+  "category": "debugging",
+  "difficulty": "hard",
+  "language": "javascript",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "behavior-preservation",
+      "repo-triage",
+      "api-compat"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Prefer refresh tokens when available, but restore the device-code fallback path when the refresh token is missing.",
+  "verification": {
+    "failToPass": [
+      "node --test test/login-refresh-fallback.test.js"
+    ],
+    "passToPass": [
+      "node --test test/existing-refresh-token.test.js"
+    ]
+  },
+  "policy": "always"
+}

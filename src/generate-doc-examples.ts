@@ -57,6 +57,7 @@ async function main(): Promise<void> {
   const passReports = join(generatedRoot, "pass");
   const regressionReports = join(generatedRoot, "regression");
   const baselinePath = join(generatedRoot, "baseline.json");
+  const workspaceRoot = join(generatedRoot, "workspaces");
   const docsExamplesDir = resolve("docs/examples");
   const docsAssetsDir = resolve("docs/assets");
 
@@ -75,6 +76,8 @@ async function main(): Promise<void> {
       passReports,
       "--baseline",
       baselinePath,
+      "--workspace-root",
+      workspaceRoot,
       "--update-baseline",
     ],
     { now: () => new Date("2026-03-21T09:00:00.000Z") },
@@ -92,6 +95,8 @@ async function main(): Promise<void> {
       regressionReports,
       "--baseline",
       baselinePath,
+      "--workspace-root",
+      workspaceRoot,
     ],
     { now: () => new Date("2026-03-21T09:10:00.000Z") },
   );

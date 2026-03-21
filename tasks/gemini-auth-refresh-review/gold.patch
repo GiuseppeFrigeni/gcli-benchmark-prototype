@@ -1,0 +1,44 @@
+diff --git a/src/auth/refresh.js b/src/auth/refresh.js
+--- a/src/auth/refresh.js
++++ b/src/auth/refresh.js
+@@ -1,13 +1,20 @@
+-function buildRefreshRequest(session = {}) {
++function buildRefreshRequest(session = {}, fallbackDeviceCode) {
+   if (session.refreshToken) {
+     return {
+       grantType: "refresh_token",
+       refreshToken: session.refreshToken,
+     };
+   }
+-  return null;
++  const deviceCode = fallbackDeviceCode || session.deviceCode;
++  if (deviceCode) {
++    return {
++      grantType: "device_code",
++      deviceCode,
++    };
++  }
++  return null;
+ }
+ 
+ module.exports = {
+   buildRefreshRequest,
+ };
+diff --git a/src/commands/login.js b/src/commands/login.js
+--- a/src/commands/login.js
++++ b/src/commands/login.js
+@@ -1,13 +1,13 @@
+ const { buildRefreshRequest } = require("../auth/refresh");
+ 
+ function planRefresh(session = {}, env = {}) {
+-  const request = buildRefreshRequest(session);
++  const request = buildRefreshRequest(session, env.deviceCode);
+   if (!request) {
+     throw new Error("No refresh credentials available");
+   }
+   return request;
+ }
+ 
+ module.exports = {
+   planRefresh,
+ };

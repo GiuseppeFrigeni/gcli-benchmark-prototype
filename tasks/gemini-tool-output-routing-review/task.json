@@ -1,0 +1,58 @@
+{
+  "id": "gemini-tool-output-routing-review",
+  "title": "Inspect the expected routing path before reviewing a Gemini CLI output regression",
+  "taskKind": "tool-use",
+  "category": "code-review",
+  "difficulty": "medium",
+  "language": "text",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "tool-use",
+      "review-feedback",
+      "output-format"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Inspect ${workspaceDir}/test/models-json.test.js, then ${workspaceDir}/src/commands/models.js, then ${workspaceDir}/src/renderers/output.js before answering.",
+  "toolExpectations": {
+    "requiredCalls": [
+      {
+        "name": "read_file",
+        "targetIncludes": "test/models-json.test.js"
+      },
+      {
+        "name": "read_file",
+        "targetIncludes": "src/commands/models.js"
+      },
+      {
+        "name": "read_file",
+        "targetIncludes": "src/renderers/output.js"
+      }
+    ],
+    "orderedCalls": [
+      {
+        "name": "read_file",
+        "targetIncludes": "test/models-json.test.js"
+      },
+      {
+        "name": "read_file",
+        "targetIncludes": "src/commands/models.js"
+      },
+      {
+        "name": "read_file",
+        "targetIncludes": "src/renderers/output.js"
+      }
+    ]
+  },
+  "verification": {
+    "failToPass": [
+      "node \"${taskDir}/verify-output.js\" \"${artifactDir}/agent-stdout.txt\""
+    ],
+    "passToPass": [
+      "node \"${taskDir}/verify-fixtures.js\" \"${workspaceDir}/test/models-json.test.js\" \"${workspaceDir}/src/commands/models.js\" \"${workspaceDir}/src/renderers/output.js\""
+    ]
+  },
+  "policy": "always"
+}

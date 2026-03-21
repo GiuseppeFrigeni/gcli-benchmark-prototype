@@ -1,0 +1,54 @@
+{
+  "id": "gemini-tool-first-inspection-root-cause",
+  "title": "Inspect the failing test first before explaining a Gemini CLI JSON regression",
+  "taskKind": "tool-use",
+  "category": "debugging",
+  "difficulty": "hard",
+  "language": "text",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "tool-use",
+      "artifact-triage",
+      "output-format"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Start with ${workspaceDir}/test/run-json-output.test.js, then inspect ${workspaceDir}/src/commands/run.js before answering.",
+  "toolExpectations": {
+    "firstCall": {
+      "name": "read_file",
+      "targetIncludes": "test/run-json-output.test.js"
+    },
+    "requiredCalls": [
+      {
+        "name": "read_file",
+        "targetIncludes": "test/run-json-output.test.js"
+      },
+      {
+        "name": "read_file",
+        "targetIncludes": "src/commands/run.js"
+      }
+    ],
+    "orderedCalls": [
+      {
+        "name": "read_file",
+        "targetIncludes": "test/run-json-output.test.js"
+      },
+      {
+        "name": "read_file",
+        "targetIncludes": "src/commands/run.js"
+      }
+    ]
+  },
+  "verification": {
+    "failToPass": [
+      "node \"${taskDir}/verify-investigation.js\" \"${artifactDir}/agent-stdout.txt\" \"${artifactDir}/activity-summary.json\""
+    ],
+    "passToPass": [
+      "node \"${taskDir}/verify-fixtures.js\" \"${workspaceDir}/test/run-json-output.test.js\" \"${workspaceDir}/src/commands/run.js\""
+    ]
+  },
+  "policy": "always"
+}

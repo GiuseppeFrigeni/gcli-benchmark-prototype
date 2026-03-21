@@ -7,6 +7,7 @@ export interface GeminiCliAgentOptions {
   geminiBin: string;
   geminiArgs: string[];
   model?: string;
+  approvalMode?: string;
   liveOutput: boolean;
 }
 
@@ -14,12 +15,14 @@ export class GeminiCliAgent implements TaskAgent {
   private readonly geminiBin: string;
   private readonly geminiArgs: string[];
   private readonly model?: string;
+  private readonly approvalMode?: string;
   private readonly liveOutput: boolean;
 
   constructor(options: GeminiCliAgentOptions) {
     this.geminiBin = options.geminiBin;
     this.geminiArgs = options.geminiArgs;
     this.model = options.model;
+    this.approvalMode = options.approvalMode;
     this.liveOutput = options.liveOutput;
   }
 
@@ -181,11 +184,13 @@ export class GeminiCliAgent implements TaskAgent {
     }
 
     const resolvedModel = this.model ?? modelFromArgs;
+    const resolvedApprovalMode =
+      this.approvalMode ?? process.env.GCLI_BENCHMARK_APPROVAL_MODE ?? "yolo";
     if (resolvedModel && resolvedModel.trim().length > 0) {
       args.push(`--model=${resolvedModel}`);
     }
 
-    args.push("--approval-mode=yolo");
+    args.push(`--approval-mode=${resolvedApprovalMode}`);
     args.push(prompt);
     return args;
   }

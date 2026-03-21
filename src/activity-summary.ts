@@ -1,17 +1,5 @@
 import { readTextFile, writeJsonFile } from "./utils";
-
-export interface ActivityCallSummary {
-  index: number;
-  name: string;
-  target?: string;
-}
-
-export interface ActivitySummary {
-  rawEvents: number;
-  parsedEmbeddedEvents: number;
-  calls: ActivityCallSummary[];
-  counts: Record<string, number>;
-}
+import { ActivityCallSummary, ActivitySummary } from "./types";
 
 const TARGET_KEYS = [
   "file_path",

@@ -34,6 +34,7 @@ Optional fields:
 - `timeoutMs`
 - `promptAddendum`
 - `setupCommands`
+- `toolExpectations` for `tool-use`
 
 ## Task Kinds
 
@@ -77,6 +78,7 @@ Typical verification:
 
 - compare `agent-stdout.txt` with an expected conclusion
 - assert on `activity-summary.json` to confirm required tools and targets were used
+- optionally declare `toolExpectations` in `task.json` so the harness can diagnose wrong first inspections and ordered-path failures directly
 
 ## Variable Interpolation
 
@@ -99,6 +101,33 @@ Every run writes `activity-summary.json` beside the raw `activity.jsonl`.
 - a compact target string when the call arguments include a file path, command, pattern, or prompt
 
 Prefer asserting on `activity-summary.json` instead of the raw provider log.
+
+## Tool Expectations
+
+`tool-use` tasks can add an optional `toolExpectations` block:
+
+```json
+{
+  "toolExpectations": {
+    "firstCall": { "name": "read_file", "targetIncludes": "test/failing.test.js" },
+    "requiredCalls": [
+      { "name": "read_file", "targetIncludes": "test/failing.test.js" },
+      { "name": "read_file", "targetIncludes": "src/feature.js" }
+    ],
+    "orderedCalls": [
+      { "name": "read_file", "targetIncludes": "test/failing.test.js" },
+      { "name": "read_file", "targetIncludes": "src/feature.js" }
+    ]
+  }
+}
+```
+
+Notes:
+
+- `requiredCalls` checks presence anywhere in the tool trace
+- `orderedCalls` checks the leading inspection path in order
+- `firstCall` is the headline strict check for “wrong first file/tool choice” tasks
+- this supplements normal shell verification; it does not replace exact-answer checks
 
 ## Taxonomy
 
@@ -134,6 +163,13 @@ Starter shared vocabulary:
 - `strict-output`
 - `tool-use`
 
+Useful template families for contributor tooling:
+
+- `gemini-tool-investigation`
+- `maintainer-prompt-response`
+- `repo-edit-debugging`
+- `hard-debugging-investigation`
+
 ## Verification Contract
 
 - Every command in `verification.failToPass` must fail before the agent runs and pass after the expected fix or response.
@@ -147,3 +183,20 @@ Starter shared vocabulary:
 - For `prompt-output`, score the exact response shape.
 - For `tool-use`, score both the conclusion and the required inspection path.
 - Keep mock gold artifacts reviewable so contributors can understand what "good" looks like at a glance.
+
+## Drafting From Chat Logs
+
+The harness also supports a narrow task-drafting flow:
+
+```bash
+npm run dev:draft-task -- --chat-log ./chat-log.json --task-id draft-task --task-kind tool-use --category debugging --language text --out ./drafts/draft-task
+```
+
+The generated draft includes:
+
+- `task.json`
+- `issue.md`
+- `chat-log.json`
+- placeholder gold assets for the chosen task kind
+
+Drafts are intentionally not production-ready. Tighten the fixtures, verification commands, and taxonomy before adding them to `tasks/`.

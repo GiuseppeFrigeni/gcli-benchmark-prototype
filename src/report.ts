@@ -24,6 +24,31 @@ function formatTaskKinds(run: EvaluationRun): string {
     : run.summary.taskKinds.map((entry) => `${entry.taskKind}=${entry.count}`).join(", ");
 }
 
+function formatFailureBreakdown(
+  entries: EvaluationRun["summary"]["failureBreakdown"]["byReason"],
+): string {
+  return entries.length === 0 ? "none" : entries.map((entry) => `${entry.label}=${entry.count}`).join(", ");
+}
+
+function formatToolCall(
+  call: EvaluationRun["tasks"][number]["failureAnalysis"]["firstObservedToolCall"],
+): string {
+  if (!call) {
+    return "-";
+  }
+  return call.target ? `${call.name} -> ${call.target}` : call.name;
+}
+
+function formatFirstFailure(task: EvaluationRun["tasks"][number]): string {
+  if (task.failureAnalysis.firstFailedVerification) {
+    return task.failureAnalysis.firstFailedVerification.command;
+  }
+  if (task.failureAnalysis.toolExpectationFailures.length > 0) {
+    return task.failureAnalysis.toolExpectationFailures[0].message;
+  }
+  return "-";
+}
+
 export function renderMarkdownReport(run: EvaluationRun): string {
   const lines: string[] = [];
   lines.push("# Gemini CLI Contributor Eval Report");
@@ -111,6 +136,17 @@ export function renderMarkdownReport(run: EvaluationRun): string {
   lines.push(`Total Deletions: ${run.summary.efficiency.totalDeletions}`);
   lines.push("");
 
+  lines.push("## Failure Breakdown");
+  lines.push("");
+  lines.push(`Reasons: ${formatFailureBreakdown(run.summary.failureBreakdown.byReason)}`);
+  lines.push(
+    `Task Kinds: ${formatFailureBreakdown(run.summary.failureBreakdown.byTaskKind)}`,
+  );
+  lines.push(
+    `Categories: ${formatFailureBreakdown(run.summary.failureBreakdown.byCategory)}`,
+  );
+  lines.push("");
+
   lines.push("## Regression Findings");
   lines.push("");
   if (run.regressions.length === 0) {
@@ -134,8 +170,8 @@ export function renderMarkdownReport(run: EvaluationRun): string {
 
   lines.push("## Task Results");
   lines.push("");
-  lines.push("| Task | Kind | Category | Language | Taxonomy | Policy | Status | Harness ms | Agent ms | Files | Changed Lines | Artifacts | Notes |");
-  lines.push("| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |");
+  lines.push("| Task | Kind | Category | Language | Taxonomy | Policy | Status | Failure Reason | First Failure | First Tool | Baseline | Harness ms | Agent ms | Files | Changed Lines | Artifacts | Notes |");
+  lines.push("| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |");
   for (const task of run.tasks) {
     const artifacts = [
       task.artifacts.diffPath,
@@ -150,8 +186,12 @@ export function renderMarkdownReport(run: EvaluationRun): string {
     const agentDuration = task.efficiency ? formatDecimal(task.efficiency.agentDurationMs) : "-";
     const filesChanged = task.efficiency ? String(task.efficiency.filesChanged) : "-";
     const changedLines = task.efficiency ? String(task.efficiency.changedLines) : "-";
+    const baseline =
+      task.failureAnalysis.baselineStatus === undefined
+        ? task.failureAnalysis.baselineDelta ?? "-"
+        : `${task.failureAnalysis.baselineStatus} -> ${task.failureAnalysis.baselineDelta ?? "unchanged"}`;
     lines.push(
-      `| ${task.taskId} | ${task.taskKind} | ${task.category} | ${task.language} | ${formatTaxonomy(task)} | ${task.policy} | ${task.status} | ${task.durationMs} | ${agentDuration} | ${filesChanged} | ${changedLines} | ${artifacts || "-"} | ${task.notes.join("; ") || "-"} |`,
+      `| ${task.taskId} | ${task.taskKind} | ${task.category} | ${task.language} | ${formatTaxonomy(task)} | ${task.policy} | ${task.status} | ${task.failureAnalysis.reason} | ${formatFirstFailure(task)} | ${formatToolCall(task.failureAnalysis.firstObservedToolCall)} | ${baseline} | ${task.durationMs} | ${agentDuration} | ${filesChanged} | ${changedLines} | ${artifacts || "-"} | ${task.notes.join("; ") || "-"} |`,
     );
   }
   lines.push("");

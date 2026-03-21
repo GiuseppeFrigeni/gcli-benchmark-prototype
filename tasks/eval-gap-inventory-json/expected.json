@@ -1,0 +1,14 @@
+{
+  "headline": "Tool-use coverage is still the highest-priority contributor gap.",
+  "highestPriorityGap": {
+    "dimension": "taskKind",
+    "value": "tool-use",
+    "count": 3
+  },
+  "secondaryGap": {
+    "dimension": "difficulty",
+    "value": "hard",
+    "count": 2
+  },
+  "recommendedTemplateFamily": "gemini-tool-investigation"
+}

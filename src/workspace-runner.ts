@@ -8,11 +8,17 @@ import {
   buildTaxonomyCoverageSummary,
 } from "./task-metrics";
 import {
+  ActivityCallSummary,
+  ActivitySummary,
   CategorySummary,
   EvaluationSummary,
+  FailedVerificationSummary,
   TaskAgent,
   TaskEfficiency,
+  TaskFailureAnalysis,
   TaskRunResult,
+  ToolExpectationCall,
+  ToolExpectationFailure,
   VerificationCommandResult,
   VerificationSnapshot,
   WorkspaceTask,
@@ -286,11 +292,151 @@ function buildPrompt(task: WorkspaceTask, problemStatement: string, context: Tas
   return sections.join("\n");
 }
 
+function summarizeFailedVerification(
+  snapshot: VerificationSnapshot | undefined,
+): FailedVerificationSummary[] {
+  if (!snapshot) {
+    return [];
+  }
+
+  const failures: FailedVerificationSummary[] = [];
+  for (const result of snapshot.failToPass) {
+    if (!result.passed) {
+      failures.push({
+        phase: "failToPass",
+        command: result.command,
+        exitCode: result.exitCode,
+        error: result.error,
+        stdoutPath: result.stdoutPath,
+        stderrPath: result.stderrPath,
+      });
+    }
+  }
+  for (const result of snapshot.passToPass) {
+    if (!result.passed) {
+      failures.push({
+        phase: "passToPass",
+        command: result.command,
+        exitCode: result.exitCode,
+        error: result.error,
+        stdoutPath: result.stdoutPath,
+        stderrPath: result.stderrPath,
+      });
+    }
+  }
+  return failures;
+}
+
+function toolCallMatches(call: ActivityCallSummary | undefined, expected: ToolExpectationCall): boolean {
+  if (!call || call.name !== expected.name) {
+    return false;
+  }
+  if (!expected.targetIncludes) {
+    return true;
+  }
+  return String(call.target ?? "").includes(expected.targetIncludes);
+}
+
+function evaluateToolExpectations(
+  task: WorkspaceTask,
+  activitySummary: ActivitySummary,
+): {
+  missingExpectedInspections: ToolExpectationCall[];
+  toolExpectationFailures: ToolExpectationFailure[];
+  firstUnexpectedInspection?: ActivityCallSummary;
+} {
+  const missingExpectedInspections: ToolExpectationCall[] = [];
+  const toolExpectationFailures: ToolExpectationFailure[] = [];
+  let firstUnexpectedInspection: ActivityCallSummary | undefined;
+  const expectations = task.toolExpectations;
+
+  if (!expectations) {
+    return {
+      missingExpectedInspections,
+      toolExpectationFailures,
+      firstUnexpectedInspection,
+    };
+  }
+
+  if (expectations.firstCall) {
+    const actual = activitySummary.calls[0];
+    if (!toolCallMatches(actual, expectations.firstCall)) {
+      toolExpectationFailures.push({
+        type: "first-call-mismatch",
+        expected: expectations.firstCall,
+        actual,
+        message: `Expected the first tool call to match '${expectations.firstCall.targetIncludes ?? expectations.firstCall.name}'.`,
+      });
+      firstUnexpectedInspection = actual;
+    }
+  }
+
+  for (const expected of expectations.requiredCalls ?? []) {
+    if (!activitySummary.calls.some((call) => toolCallMatches(call, expected))) {
+      missingExpectedInspections.push(expected);
+      toolExpectationFailures.push({
+        type: "missing-required-call",
+        expected,
+        message: `Missing required inspection for '${expected.targetIncludes ?? expected.name}'.`,
+      });
+    }
+  }
+
+  for (let index = 0; index < (expectations.orderedCalls ?? []).length; index += 1) {
+    const expected = expectations.orderedCalls?.[index];
+    if (!expected) {
+      continue;
+    }
+    const actual = activitySummary.calls[index];
+    if (!toolCallMatches(actual, expected)) {
+      toolExpectationFailures.push({
+        type: "ordered-call-mismatch",
+        expected,
+        actual,
+        message: `Expected tool call ${index + 1} to match '${expected.targetIncludes ?? expected.name}'.`,
+      });
+      if (!firstUnexpectedInspection) {
+        firstUnexpectedInspection = actual;
+      }
+      break;
+    }
+  }
+
+  return {
+    missingExpectedInspections,
+    toolExpectationFailures,
+    firstUnexpectedInspection,
+  };
+}
+
+function buildFailureAnalysis(
+  reason: TaskFailureAnalysis["reason"],
+  options: {
+    verification?: VerificationSnapshot;
+    activitySummary?: ActivitySummary;
+    missingExpectedInspections?: ToolExpectationCall[];
+    toolExpectationFailures?: ToolExpectationFailure[];
+    firstUnexpectedInspection?: ActivityCallSummary;
+  } = {},
+): TaskFailureAnalysis {
+  const failedVerificationCommands = summarizeFailedVerification(options.verification);
+  return {
+    reason,
+    failedVerificationCommands,
+    firstFailedVerification: failedVerificationCommands[0],
+    firstObservedToolCall: options.activitySummary?.calls[0],
+    missingExpectedInspections: options.missingExpectedInspections ?? [],
+    toolExpectationFailures: options.toolExpectationFailures ?? [],
+    firstUnexpectedInspection: options.firstUnexpectedInspection,
+  };
+}
+
 function makeResult(
   task: WorkspaceTask,
   status: TaskRunResult["status"],
   durationMs: number,
   notes: string[],
+  failureAnalysis: TaskFailureAnalysis,
   artifactDir: string,
   promptPath: string,
   diffPath: string,
@@ -313,6 +459,7 @@ function makeResult(
     durationMs,
     efficiency,
     notes,
+    failureAnalysis,
     preflight,
     verification,
     artifacts: {
@@ -373,6 +520,9 @@ async function runTask(
       "infra_failed",
       Date.now() - startedAt,
       [`Workspace setup failed: ${failedSetup.command}`],
+      buildFailureAnalysis("workspace-setup-failed", {
+        verification: { failToPass: setupResults, passToPass: [] },
+      }),
       artifactDir,
       promptPath,
       diffPath,
@@ -398,6 +548,9 @@ async function runTask(
         "invalid_task",
         Date.now() - startedAt,
         [`Task setup failed: ${failedTaskSetup.command}`],
+        buildFailureAnalysis("task-setup-failed", {
+          verification: { failToPass: taskSetup, passToPass: [] },
+        }),
         artifactDir,
         promptPath,
         diffPath,
@@ -449,6 +602,7 @@ async function runTask(
       "invalid_task",
       Date.now() - startedAt,
       notes,
+      buildFailureAnalysis("invalid-task", { verification: preflight }),
       artifactDir,
       promptPath,
       diffPath,
@@ -472,7 +626,7 @@ async function runTask(
     timeoutMs: task.timeoutMs ?? options.defaultTaskTimeoutMs,
   });
   const diffPath = await captureDiff(workspaceDir, artifactDir);
-  await createActivitySummary(
+  const activitySummary = await createActivitySummary(
     join(artifactDir, "activity.jsonl"),
     join(artifactDir, "activity-summary.json"),
   );
@@ -484,6 +638,9 @@ async function runTask(
       "infra_failed",
       Date.now() - startedAt,
       [agentResult.error ?? `Agent exited with code ${String(agentResult.exitCode)}`],
+      buildFailureAnalysis("agent-error", {
+        activitySummary,
+      }),
       artifactDir,
       promptPath,
       diffPath,
@@ -517,16 +674,37 @@ async function runTask(
       30000,
     ),
   };
-  const allPassed = [...verification.failToPass, ...verification.passToPass].every(
+  const toolExpectationResult = evaluateToolExpectations(task, activitySummary);
+  const verificationPassed = [...verification.failToPass, ...verification.passToPass].every(
     (result) => result.passed,
   );
+  const toolExpectationsPassed = toolExpectationResult.toolExpectationFailures.length === 0;
+  const allPassed = verificationPassed && toolExpectationsPassed;
   const result = makeResult(
     task,
     allPassed ? "passed" : "failed",
     Date.now() - startedAt,
     allPassed
       ? ["All verification commands passed."]
-      : ["One or more verification commands failed after the agent run."],
+      : [
+          verificationPassed
+            ? "Tool expectations failed after the agent run."
+            : "One or more verification commands failed after the agent run.",
+        ],
+    buildFailureAnalysis(
+      allPassed
+        ? "passed"
+        : toolExpectationsPassed
+          ? "verification-failed"
+          : "tool-expectation-failed",
+      {
+        verification,
+        activitySummary,
+        missingExpectedInspections: toolExpectationResult.missingExpectedInspections,
+        toolExpectationFailures: toolExpectationResult.toolExpectationFailures,
+        firstUnexpectedInspection: toolExpectationResult.firstUnexpectedInspection,
+      },
+    ),
     artifactDir,
     promptPath,
     diffPath,
@@ -574,6 +752,35 @@ function buildCategorySummaries(results: TaskRunResult[]): CategorySummary[] {
     .sort((a, b) => a.category.localeCompare(b.category));
 }
 
+function buildFailureBreakdown(results: TaskRunResult[]): EvaluationSummary["failureBreakdown"] {
+  const byReason = new Map<string, number>();
+  const byTaskKind = new Map<string, number>();
+  const byCategory = new Map<string, number>();
+
+  for (const result of results) {
+    if (result.status === "passed") {
+      continue;
+    }
+    byReason.set(
+      result.failureAnalysis.reason,
+      (byReason.get(result.failureAnalysis.reason) ?? 0) + 1,
+    );
+    byTaskKind.set(result.taskKind, (byTaskKind.get(result.taskKind) ?? 0) + 1);
+    byCategory.set(result.category, (byCategory.get(result.category) ?? 0) + 1);
+  }
+
+  const toSortedEntries = (map: Map<string, number>) =>
+    [...map.entries()]
+      .map(([label, count]) => ({ label, count }))
+      .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+
+  return {
+    byReason: toSortedEntries(byReason),
+    byTaskKind: toSortedEntries(byTaskKind),
+    byCategory: toSortedEntries(byCategory),
+  };
+}
+
 export async function runTasks(
   tasks: WorkspaceTask[],
   agent: TaskAgent,
@@ -610,6 +817,7 @@ export async function runTasks(
     taskKinds: buildTaskKindCoverageSummary(results),
     taxonomyCoverage: buildTaxonomyCoverageSummary(results),
     efficiency: buildEfficiencySummary(results),
+    failureBreakdown: buildFailureBreakdown(results),
   };
 
   return { summary, tasks: results };

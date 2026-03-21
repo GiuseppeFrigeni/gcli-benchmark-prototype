@@ -1,0 +1,1 @@
+Finding: src/commands/models.js always calls `renderTextOutput`, so `--json` responses never reach the JSON branch in src/renderers/output.js.

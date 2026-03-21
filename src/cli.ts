@@ -4,13 +4,19 @@ import { GeminiCliAgent } from "./gemini-adapter";
 import { GoldPatchAgent, NoopAgent } from "./mock-agents";
 import { buildTaskKindCoverageSummary, buildTaxonomyCoverageSummary } from "./task-metrics";
 import { loadTasks } from "./task-loader";
-import { detectRegressions, loadBaselineIfExists, makeBaseline, saveBaseline } from "./regression";
+import {
+  attachBaselineContext,
+  detectRegressions,
+  loadBaselineIfExists,
+  makeBaseline,
+  saveBaseline,
+} from "./regression";
 import { saveReports } from "./report";
 import { AgentMode, EvaluationRun, RunConfig, TaskAgent, WorkspaceTask } from "./types";
-import { timestampForFile } from "./utils";
+import { ensureDir, readJsonFile, readTextFile, timestampForFile, writeJsonFile, writeTextFile } from "./utils";
 import { runTasks } from "./workspace-runner";
 
-type Command = "run" | "list";
+type Command = "run" | "list" | "gaps" | "compare" | "draft-task";
 
 interface CliOptions {
   command: Command;
@@ -18,20 +24,32 @@ interface CliOptions {
   tasksDir: string;
   reportsDir: string;
   baselinePath: string;
+  resultsPath: string;
   updateBaseline: boolean;
   geminiBin: string;
   geminiArgs: string[];
   model?: string;
+  approvalMode?: string;
   defaultTimeoutMs: number;
   maxTasks?: number;
   liveOutput: boolean;
+  json: boolean;
   selectedTaskIds: string[];
   workspaceRoot: string;
   keepWorkspaces: boolean;
+  draftTaskId?: string;
+  draftTaskKind?: WorkspaceTask["taskKind"];
+  draftCategory?: WorkspaceTask["category"];
+  draftDifficulty?: WorkspaceTask["difficulty"];
+  draftLanguage?: string;
+  draftPolicy?: WorkspaceTask["policy"];
+  draftOutDir?: string;
+  draftChatLogPath?: string;
   explicitGeminiBin: boolean;
   explicitGeminiArgs: boolean;
   explicitModel: boolean;
   explicitLiveOutput: boolean;
+  explicitApprovalMode: boolean;
 }
 
 interface CliDependencies {
@@ -47,11 +65,13 @@ const defaults: CliOptions = {
   tasksDir: "./tasks",
   reportsDir: "./reports",
   baselinePath: "./baseline/baseline.json",
+  resultsPath: "./reports/latest-results.json",
   updateBaseline: false,
   geminiBin: "gemini",
   geminiArgs: [],
   defaultTimeoutMs: 120000,
   liveOutput: false,
+  json: false,
   selectedTaskIds: [],
   workspaceRoot: join(tmpdir(), "gcli-benchmark-workspaces"),
   keepWorkspaces: false,
@@ -59,12 +79,16 @@ const defaults: CliOptions = {
   explicitGeminiArgs: false,
   explicitModel: false,
   explicitLiveOutput: false,
+  explicitApprovalMode: false,
 };
 
 function usage(): string {
   return [
     "Usage:",
-    "  npm run dev:list -- [--tasks ./tasks]",
+    "  npm run dev:list -- [--tasks ./tasks] [--json]",
+    "  npm run dev:gaps -- [--tasks ./tasks] [--json]",
+    "  npm run dev:compare -- [--results ./reports/latest-results.json] [--baseline ./baseline/baseline.json] [--json]",
+    "  npm run dev:draft-task -- --chat-log ./chat.json --task-id my-task --task-kind tool-use --category debugging --language text --out ./drafts/my-task [--difficulty medium] [--policy always]",
     "  npm run dev:run -- [options]",
     "",
     "Options:",
@@ -72,16 +96,27 @@ function usage(): string {
     "  --tasks <path>              Tasks directory (default: ./tasks)",
     "  --reports <path>            Output report directory (default: ./reports)",
     "  --baseline <path>           Baseline file path (default: ./baseline/baseline.json)",
+    "  --results <path>            Results file path for compare (default: ./reports/latest-results.json)",
     "  --update-baseline           Overwrite baseline using current run",
     "  --task <id>                 Run a specific task id (repeatable)",
     "  --gemini-bin <command>      Gemini CLI binary name/path (default: gemini)",
     "  --model <name>              Gemini model to use (ex: gemini-2.5-pro)",
+    "  --approval-mode <mode>      Harness approval policy for Gemini CLI (default: env or yolo)",
     "  --gemini-arg <arg>          Extra gemini arg (repeatable)",
     "  --timeout-ms <number>       Default per-task timeout (default: 120000)",
     "  --max-tasks <number>        Limit loaded tasks",
     "  --workspace-root <path>     Root directory for temp workspaces",
     "  --keep-workspaces           Keep generated task workspaces after the run",
     "  --live-output               Stream Gemini output to terminal during evaluation",
+    "  --json                      Emit JSON output for list/gaps/compare",
+    "  --chat-log <path>           Structured chat log JSON for draft-task",
+    "  --task-id <id>              Draft task id for draft-task",
+    "  --task-kind <kind>          Draft task kind for draft-task",
+    "  --category <name>           Draft task category for draft-task",
+    "  --difficulty <name>         Draft task difficulty for draft-task (default: medium)",
+    "  --language <name>           Draft task language for draft-task",
+    "  --policy <name>             Draft task policy for draft-task (default: always)",
+    "  --out <path>                Output directory for draft-task",
   ].join("\n");
 }
 
@@ -100,6 +135,34 @@ function parseAgentMode(value: string): AgentMode {
   throw new Error(`Invalid value for --agent-mode: '${value}'`);
 }
 
+function parseTaskKindValue(value: string): WorkspaceTask["taskKind"] {
+  if (value === "workspace-edit" || value === "prompt-output" || value === "tool-use") {
+    return value;
+  }
+  throw new Error(`Invalid value for --task-kind: '${value}'`);
+}
+
+function parseCategoryValue(value: string): WorkspaceTask["category"] {
+  if (value === "debugging" || value === "refactoring" || value === "new-feature" || value === "code-review") {
+    return value;
+  }
+  throw new Error(`Invalid value for --category: '${value}'`);
+}
+
+function parseDifficultyValue(value: string): WorkspaceTask["difficulty"] {
+  if (value === "easy" || value === "medium" || value === "hard") {
+    return value;
+  }
+  throw new Error(`Invalid value for --difficulty: '${value}'`);
+}
+
+function parsePolicyValue(value: string): WorkspaceTask["policy"] {
+  if (value === "always" || value === "usually") {
+    return value;
+  }
+  throw new Error(`Invalid value for --policy: '${value}'`);
+}
+
 function validateAgentModeOptions(options: CliOptions): void {
   if (options.command !== "run" || options.agentMode === "gemini-cli") {
     return;
@@ -115,6 +178,9 @@ function validateAgentModeOptions(options: CliOptions): void {
   if (options.explicitModel) {
     rejectedFlags.push("--model");
   }
+  if (options.explicitApprovalMode) {
+    rejectedFlags.push("--approval-mode");
+  }
   if (options.explicitLiveOutput) {
     rejectedFlags.push("--live-output");
   }
@@ -128,11 +194,21 @@ function validateAgentModeOptions(options: CliOptions): void {
 
 function parseArgs(argv: string[]): CliOptions {
   const args = [...argv];
-  const options: CliOptions = { ...defaults, geminiArgs: [...defaults.geminiArgs] };
+  const options: CliOptions = {
+    ...defaults,
+    geminiArgs: [...defaults.geminiArgs],
+    selectedTaskIds: [...defaults.selectedTaskIds],
+  };
 
   if (args.length > 0 && !args[0].startsWith("--")) {
     const command = args.shift();
-    if (command !== "run" && command !== "list") {
+    if (
+      command !== "run" &&
+      command !== "list" &&
+      command !== "gaps" &&
+      command !== "compare" &&
+      command !== "draft-task"
+    ) {
       throw new Error(`Unknown command '${command}'`);
     }
     options.command = command;
@@ -155,6 +231,10 @@ function parseArgs(argv: string[]): CliOptions {
     if (arg === "--live-output") {
       options.liveOutput = true;
       options.explicitLiveOutput = true;
+      continue;
+    }
+    if (arg === "--json") {
+      options.json = true;
       continue;
     }
     if (arg === "--keep-workspaces") {
@@ -188,13 +268,23 @@ function parseArgs(argv: string[]): CliOptions {
         "--agent-mode",
         "--reports",
         "--baseline",
+        "--results",
         "--task",
         "--gemini-bin",
         "--model",
+        "--approval-mode",
         "--gemini-arg",
         "--timeout-ms",
         "--max-tasks",
         "--workspace-root",
+        "--chat-log",
+        "--task-id",
+        "--task-kind",
+        "--category",
+        "--difficulty",
+        "--language",
+        "--policy",
+        "--out",
       ].includes(flag) &&
       value === undefined
     ) {
@@ -215,6 +305,9 @@ function parseArgs(argv: string[]): CliOptions {
       case "--baseline":
         options.baselinePath = requiredValue;
         break;
+      case "--results":
+        options.resultsPath = requiredValue;
+        break;
       case "--task":
         options.selectedTaskIds.push(requiredValue);
         break;
@@ -225,6 +318,10 @@ function parseArgs(argv: string[]): CliOptions {
       case "--model":
         options.model = requiredValue;
         options.explicitModel = true;
+        break;
+      case "--approval-mode":
+        options.approvalMode = requiredValue;
+        options.explicitApprovalMode = true;
         break;
       case "--gemini-arg":
         options.geminiArgs.push(requiredValue);
@@ -238,6 +335,30 @@ function parseArgs(argv: string[]): CliOptions {
         break;
       case "--workspace-root":
         options.workspaceRoot = requiredValue;
+        break;
+      case "--chat-log":
+        options.draftChatLogPath = requiredValue;
+        break;
+      case "--task-id":
+        options.draftTaskId = requiredValue;
+        break;
+      case "--task-kind":
+        options.draftTaskKind = parseTaskKindValue(requiredValue);
+        break;
+      case "--category":
+        options.draftCategory = parseCategoryValue(requiredValue);
+        break;
+      case "--difficulty":
+        options.draftDifficulty = parseDifficultyValue(requiredValue);
+        break;
+      case "--language":
+        options.draftLanguage = requiredValue;
+        break;
+      case "--policy":
+        options.draftPolicy = parsePolicyValue(requiredValue);
+        break;
+      case "--out":
+        options.draftOutDir = requiredValue;
         break;
       default:
         throw new Error(`Unknown flag '${flag}'`);
@@ -287,13 +408,17 @@ function resolveRunConfig(options: CliOptions): RunConfig {
     config.geminiBin = options.geminiBin;
     config.geminiArgs = options.geminiArgs;
     config.model = options.model;
+    config.approvalMode = options.approvalMode ?? process.env.GCLI_BENCHMARK_APPROVAL_MODE;
     config.liveOutput = options.liveOutput;
   }
   return config;
 }
 
 function defaultCreateAgent(
-  options: Pick<CliOptions, "agentMode" | "geminiBin" | "geminiArgs" | "model" | "liveOutput">,
+  options: Pick<
+    CliOptions,
+    "agentMode" | "geminiBin" | "geminiArgs" | "model" | "approvalMode" | "liveOutput"
+  >,
 ): TaskAgent {
   if (options.agentMode === "gold-patch") {
     return new GoldPatchAgent();
@@ -305,6 +430,7 @@ function defaultCreateAgent(
     geminiBin: options.geminiBin,
     geminiArgs: options.geminiArgs,
     model: options.model,
+    approvalMode: options.approvalMode,
     liveOutput: options.liveOutput,
   });
 }
@@ -315,6 +441,7 @@ function printSummary(summary: EvaluationRun["summary"], config: RunConfig, regr
   if (config.mode === "gemini-cli") {
     console.log(`Gemini binary: ${config.geminiBin}`);
     console.log(`Model: ${config.model ?? "Gemini CLI default"}`);
+    console.log(`Approval mode: ${config.approvalMode ?? "yolo"}`);
   }
   console.log(`Overall: ${summary.passed}/${summary.total} passed (${(summary.passRate * 100).toFixed(2)}%)`);
   console.log(`Failed: ${summary.failed}`);
@@ -345,34 +472,279 @@ function printCounts(title: string, entries: Array<[string, number]>): void {
   }
 }
 
-async function listTasks(options: CliOptions): Promise<void> {
-  const tasks = await loadTasks(resolve(options.tasksDir));
-  console.log(`Loaded ${tasks.length} tasks from ${resolve(options.tasksDir)}`);
+function sortEntries(map: Map<string, number>): Array<[string, number]> {
+  return [...map.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+}
 
+function buildSuiteSummary(tasks: WorkspaceTask[]) {
   const categories = new Map<string, number>();
   const languages = new Map<string, number>();
+  const difficulties = new Map<string, number>();
   for (const task of tasks) {
     categories.set(task.category, (categories.get(task.category) ?? 0) + 1);
     languages.set(task.language, (languages.get(task.language) ?? 0) + 1);
+    difficulties.set(task.difficulty, (difficulties.get(task.difficulty) ?? 0) + 1);
   }
-  const taskKindCoverage = buildTaskKindCoverageSummary(tasks);
-  const taxonomyCoverage = buildTaxonomyCoverageSummary(tasks);
 
-  printCounts("Categories", [...categories.entries()].sort((a, b) => a[0].localeCompare(b[0])));
-  printCounts("Languages", [...languages.entries()].sort((a, b) => a[0].localeCompare(b[0])));
+  return {
+    total: tasks.length,
+    categories: sortEntries(categories),
+    languages: sortEntries(languages),
+    difficulties: sortEntries(difficulties),
+    taskKinds: buildTaskKindCoverageSummary(tasks).map((entry) => [entry.taskKind, entry.count] as [string, number]),
+    taxonomyCoverage: buildTaxonomyCoverageSummary(tasks),
+    tasks: tasks.map((task) => ({
+      id: task.id,
+      title: task.title,
+      taskKind: task.taskKind,
+      category: task.category,
+      difficulty: task.difficulty,
+      language: task.language,
+      taxonomy: task.taxonomy,
+    })),
+  };
+}
+
+function recommendTemplateFamily(tasks: WorkspaceTask[]): string {
+  const summary = buildSuiteSummary(tasks);
+  const lowestTaskKind = [...summary.taskKinds].sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0]))[0]?.[0];
+  const lowestDifficulty = [...summary.difficulties].sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0]))[0]?.[0];
+
+  if (lowestDifficulty === "hard") {
+    return "hard-debugging-investigation";
+  }
+  if (lowestTaskKind === "tool-use") {
+    return "gemini-tool-investigation";
+  }
+  if (lowestTaskKind === "prompt-output") {
+    return "maintainer-prompt-response";
+  }
+  return "repo-edit-debugging";
+}
+
+function buildGapsReport(tasks: WorkspaceTask[]) {
+  const summary = buildSuiteSummary(tasks);
+  const taxonomyTags = summary.taxonomyCoverage.tags
+    .map((entry) => [entry.tag, entry.count] as [string, number])
+    .sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0]));
+
+  return {
+    total: summary.total,
+    underCovered: {
+      taskKinds: [...summary.taskKinds].sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0])).slice(0, 3),
+      categories: [...summary.categories].sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0])).slice(0, 3),
+      difficulties: [...summary.difficulties].sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0])).slice(0, 3),
+      tags: taxonomyTags.slice(0, 5),
+    },
+    recommendedTemplateFamily: recommendTemplateFamily(tasks),
+    templateFamilies: {
+      "gemini-tool-investigation": "Tool-use task that verifies required inspections and ordered evidence gathering.",
+      "maintainer-prompt-response": "Prompt-output task with strict JSON or Markdown maintainer-facing output.",
+      "repo-edit-debugging": "Workspace-edit task with one fail-to-pass check and preserved baseline behavior.",
+      "hard-debugging-investigation": "Multi-step debugging task with ambiguous ownership and explicit evidence requirements.",
+    },
+  };
+}
+
+function readJsonOrThrow<T>(path: string): Promise<T> {
+  return readJsonFile<T>(resolve(path));
+}
+
+async function listTasks(options: CliOptions): Promise<void> {
+  const tasks = await loadTasks(resolve(options.tasksDir));
+  const summary = buildSuiteSummary(tasks);
+  if (options.json) {
+    console.log(JSON.stringify(summary, null, 2));
+    return;
+  }
+
+  console.log(`Loaded ${summary.total} tasks from ${resolve(options.tasksDir)}`);
+  printCounts("Categories", summary.categories);
+  printCounts("Languages", summary.languages);
+  printCounts("Difficulties", summary.difficulties);
   printCounts(
     "Task kinds",
-    taskKindCoverage.map((entry): [string, number] => [entry.taskKind, entry.count]),
+    summary.taskKinds,
   );
   printCounts(
     "Taxonomy scopes",
-    taxonomyCoverage.scopes.map((entry): [string, number] => [entry.scope, entry.count]),
+    summary.taxonomyCoverage.scopes.map((entry): [string, number] => [entry.scope, entry.count]),
   );
   printCounts(
     "Taxonomy tags",
-    taxonomyCoverage.tags.map((entry): [string, number] => [entry.tag, entry.count]),
+    summary.taxonomyCoverage.tags.map((entry): [string, number] => [entry.tag, entry.count]),
   );
-  console.log(`Tasks missing taxonomy: ${taxonomyCoverage.tasksWithoutTaxonomy}`);
+  console.log(`Tasks missing taxonomy: ${summary.taxonomyCoverage.tasksWithoutTaxonomy}`);
+}
+
+async function printCoverageGaps(options: CliOptions): Promise<void> {
+  const tasks = await loadTasks(resolve(options.tasksDir));
+  const report = buildGapsReport(tasks);
+  if (options.json) {
+    console.log(JSON.stringify(report, null, 2));
+    return;
+  }
+
+  console.log(`Loaded ${report.total} tasks from ${resolve(options.tasksDir)}`);
+  printCounts("Under-covered task kinds", report.underCovered.taskKinds);
+  printCounts("Under-covered categories", report.underCovered.categories);
+  printCounts("Under-covered difficulties", report.underCovered.difficulties);
+  printCounts("Under-covered tags", report.underCovered.tags);
+  console.log(`Recommended template family: ${report.recommendedTemplateFamily}`);
+  console.log(
+    `Template guidance: ${report.templateFamilies[report.recommendedTemplateFamily as keyof typeof report.templateFamilies]}`,
+  );
+}
+
+async function compareResults(options: CliOptions): Promise<void> {
+  const results = await readJsonOrThrow<EvaluationRun>(options.resultsPath);
+  const baselinePath = results.baselinePath ?? options.baselinePath;
+  const baseline = await loadBaselineIfExists(resolve(baselinePath));
+  if (!baseline) {
+    throw new Error(`No baseline found at '${resolve(baselinePath)}'`);
+  }
+
+  const annotatedTasks = attachBaselineContext(results.tasks, baseline);
+  const regressedTasks = annotatedTasks.filter(
+    (task) => task.failureAnalysis.baselineDelta === "regressed",
+  );
+  const byTaskKind = new Map<string, number>();
+  const byCategory = new Map<string, number>();
+  for (const task of regressedTasks) {
+    byTaskKind.set(task.taskKind, (byTaskKind.get(task.taskKind) ?? 0) + 1);
+    byCategory.set(task.category, (byCategory.get(task.category) ?? 0) + 1);
+  }
+
+  const report = {
+    resultsPath: resolve(options.resultsPath),
+    baselinePath: resolve(baselinePath),
+    regressions: results.regressions,
+    regressedTasks: regressedTasks.map((task) => ({
+      taskId: task.taskId,
+      taskKind: task.taskKind,
+      category: task.category,
+      status: task.status,
+      failureReason: task.failureAnalysis.reason,
+      firstFailure:
+        task.failureAnalysis.firstFailedVerification?.command ??
+        task.failureAnalysis.toolExpectationFailures[0]?.message ??
+        null,
+      artifactDir: task.artifacts.artifactDir,
+    })),
+    regressedTaskKinds: sortEntries(byTaskKind),
+    regressedCategories: sortEntries(byCategory),
+  };
+
+  if (options.json) {
+    console.log(JSON.stringify(report, null, 2));
+    return;
+  }
+
+  console.log(`Results: ${report.resultsPath}`);
+  console.log(`Baseline: ${report.baselinePath}`);
+  console.log(`Regression findings: ${report.regressions.length}`);
+  printCounts("Most regressed task kinds", report.regressedTaskKinds);
+  printCounts("Most regressed categories", report.regressedCategories);
+  if (report.regressedTasks.length === 0) {
+    console.log("No task regressions found.");
+    return;
+  }
+  console.log("Regressed tasks:");
+  for (const task of report.regressedTasks) {
+    console.log(
+      `- ${task.taskId}: ${task.status}, ${task.failureReason}, first failure=${task.firstFailure ?? "none"}, artifacts=${task.artifactDir}`,
+    );
+  }
+}
+
+interface DraftChatLog {
+  title?: string;
+  summary?: string;
+  taskDescription?: string;
+  acceptanceCriteria?: string[];
+  relevantFiles?: string[];
+  conversation?: Array<{ role?: string; content?: string }>;
+}
+
+function buildDraftIssue(chatLog: DraftChatLog): string {
+  const lines = [
+    `# ${chatLog.title ?? "Draft Eval Task"}`,
+    "",
+    chatLog.summary ?? chatLog.taskDescription ?? "Drafted from a structured chat log artifact.",
+  ];
+
+  if (chatLog.acceptanceCriteria && chatLog.acceptanceCriteria.length > 0) {
+    lines.push("", "## Acceptance Criteria");
+    for (const item of chatLog.acceptanceCriteria) {
+      lines.push(`- ${item}`);
+    }
+  }
+
+  if (chatLog.relevantFiles && chatLog.relevantFiles.length > 0) {
+    lines.push("", "## Candidate Files");
+    for (const item of chatLog.relevantFiles) {
+      lines.push(`- ${item}`);
+    }
+  }
+
+  if (chatLog.conversation && chatLog.conversation.length > 0) {
+    lines.push("", "## Conversation Excerpt");
+    for (const entry of chatLog.conversation.slice(0, 4)) {
+      lines.push(`- ${entry.role ?? "unknown"}: ${(entry.content ?? "").trim()}`);
+    }
+  }
+
+  return `${lines.join("\n")}\n`;
+}
+
+async function draftTaskFromChatLog(options: CliOptions): Promise<void> {
+  if (!options.draftChatLogPath || !options.draftTaskId || !options.draftTaskKind || !options.draftCategory || !options.draftLanguage || !options.draftOutDir) {
+    throw new Error("draft-task requires --chat-log, --task-id, --task-kind, --category, --language, and --out");
+  }
+
+  const chatLog = await readJsonOrThrow<DraftChatLog>(options.draftChatLogPath);
+  const outDir = resolve(options.draftOutDir);
+  await ensureDir(outDir);
+  await writeTextFile(join(outDir, "issue.md"), buildDraftIssue(chatLog));
+  await writeTextFile(
+    join(outDir, "chat-log.json"),
+    `${await readTextFile(resolve(options.draftChatLogPath))}\n`,
+  );
+
+  if (options.draftTaskKind === "workspace-edit") {
+    await ensureDir(join(outDir, "repo"));
+    await writeTextFile(join(outDir, "repo", "README.md"), "# Draft workspace fixture\n");
+    await writeTextFile(join(outDir, "gold.patch"), "");
+  } else if (options.draftTaskKind === "prompt-output") {
+    await writeTextFile(join(outDir, "gold.stdout.txt"), "TODO: replace with expected output\n");
+  } else {
+    await writeTextFile(join(outDir, "gold.activity.jsonl"), "");
+    await writeTextFile(join(outDir, "gold.stdout.txt"), "TODO: replace with expected tool-use answer\n");
+  }
+
+  const manifest = {
+    id: options.draftTaskId,
+    title: chatLog.title ?? `Draft ${options.draftTaskId}`,
+    taskKind: options.draftTaskKind,
+    category: options.draftCategory,
+    difficulty: options.draftDifficulty ?? "medium",
+    language: options.draftLanguage,
+    taxonomy: {
+      scope: "multi-file",
+      tags: ["draft-task", "chat-log-derived"],
+    },
+    problemStatementFile: "issue.md",
+    promptAddendum: "Generated from chat-log.json. Tighten instructions, fixtures, and verification before adding to the suite.",
+    verification: {
+      failToPass: ['node -e "process.exit(1)"'],
+      passToPass: ['node -e "process.exit(0)"'],
+    },
+    policy: options.draftPolicy ?? "always",
+  };
+
+  await writeJsonFile(join(outDir, "task.json"), manifest);
+
+  console.log(`Draft task created at ${outDir}`);
 }
 
 async function runEvaluation(options: CliOptions, deps: CliDependencies): Promise<number> {
@@ -393,11 +765,12 @@ async function runEvaluation(options: CliOptions, deps: CliDependencies): Promis
   });
   const baselinePath = resolve(options.baselinePath);
   const baseline = await loadBaselineIfExists(baselinePath);
-  const regressions = detectRegressions(evaluation.summary, evaluation.tasks, baseline);
+  const tasksWithBaseline = attachBaselineContext(evaluation.tasks, baseline);
+  const regressions = detectRegressions(evaluation.summary, tasksWithBaseline, baseline);
 
   const run: EvaluationRun = {
     summary: evaluation.summary,
-    tasks: evaluation.tasks,
+    tasks: tasksWithBaseline,
     regressions,
     baselinePath,
     config: runConfig,
@@ -408,7 +781,7 @@ async function runEvaluation(options: CliOptions, deps: CliDependencies): Promis
   console.log(`Saved report Markdown: ${reportPaths.markdownPath}`);
 
   if (options.updateBaseline) {
-    const newBaseline = makeBaseline(evaluation.summary, evaluation.tasks);
+    const newBaseline = makeBaseline(evaluation.summary, tasksWithBaseline);
     await saveBaseline(baselinePath, newBaseline);
     console.log(`Updated baseline: ${baselinePath}`);
   } else if (!baseline) {
@@ -427,6 +800,18 @@ export async function runCli(argv: string[], deps: CliDependencies = {}): Promis
     const options = parseArgs(argv);
     if (options.command === "list") {
       await listTasks(options);
+      return 0;
+    }
+    if (options.command === "gaps") {
+      await printCoverageGaps(options);
+      return 0;
+    }
+    if (options.command === "compare") {
+      await compareResults(options);
+      return 0;
+    }
+    if (options.command === "draft-task") {
+      await draftTaskFromChatLog(options);
       return 0;
     }
     return await runEvaluation(options, deps);

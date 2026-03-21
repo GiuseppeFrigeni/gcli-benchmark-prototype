@@ -12,21 +12,21 @@ The roadmap from here is about growing coverage and tightening regression policy
 
 ## Near Term
 
-- Expand beyond the current 14-task suite with more medium and hard fixtures.
-- Add more tool-use tasks that verify inspected targets, not just tool counts.
-- Add more prompt-output tasks for maintainer workflows like summarization, triage, and review replies.
-- Keep the mocked gold/noop flow reliable so contributors can trust CI artifacts.
+- Expand beyond the current 26-task suite with more medium and hard fixtures.
+- Add more tool-use tasks that verify inspected targets, first-inspection choices, and debug workflow commands.
+- Add more prompt-output tasks for maintainer workflows like summarization, triage, review replies, and eval maintenance.
+- Keep the mocked gold/noop flow reliable so contributors can trust CI artifacts and draft-task outputs.
 
 ## Next Quality Bar
 
 - Add per-category and per-task-kind regression thresholds.
 - Surface richer baseline drift reporting when behavior changes intentionally.
 - Track stronger efficiency signals for large edits and investigative tasks.
-- Improve artifact summaries for PR reviews and manual triage.
+- Improve artifact summaries for PR reviews, manual triage, and contributor-authored eval drafts.
 
 ## Contributor Scale
 
-- Reach 25+ curated tasks with balanced category and task-kind coverage.
-- Add contributor templates for each task kind.
-- Document a lightweight checklist for proposing new tasks and refreshing examples.
+- Reach 30+ curated tasks with balanced category, difficulty, and task-kind coverage.
+- Add contributor templates for each task kind and stronger authoring helpers for eval maintenance work.
+- Document a lightweight checklist for proposing new tasks, drafting from chat logs, and refreshing examples.
 - Keep checked-in examples and screenshot assets refreshed from deterministic mock runs.

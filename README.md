@@ -11,7 +11,7 @@ Contributor eval harness for Gemini CLI quality work, built around deterministic
 
 ## What The Harness Evaluates
 
-The suite currently includes 18 deterministic tasks across three task kinds:
+The suite currently includes 26 deterministic tasks across three task kinds:
 
 - `workspace-edit`: repo-backed fixes verified by fail-to-pass and pass-to-pass commands
 - `prompt-output`: strict response-shape tasks scored from agent stdout
@@ -23,14 +23,16 @@ Gemini-CLI-specific contributor coverage now includes:
 - strict repo triage for Gemini CLI ownership and first-file selection
 - output-format regression summaries for script-facing compatibility breaks
 - maintainer handoff prompts with exact Markdown structure
+- eval gap inventory and flaky-verifier maintenance prompts
+- contributor-tooling commands for coverage gaps, run comparison, and chat-log task drafts
 
 Current suite shape:
 
-- 18 total tasks
-- 10 `workspace-edit` tasks
-- 5 `prompt-output` tasks
-- 3 `tool-use` tasks
-- 9 `multi-file` tasks
+- 26 total tasks
+- 12 `workspace-edit` tasks
+- 7 `prompt-output` tasks
+- 7 `tool-use` tasks
+- 17 `multi-file` tasks
 - 9 `single-file` tasks
 
 ## Example Artifacts
@@ -88,6 +90,24 @@ Run a Gemini-quality subset:
 npm run dev:run -- --task=gemini-tool-json-mode-root-cause --task=gemini-repo-triage-json --task=gemini-output-regression-summary
 ```
 
+Find under-covered slices and a recommended starting template:
+
+```bash
+npm run dev:gaps
+```
+
+Compare a run against its baseline with contributor-facing summaries:
+
+```bash
+npm run dev:compare -- --results reports/latest-results.json --baseline baseline/baseline.json
+```
+
+Draft a new task from a structured chat log:
+
+```bash
+npm run dev:draft-task -- --chat-log examples/chat-log.json --task-id draft-task --task-kind tool-use --category debugging --language text --out drafts/draft-task
+```
+
 Run the deterministic mock path used in CI:
 
 ```bash
@@ -137,6 +157,8 @@ Verification and setup commands support:
 
 Tool-use tasks also get a normalized `activity-summary.json` artifact so they can assert on ordered tool calls and inspected targets without depending on provider-specific raw logs.
 
+Tool-use tasks can also declare `toolExpectations` so the harness can surface missing required inspections, wrong first inspections, and ordered-path violations directly in reports and JSON results.
+
 More detail:
 
 - [`docs/ADDING_TASKS.md`](./docs/ADDING_TASKS.md)
@@ -185,13 +207,18 @@ The Markdown and JSON reports now surface:
 - task-kind coverage
 - taxonomy coverage
 - efficiency metrics
+- failure breakdowns by reason, category, and task kind
 - regression findings
+- per-task failure analysis, including first failing verifier and first observed tool call
 - per-task artifact paths, including `activity-summary.json`
 
 ## Commands
 
 ```bash
 npm run dev:list
+npm run dev:gaps
+npm run dev:compare
+npm run dev:draft-task
 npm run dev:run
 npm run dev:run -- --agent-mode=gold-patch
 npm run dev:run -- --agent-mode=noop
@@ -200,6 +227,15 @@ npm run docs:examples
 npm test
 ```
 
+## Approval Policy
+
+The Gemini adapter now exposes approval mode as harness policy:
+
+- `--approval-mode <value>`
+- `GCLI_BENCHMARK_APPROVAL_MODE=<value>`
+
+Precedence is explicit CLI flag, then environment variable, then the compatibility default of `yolo`.
+
 ## Roadmap
 
-The harness now covers repo edits, prompt-output behavior, tool-use behavior, and Gemini-CLI-specific contributor quality tasks. The next upgrades are focused on stronger regression policy, richer tool-usage assertions, and more contributor-curated tasks rather than changing the core harness model.
+The harness now covers repo edits, prompt-output behavior, tool-use behavior, contributor authoring support, and Gemini-CLI-specific debugging workflows. The next upgrades are focused on deeper contributor templates, more explicit subagent/skills coverage once it exists in the harness, and continued deterministic mock coverage rather than changing the core harness model.
