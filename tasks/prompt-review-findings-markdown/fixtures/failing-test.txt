@@ -1,0 +1,7 @@
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'docs?lang=en&sort=asc'
+- 'docs?sort=asc&lang=en'
+
+at TestContext.<anonymous> (test/stable-param-order.test.js:8:10)

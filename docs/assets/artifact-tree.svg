@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="520" viewBox="0 0 980 520">
+  <rect width="100%" height="100%" rx="24" fill="#052e16"/>
+  <rect x="16" y="16" width="948" height="488" rx="18" fill="#052e16" stroke="#22c55e" stroke-width="2"/>
+  <circle cx="42" cy="44" r="8" fill="#22c55e"/>
+  <circle cx="66" cy="44" r="8" fill="#f59e0b"/>
+  <circle cx="90" cy="44" r="8" fill="#10b981"/>
+  <text x="120" y="50" fill="#f8fafc" font-family="Consolas, 'Courier New', monospace" font-size="20">Per-Task Artifact Layout</text>
+  <text x="36" y="96" fill="#dcfce7" font-family="Consolas, 'Courier New', monospace" font-size="16">reports/artifacts/&lt;run-id&gt;/</text>
+  <text x="36" y="122" fill="#dcfce7" font-family="Consolas, 'Courier New', monospace" font-size="16">  node-config-precedence/</text>
+  <text x="36" y="148" fill="#dcfce7" font-family="Consolas, 'Courier New', monospace" font-size="16">    prompt.txt</text>
+  <text x="36" y="174" fill="#dcfce7" font-family="Consolas, 'Courier New', monospace" font-size="16">    git-diff.patch</text>
+  <text x="36" y="200" fill="#dcfce7" font-family="Consolas, 'Courier New', monospace" font-size="16">    agent-stdout.txt</text>
+  <text x="36" y="226" fill="#dcfce7" font-family="Consolas, 'Courier New', monospace" font-size="16">    activity-summary.json</text>
+  <text x="36" y="264" fill="#dcfce7" font-family="Consolas, 'Courier New', monospace" font-size="16">  prompt-regression-triage-json/</text>
+  <text x="36" y="290" fill="#dcfce7" font-family="Consolas, 'Courier New', monospace" font-size="16">    prompt.txt</text>
+  <text x="36" y="316" fill="#dcfce7" font-family="Consolas, 'Courier New', monospace" font-size="16">    agent-stdout.txt</text>
+  <text x="36" y="342" fill="#dcfce7" font-family="Consolas, 'Courier New', monospace" font-size="16">    activity-summary.json</text>
+  <text x="36" y="380" fill="#dcfce7" font-family="Consolas, 'Courier New', monospace" font-size="16">  tool-router-root-cause/</text>
+  <text x="36" y="406" fill="#dcfce7" font-family="Consolas, 'Courier New', monospace" font-size="16">    prompt.txt</text>
+  <text x="36" y="432" fill="#dcfce7" font-family="Consolas, 'Courier New', monospace" font-size="16">    agent-stdout.txt</text>
+  <text x="36" y="458" fill="#dcfce7" font-family="Consolas, 'Courier New', monospace" font-size="16">    activity-summary.json</text>
+</svg>

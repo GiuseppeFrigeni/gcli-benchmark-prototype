@@ -1,0 +1,44 @@
+{
+  "summary": {
+    "generatedAt": "2026-03-21T09:10:00.000Z",
+    "total": 14,
+    "passed": 0,
+    "failed": 14,
+    "infraFailed": 0,
+    "invalidTasks": 0,
+    "passRate": 0,
+    "averageDurationMs": 12.34,
+    "taskKinds": [
+      {
+        "taskKind": "prompt-output",
+        "count": 2
+      },
+      {
+        "taskKind": "tool-use",
+        "count": 2
+      },
+      {
+        "taskKind": "workspace-edit",
+        "count": 10
+      }
+    ]
+  },
+  "regressions": [
+    {
+      "scope": "overall-pass-rate",
+      "severity": "high",
+      "message": "Overall pass rate regressed.",
+      "baselineValue": 1,
+      "currentValue": 0,
+      "delta": -1
+    },
+    {
+      "scope": "task-status",
+      "severity": "medium",
+      "message": "Task 'node-config-precedence' regressed from passed to failed.",
+      "baselineValue": "passed",
+      "currentValue": "failed",
+      "taskId": "node-config-precedence"
+    }
+  ]
+}

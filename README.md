@@ -1,36 +1,53 @@
 # gcli-benchmark-prototype
 
-Prototype contributor-facing eval harness for Gemini CLI, built around deterministic repo-backed tasks, objective verification, and regression reporting.
+Contributor-facing eval harness for Gemini CLI, built around deterministic tasks, objective verification, and inspectable regression artifacts.
 
-## Why this matters for contributors
+## Why Contributors Use This
 
-- repeatable local validation before PRs
-- inspectable artifacts for debugging failures
-- a path to expand quality coverage with deterministic fixtures
+- validate changes locally before opening a PR
+- compare current behavior against a saved baseline
+- inspect per-task prompts, diffs, stdout, stderr, and tool-usage summaries
+- extend coverage with small, reviewable task fixtures instead of ad hoc one-off scripts
 
-See the [contributor eval roadmap](./docs/ROADMAP.md) for the planned growth path.
+## What The Harness Evaluates
 
-## What this harness does
+The suite currently includes 14 deterministic tasks across three task kinds:
 
-- Runs repo-backed coding tasks against Gemini CLI
-- Judges success with objective verification commands instead of keyword heuristics
-- Compares pass/fail outcomes against a saved baseline
-- Produces JSON, Markdown, and per-task artifacts contributors can inspect locally or in CI
+- `workspace-edit`: repo-backed fixes verified by fail-to-pass and pass-to-pass commands
+- `prompt-output`: strict response-shape tasks scored from agent stdout
+- `tool-use`: investigation tasks scored from both the final answer and normalized tool-usage activity
 
-## Mapping the prototype to current Gemini CLI gaps
+Current suite shape:
 
-- seed support for debugging and code-review eval-style tasks
-- a starter taxonomy for slicing coverage quality
-- regression artifacts contributors can inspect locally and in CI
+- 14 total tasks
+- 10 `workspace-edit` tasks
+- 2 `prompt-output` tasks
+- 2 `tool-use` tasks
+- 7 `multi-file` tasks
+- 7 `single-file` tasks
 
-This is intentionally a seed framework contributors can extend, not a complete eval solution. Today it includes 7 seed tasks, mostly easy JavaScript fixtures, they are currently single-file in scope, and efficiency tracking is informational only with no efficiency gating yet.
+## Example Artifacts
+
+Deterministic mock examples live under [`docs/examples`](./docs/examples) and can be refreshed with `npm run docs:examples`.
+
+![Mock report overview](./docs/assets/report-overview.svg)
+
+![Per-task artifact layout](./docs/assets/artifact-tree.svg)
+
+![Regression snapshot](./docs/assets/regression-pr-view.svg)
+
+See the checked-in examples directly:
+
+- [`docs/examples/mock-report.md`](./docs/examples/mock-report.md)
+- [`docs/examples/mock-results.json`](./docs/examples/mock-results.json)
+- [`docs/examples/mock-regression.md`](./docs/examples/mock-regression.md)
 
 ## Installation
 
 Prerequisites:
 
 - Node.js 20+
-- Gemini CLI installed and authenticated (`gemini`) for real-agent runs
+- Gemini CLI installed and authenticated as `gemini` for real-agent runs
 
 Install dependencies:
 
@@ -40,164 +57,108 @@ npm install
 
 ## Quick Start
 
-List available tasks:
+List the available tasks and coverage slices:
 
 ```bash
 npm run dev:list
 ```
 
-Run all tasks with Gemini CLI:
+Run the full suite with Gemini CLI:
 
 ```bash
 npm run dev:run
 ```
 
-Run a single task:
+Run a focused subset:
 
 ```bash
-npm run dev:run -- --task=node-config-precedence
+npm run dev:run -- --task=node-config-precedence --task=tool-router-root-cause
 ```
 
-Run the deterministic mock path used by CI:
+Run the deterministic mock path used in CI:
 
 ```bash
 npm run dev:run -- --agent-mode=gold-patch
 ```
 
-## Model Selection
+## How A Contributor Would Catch A Regression
 
-Set an explicit model:
-
-```bash
-npm run dev:run -- --model=gemini-2.5-pro
-```
-
-Use Gemini CLI defaults:
+1. Run the tasks that cover the area you changed.
 
 ```bash
-npm run dev:run
+npm run dev:run -- --task=node-config-precedence --task=prompt-regression-triage-json
 ```
 
-## Real-Time Output
+2. Compare the run against the baseline.
 
-Stream Gemini output while tasks run:
+The harness exits with `2` when regressions are detected against the current baseline.
 
-```bash
-npm run dev:run -- --live-output
-```
+3. Inspect the generated artifacts.
 
-## Baseline + Regression Checks
+- `reports/latest-report.md`
+- `reports/latest-results.json`
+- `reports/artifacts/<run-id>/<task-id>/prompt.txt`
+- `reports/artifacts/<run-id>/<task-id>/activity-summary.json`
+- `reports/artifacts/<run-id>/<task-id>/git-diff.patch`
 
-Create or update baseline:
+4. Refresh the baseline only when the expected benchmark behavior intentionally changed.
 
 ```bash
 npm run baseline:update
 ```
 
-Create a fully passing mock baseline:
+## Task Authoring Model
 
-```bash
-npm run dev:run -- --agent-mode=gold-patch --update-baseline
-```
+Every task lives under `tasks/<task-id>/` and declares a `taskKind` in `task.json`.
 
-Validate regression reporting with the no-op mock agent:
+- `workspace-edit` requires `repo/` and `gold.patch`
+- `prompt-output` requires `gold.stdout.txt`
+- `tool-use` requires `gold.activity.jsonl`
+- `gold.stderr.txt` is optional for non-workspace tasks
 
-```bash
-npm run dev:run -- --agent-mode=noop
-```
+Verification and setup commands support:
 
-The checked-in baseline is intended to come from a real Gemini CLI run on the current task suite. Regenerate it after a successful run instead of editing it manually.
+- `${taskDir}`
+- `${workspaceDir}`
+- `${artifactDir}`
 
-Current checked-in baseline:
+Tool-use tasks also get a normalized `activity-summary.json` artifact so they can assert on ordered tool calls and inspected targets without depending on provider-specific raw logs.
 
-- Run date: `2026-03-15T18:10:02.028Z`
-- Overall pass rate: `5/7` (`71.43%`)
-- Infra failures: `2`
+More detail:
 
-Keep generated workspaces for inspection:
-
-```bash
-npm run dev:run -- --keep-workspaces
-```
-
-## Tests
-
-Run the deterministic harness tests and mock-agent smoke coverage:
-
-```bash
-npm test
-```
-
-GitHub Actions also runs a mocked end-to-end benchmark flow on pull requests and manual dispatches. That workflow:
-
-- creates a passing baseline with `--agent-mode=gold-patch`
-- runs a regression check with `--agent-mode=noop`
-- expects exit code `2` from the regression pass
-- uploads the generated reports and artifacts from both runs
+- [`docs/ADDING_TASKS.md`](./docs/ADDING_TASKS.md)
+- [`docs/ROADMAP.md`](./docs/ROADMAP.md)
 
 ## Reports
 
-Output files:
+Each run writes:
 
 - `reports/latest-results.json`
 - `reports/latest-report.md`
 - archived timestamped copies in `reports/`
 - per-task artifacts in `reports/artifacts/<run-id>/`
 
-The JSON output includes per-task taxonomy and efficiency details plus summary-level taxonomy coverage and efficiency aggregates. The Markdown report mirrors that with compact contributor-facing sections.
+The Markdown and JSON reports now surface:
 
-## Included Tasks
+- category coverage
+- task-kind coverage
+- taxonomy coverage
+- efficiency metrics
+- regression findings
+- per-task artifact paths, including `activity-summary.json`
 
-- `node-config-precedence`
-- `node-router-path-normalization`
-- `node-cli-json-output`
-- `node-slug-shared-normalizer`
-- `node-keyword-normalizer-refactor`
-- `node-header-merge-review`
-- `node-cache-key-review`
+## Commands
 
-Current category coverage:
-
-- `debugging`: 2 tasks
-- `new-feature`: 1 task
-- `refactoring`: 2 tasks
-- `code-review`: 2 tasks
-
-Current taxonomy scope coverage:
-
-- `single-file`: 7 tasks
+```bash
+npm run dev:list
+npm run dev:run
+npm run dev:run -- --agent-mode=gold-patch
+npm run dev:run -- --agent-mode=noop
+npm run baseline:update
+npm run docs:examples
+npm test
+```
 
 ## Roadmap
 
-Short-term roadmap for growing this into a stronger contributor eval harness:
-
-1. Expand from 7 seed tasks to 15-20 deterministic fixtures, especially more debugging and code-review tasks.
-2. Add harder multi-file reasoning tasks and richer taxonomy slicing.
-3. Strengthen efficiency tracking and PR-facing regression visibility.
-4. Grow toward a 50+ task suite with contributor templates and repeatable baseline refreshes.
-
-See [docs/ROADMAP.md](./docs/ROADMAP.md) for the fuller milestone plan.
-
-## Project Layout
-
-```text
-src/
-  cli.ts
-  gemini-adapter.ts
-  task-loader.ts
-  workspace-runner.ts
-  regression.ts
-  report.ts
-tasks/
-  <task-id>/
-    task.json
-    issue.md
-    gold.patch
-    repo/
-baseline/
-  baseline.json
-docs/
-  ADDING_TASKS.md
-tests/
-  benchmark.test.js
-```
+The harness now covers repo edits, prompt-output behavior, and tool-use behavior. The next upgrades are focused on stronger regression policy, richer tool-usage assertions, and more contributor-curated tasks rather than changing the core harness model.

@@ -1,4 +1,4 @@
-# Adding Workspace Tasks
+# Adding Tasks
 
 Each task lives in its own directory under `tasks/`:
 
@@ -6,8 +6,11 @@ Each task lives in its own directory under `tasks/`:
 tasks/<task-id>/
   task.json
   issue.md
-  gold.patch
-  repo/
+  repo/                     # required for workspace-edit, optional otherwise
+  gold.patch                # required for workspace-edit
+  gold.stdout.txt           # required for prompt-output
+  gold.activity.jsonl       # required for tool-use
+  gold.stderr.txt           # optional for prompt-output/tool-use
 ```
 
 ## `task.json`
@@ -16,6 +19,7 @@ Required fields:
 
 - `id`
 - `title`
+- `taskKind`
 - `category`
 - `difficulty`
 - `language`
@@ -31,48 +35,114 @@ Optional fields:
 - `promptAddendum`
 - `setupCommands`
 
+## Task Kinds
+
+### `workspace-edit`
+
+Use this for repo-backed coding tasks where success is judged by verification commands after the agent edits the workspace.
+
+Required assets:
+
+- `repo/`
+- `gold.patch`
+
+### `prompt-output`
+
+Use this when the benchmark is the agent response itself rather than a code diff.
+
+Required assets:
+
+- `gold.stdout.txt`
+
+Typical verification:
+
+- compare `agent-stdout.txt` with an expected JSON or Markdown output
+- optionally inspect `activity-summary.json` if the response should come after some local investigation
+
+### `tool-use`
+
+Use this when the benchmark cares that the agent inspected the right local materials before answering.
+
+Required assets:
+
+- `gold.activity.jsonl`
+
+Optional assets:
+
+- `repo/` if you want a workspace to inspect
+- `gold.stdout.txt` if the gold mock should also supply a final answer
+- `gold.stderr.txt`
+
+Typical verification:
+
+- compare `agent-stdout.txt` with an expected conclusion
+- assert on `activity-summary.json` to confirm required tools and targets were used
+
+## Variable Interpolation
+
+`setupCommands`, `verification.failToPass`, `verification.passToPass`, and `promptAddendum` support:
+
+- `${taskDir}`
+- `${workspaceDir}`
+- `${artifactDir}`
+
+This keeps tasks shell-based and inspectable without adding a custom verification DSL.
+
+## Activity Summary
+
+Every run writes `activity-summary.json` beside the raw `activity.jsonl`.
+
+`activity-summary.json` is the stable verification surface for tool-use tasks. It includes:
+
+- ordered tool/function calls
+- per-tool counts
+- a compact target string when the call arguments include a file path, command, pattern, or prompt
+
+Prefer asserting on `activity-summary.json` instead of the raw provider log.
+
 ## Taxonomy
 
-`taxonomy` is optional for backward compatibility, but new tasks should include it:
+New tasks should include taxonomy:
 
 ```json
 {
   "taxonomy": {
-    "scope": "single-file",
-    "tags": ["behavior-preservation", "shared-logic"]
+    "scope": "multi-file",
+    "tags": ["tool-use", "artifact-triage"]
   }
 }
 ```
 
 Rules:
 
-- `taxonomy.scope` is required when `taxonomy` is present and must be `single-file` or `multi-file`
-- `taxonomy.tags` is required when `taxonomy` is present and must be a non-empty `string[]`
+- `taxonomy.scope` must be `single-file` or `multi-file`
+- `taxonomy.tags` must be a non-empty `string[]`
 
 Starter shared vocabulary:
 
-- `behavior-preservation`
 - `api-compat`
-- `output-format`
-- `shared-logic`
-- `review-feedback`
-- `ordering`
-- `non-mutating-change`
+- `artifact-triage`
+- `behavior-preservation`
 - `config-precedence`
+- `filtering`
+- `output-format`
 - `path-normalization`
-
-Prefer lowercase kebab-case tags and reuse the shared vocabulary when it materially fits the task.
+- `regression-reporting`
+- `review-feedback`
+- `shared-logic`
+- `strict-output`
+- `tool-use`
 
 ## Verification Contract
 
-- Every command in `verification.failToPass` must fail before the agent runs and pass after the fix.
-- Every command in `verification.passToPass` must already pass before the agent runs and remain passing after the fix.
-- If that contract is broken on the pristine repo, the task is marked `invalid_task`.
+- Every command in `verification.failToPass` must fail before the agent runs and pass after the expected fix or response.
+- Every command in `verification.passToPass` must already pass before the agent runs and remain passing after the run.
+- If that contract is broken on the pristine task, the harness marks the task as `invalid_task`.
 
 ## Authoring Tips
 
-- Keep each repo fixture small and deterministic.
-- Use only checked-in files and built-in runtimes when possible.
-- Prefer one targeted failing command and one or two stability commands.
-- Add taxonomy so list/report output can show scope and tag coverage.
-- Record the intended solution in `gold.patch` so the mock-agent smoke tests can apply it.
+- Keep fixtures small and deterministic.
+- Prefer one targeted fail-to-pass check and one or two stability checks.
+- For `prompt-output`, score the exact response shape.
+- For `tool-use`, score both the conclusion and the required inspection path.
+- Keep mock gold artifacts reviewable so contributors can understand what "good" looks like at a glance.

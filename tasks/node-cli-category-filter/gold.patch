@@ -1,0 +1,30 @@
+diff --git a/src/parse-args.js b/src/parse-args.js
+index 16238bf..6cae78d 100644
+--- a/src/parse-args.js
++++ b/src/parse-args.js
+@@ -5,6 +5,11 @@ function parseArgs(argv = []) {
+     if (current === "--json") {
+       options.json = true;
+       continue;
++    }
++    if (current === "--category") {
++      options.category = argv[i + 1];
++      i += 1;
++      continue;
+     }
+   }
+ 
+diff --git a/src/render.js b/src/render.js
+index f6bd854..554bc8a 100644
+--- a/src/render.js
++++ b/src/render.js
+@@ -1,5 +1,8 @@
+ function renderItems(items, options = {}) {
+-  const visibleItems = items;
++  const visibleItems = options.category
++    ? items.filter((item) => item.category === options.category)
++    : items;
++
+   if (options.json) {
+     return JSON.stringify(visibleItems);
+   }

@@ -1,0 +1,28 @@
+{
+  "id": "tool-regression-review",
+  "title": "Inspect diff and failing artifacts before giving a regression finding",
+  "taskKind": "tool-use",
+  "category": "code-review",
+  "difficulty": "medium",
+  "language": "text",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "tool-use",
+      "review-feedback",
+      "artifact-triage"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Inspect ${taskDir}/fixtures/git-diff.patch and ${taskDir}/fixtures/failing-command.stderr.txt before answering.",
+  "verification": {
+    "failToPass": [
+      "node \"${taskDir}/verify-review-investigation.js\" \"${artifactDir}/agent-stdout.txt\" \"${artifactDir}/activity-summary.json\""
+    ],
+    "passToPass": [
+      "node \"${taskDir}/verify-fixtures.js\" \"${taskDir}/fixtures/git-diff.patch\" \"${taskDir}/fixtures/failing-command.stderr.txt\""
+    ]
+  },
+  "policy": "always"
+}

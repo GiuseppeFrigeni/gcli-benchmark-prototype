@@ -1,7 +1,12 @@
 import { spawn } from "node:child_process";
 import { mkdtemp } from "node:fs/promises";
 import { join } from "node:path";
-import { buildEfficiencySummary, buildTaxonomyCoverageSummary } from "./task-metrics";
+import { createActivitySummary } from "./activity-summary";
+import {
+  buildEfficiencySummary,
+  buildTaskKindCoverageSummary,
+  buildTaxonomyCoverageSummary,
+} from "./task-metrics";
 import {
   CategorySummary,
   EvaluationSummary,
@@ -19,6 +24,7 @@ import {
   removeDir,
   roundTo,
   sanitizeFileName,
+  writeJsonFile,
   writeTextFile,
 } from "./utils";
 
@@ -29,6 +35,12 @@ interface RawCommandResult {
   stderr: string;
   timedOut: boolean;
   error?: string;
+}
+
+interface TaskCommandContext {
+  task?: WorkspaceTask;
+  workspaceDir: string;
+  artifactDir: string;
 }
 
 export interface RunTasksOptions {
@@ -124,6 +136,13 @@ async function runShellCommand(
   });
 }
 
+function interpolateTaskVariables(command: string, context: TaskCommandContext): string {
+  return command
+    .replaceAll("${taskDir}", context.task?.taskDir ?? "")
+    .replaceAll("${workspaceDir}", context.workspaceDir)
+    .replaceAll("${artifactDir}", context.artifactDir);
+}
+
 async function commandWithArtifacts(
   command: string,
   cwd: string,
@@ -151,17 +170,17 @@ async function commandWithArtifacts(
 async function runCommandList(
   commands: string[],
   phaseLabel: string,
-  cwd: string,
-  artifactDir: string,
+  context: TaskCommandContext,
   timeoutMs: number,
 ): Promise<VerificationCommandResult[]> {
   const results: VerificationCommandResult[] = [];
   for (let i = 0; i < commands.length; i += 1) {
+    const resolvedCommand = interpolateTaskVariables(commands[i], context);
     const prefix = join(
-      artifactDir,
-      `${phaseLabel}-${String(i + 1).padStart(2, "0")}-${sanitizeFileName(commands[i].slice(0, 48))}`,
+      context.artifactDir,
+      `${phaseLabel}-${String(i + 1).padStart(2, "0")}-${sanitizeFileName(resolvedCommand.slice(0, 48))}`,
     );
-    results.push(await commandWithArtifacts(commands[i], cwd, timeoutMs, prefix));
+    results.push(await commandWithArtifacts(resolvedCommand, context.workspaceDir, timeoutMs, prefix));
   }
   return results;
 }
@@ -180,7 +199,12 @@ async function initializeGitRepo(
     "git add .",
     'git commit --allow-empty -m "Initial commit"',
   ];
-  return await runCommandList(commands, "workspace-setup", workspaceDir, artifactDir, 30000);
+  return await runCommandList(
+    commands,
+    "workspace-setup",
+    { workspaceDir, artifactDir },
+    30000,
+  );
 }
 
 async function captureDiff(workspaceDir: string, artifactDir: string): Promise<string> {
@@ -223,23 +247,40 @@ async function captureEfficiency(
   };
 }
 
-function buildPrompt(task: WorkspaceTask, problemStatement: string): string {
+function buildPrompt(task: WorkspaceTask, problemStatement: string, context: TaskCommandContext): string {
+  const issueText = interpolateTaskVariables(problemStatement, context);
+  const kindInstruction =
+    task.taskKind === "workspace-edit"
+      ? "Fix the issue described below by editing the workspace so the verification commands pass."
+      : task.taskKind === "prompt-output"
+        ? "Read the provided materials and respond in stdout with exactly the requested output. File edits are optional and are not the scoring target."
+        : "Investigate the provided materials with local tools before answering. Both your final answer and your tool usage will be evaluated.";
   const sections = [
     "You are working inside a local git repository.",
-    "Fix the issue described below by editing the workspace so the verification commands pass.",
+    kindInstruction,
     "You may inspect files and run local commands, but do not use network access and do not install dependencies.",
-    "Make only the targeted changes needed for the fix.",
+    task.taskKind === "workspace-edit"
+      ? "Make only the targeted changes needed for the fix."
+      : "Keep any workspace changes minimal and focused on the task.",
     "",
     `Task ID: ${task.id}`,
+    `Task Kind: ${task.taskKind}`,
     `Category: ${task.category}`,
     `Language: ${task.language}`,
+    `Task Directory: ${context.task?.taskDir ?? ""}`,
+    `Workspace Directory: ${context.workspaceDir}`,
+    `Artifact Directory: ${context.artifactDir}`,
     "",
     "Issue:",
-    problemStatement.trim(),
+    issueText.trim(),
   ];
 
   if (task.promptAddendum) {
-    sections.push("", "Additional instructions:", task.promptAddendum.trim());
+    sections.push(
+      "",
+      "Additional instructions:",
+      interpolateTaskVariables(task.promptAddendum, context).trim(),
+    );
   }
 
   return sections.join("\n");
@@ -262,6 +303,7 @@ function makeResult(
   return {
     taskId: task.id,
     title: task.title,
+    taskKind: task.taskKind,
     category: task.category,
     difficulty: task.difficulty,
     language: task.language,
@@ -280,6 +322,7 @@ function makeResult(
       agentStdoutPath: join(artifactDir, "agent-stdout.txt"),
       agentStderrPath: join(artifactDir, "agent-stderr.txt"),
       activityLogPath: join(artifactDir, "activity.jsonl"),
+      activitySummaryPath: join(artifactDir, "activity-summary.json"),
       workspacePath,
     },
     agent,
@@ -297,14 +340,29 @@ async function runTask(
   const workspaceParent = join(options.workspaceRoot, options.runId);
   await ensureDir(workspaceParent);
   const workspaceDir = await mkdtemp(join(workspaceParent, `${sanitizeFileName(task.id)}-`));
-  await copyDir(task.repoDir, workspaceDir);
+  if (task.repoDir) {
+    await copyDir(task.repoDir, workspaceDir);
+  }
+
+  const commandContext: TaskCommandContext = {
+    task,
+    workspaceDir,
+    artifactDir,
+  };
 
   const problemStatement = await readTextFile(task.issuePath);
-  const prompt = buildPrompt(task, problemStatement);
+  const prompt = buildPrompt(task, problemStatement, commandContext);
   const promptPath = join(artifactDir, "prompt.txt");
   await writeTextFile(promptPath, `${prompt}\n`);
   await writeTextFile(join(artifactDir, "agent-stdout.txt"), "");
   await writeTextFile(join(artifactDir, "agent-stderr.txt"), "");
+  await writeTextFile(join(artifactDir, "activity.jsonl"), "");
+  await writeJsonFile(join(artifactDir, "activity-summary.json"), {
+    rawEvents: 0,
+    parsedEmbeddedEvents: 0,
+    calls: [],
+    counts: {},
+  });
 
   const setupResults = await initializeGitRepo(workspaceDir, artifactDir);
   const failedSetup = setupResults.find((result) => !result.passed);
@@ -331,7 +389,7 @@ async function runTask(
   }
 
   if (task.setupCommands && task.setupCommands.length > 0) {
-    const taskSetup = await runCommandList(task.setupCommands, "task-setup", workspaceDir, artifactDir, 30000);
+    const taskSetup = await runCommandList(task.setupCommands, "task-setup", commandContext, 30000);
     const failedTaskSetup = taskSetup.find((result) => !result.passed);
     if (failedTaskSetup) {
       const diffPath = await captureDiff(workspaceDir, artifactDir);
@@ -360,15 +418,13 @@ async function runTask(
     failToPass: await runCommandList(
       task.verification.failToPass,
       "preflight-fail-to-pass",
-      workspaceDir,
-      artifactDir,
+      commandContext,
       30000,
     ),
     passToPass: await runCommandList(
       task.verification.passToPass,
       "preflight-pass-to-pass",
-      workspaceDir,
-      artifactDir,
+      commandContext,
       30000,
     ),
   };
@@ -416,6 +472,10 @@ async function runTask(
     timeoutMs: task.timeoutMs ?? options.defaultTaskTimeoutMs,
   });
   const diffPath = await captureDiff(workspaceDir, artifactDir);
+  await createActivitySummary(
+    join(artifactDir, "activity.jsonl"),
+    join(artifactDir, "activity-summary.json"),
+  );
   const efficiency = await captureEfficiency(workspaceDir, agentResult.durationMs);
 
   if (agentResult.error || agentResult.exitCode !== 0 || agentResult.timedOut) {
@@ -447,15 +507,13 @@ async function runTask(
     failToPass: await runCommandList(
       task.verification.failToPass,
       "post-run-fail-to-pass",
-      workspaceDir,
-      artifactDir,
+      commandContext,
       30000,
     ),
     passToPass: await runCommandList(
       task.verification.passToPass,
       "post-run-pass-to-pass",
-      workspaceDir,
-      artifactDir,
+      commandContext,
       30000,
     ),
   };
@@ -549,6 +607,7 @@ export async function runTasks(
     passRate: roundTo(total === 0 ? 0 : passed / total, 4),
     averageDurationMs: roundTo(averageDurationMs, 2),
     categories: buildCategorySummaries(results),
+    taskKinds: buildTaskKindCoverageSummary(results),
     taxonomyCoverage: buildTaxonomyCoverageSummary(results),
     efficiency: buildEfficiencySummary(results),
   };

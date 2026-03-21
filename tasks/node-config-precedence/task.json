@@ -1,6 +1,7 @@
 {
   "id": "node-config-precedence",
   "title": "Fix config precedence for explicit CLI values",
+  "taskKind": "workspace-edit",
   "category": "debugging",
   "difficulty": "easy",
   "language": "javascript",

@@ -1,0 +1,28 @@
+{
+  "id": "node-summary-tag-normalizer",
+  "title": "Refactor summary tags to use a shared normalizer",
+  "taskKind": "workspace-edit",
+  "category": "refactoring",
+  "difficulty": "medium",
+  "language": "javascript",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "shared-logic",
+      "behavior-preservation",
+      "api-compat"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Keep the exported function names intact, and preserve the current duplicate-tag behavior while making list output match lookup normalization.",
+  "verification": {
+    "failToPass": [
+      "node --test test/list-tags.test.js"
+    ],
+    "passToPass": [
+      "node --test test/has-tag.test.js"
+    ]
+  },
+  "policy": "always"
+}

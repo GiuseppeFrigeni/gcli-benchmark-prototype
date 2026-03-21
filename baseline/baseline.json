@@ -1,14 +1,21 @@
 {
-  "generatedAt": "2026-03-15T18:10:02.028Z",
-  "total": 7,
-  "overallPassRate": 0.7143,
+  "generatedAt": "2026-03-21T09:00:00.000Z",
+  "total": 14,
+  "overallPassRate": 1,
   "taskStatuses": {
-    "node-cache-key-review": "infra_failed",
+    "node-cache-key-review": "passed",
+    "node-cli-category-filter": "passed",
     "node-cli-json-output": "passed",
     "node-config-precedence": "passed",
+    "node-config-short-flags": "passed",
     "node-header-merge-review": "passed",
     "node-keyword-normalizer-refactor": "passed",
     "node-router-path-normalization": "passed",
-    "node-slug-shared-normalizer": "infra_failed"
+    "node-slug-shared-normalizer": "passed",
+    "node-summary-tag-normalizer": "passed",
+    "prompt-regression-triage-json": "passed",
+    "prompt-review-findings-markdown": "passed",
+    "tool-regression-review": "passed",
+    "tool-router-root-cause": "passed"
   }
 }

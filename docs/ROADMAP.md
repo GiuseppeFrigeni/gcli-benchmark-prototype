@@ -1,39 +1,32 @@
 # Contributor Eval Harness Roadmap
 
-This repo is a seed contributor-ready eval framework for Gemini CLI on deterministic repo-backed tasks. It already proves the core evaluation loop:
+This repository already supports the core contributor loop:
 
 - load validated task manifests
-- copy a fixture repo into an isolated workspace
-- run preflight checks
-- execute Gemini CLI against the issue
-- score the result with objective verification commands
-- compare the run against a saved baseline
+- run deterministic workspace, prompt-output, and tool-use tasks
+- score the run with objective verification commands
+- compare current behavior against a baseline
+- emit inspectable reports and per-task artifacts
 
-The growth plan from here is to make that seed framework more useful for contributors and maintainers, not to claim the harness is already complete.
+The roadmap from here is about growing coverage and tightening regression policy, not reinventing the harness shape.
 
-## Phase 1: Harden the harness
+## Near Term
 
-- Keep the task manifest contract small and deterministic.
-- Maintain mock-agent smoke tests so harness refactors stay safe.
-- Keep CI focused on build, task validation, and deterministic harness checks.
+- Expand beyond the current 14-task suite with more medium and hard fixtures.
+- Add more tool-use tasks that verify inspected targets, not just tool counts.
+- Add more prompt-output tasks for maintainer workflows like summarization, triage, and review replies.
+- Keep the mocked gold/noop flow reliable so contributors can trust CI artifacts.
 
-## Phase 2: Broaden contributor-facing task coverage
+## Next Quality Bar
 
-- Grow from the current seed suite to 15-20 tasks.
-- Bias growth toward more debugging and code-review tasks.
-- Balance debugging, refactoring, new-feature, and code-review coverage.
-- Add harder multi-file tasks that preserve important invariants.
+- Add per-category and per-task-kind regression thresholds.
+- Surface richer baseline drift reporting when behavior changes intentionally.
+- Track stronger efficiency signals for large edits and investigative tasks.
+- Improve artifact summaries for PR reviews and manual triage.
 
-## Phase 3: Improve evaluation quality
+## Contributor Scale
 
-- Add richer taxonomy slicing beyond the first-pass scope and tag model.
-- Strengthen efficiency tracking so contributors can inspect solution cost, not just pass/fail.
-- Add richer regression policies such as per-category thresholds and baseline drift reporting.
-- Improve PR-facing regression visibility through clearer reports and CI artifacts.
-
-## Phase 4: Reach contributor-ready scale
-
-- Expand to 50+ curated scenarios.
-- Add contributor templates and task-authoring checklists.
-- Establish a repeatable process for refreshing baselines for new Gemini CLI versions.
-- Document how contributors can run focused subsets locally before opening a pull request.
+- Reach 25+ curated tasks with balanced category and task-kind coverage.
+- Add contributor templates for each task kind.
+- Document a lightweight checklist for proposing new tasks and refreshing examples.
+- Keep checked-in examples and screenshot assets refreshed from deterministic mock runs.

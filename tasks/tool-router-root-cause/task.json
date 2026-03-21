@@ -1,0 +1,28 @@
+{
+  "id": "tool-router-root-cause",
+  "title": "Inspect the right files before explaining a router regression",
+  "taskKind": "tool-use",
+  "category": "debugging",
+  "difficulty": "medium",
+  "language": "text",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "tool-use",
+      "artifact-triage",
+      "path-normalization"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Inspect ${workspaceDir}/src/router.js and ${workspaceDir}/test/trailing-slash.test.js before answering.",
+  "verification": {
+    "failToPass": [
+      "node \"${taskDir}/verify-investigation.js\" \"${artifactDir}/agent-stdout.txt\" \"${artifactDir}/activity-summary.json\""
+    ],
+    "passToPass": [
+      "node \"${taskDir}/verify-fixtures.js\" \"${workspaceDir}/src/router.js\" \"${workspaceDir}/test/trailing-slash.test.js\""
+    ]
+  },
+  "policy": "always"
+}

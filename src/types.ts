@@ -8,6 +8,7 @@ export type TaskDifficulty = "easy" | "medium" | "hard";
 
 export type TaskPolicy = "always" | "usually";
 export type TaskScope = "single-file" | "multi-file";
+export type TaskKind = "workspace-edit" | "prompt-output" | "tool-use";
 
 export type TaskStatus = "passed" | "failed" | "infra_failed" | "invalid_task";
 export type AgentMode = "gemini-cli" | "gold-patch" | "noop";
@@ -33,6 +34,7 @@ export interface TaskEfficiency {
 export interface WorkspaceTask {
   id: string;
   title: string;
+  taskKind: TaskKind;
   category: TaskCategory;
   difficulty: TaskDifficulty;
   language: string;
@@ -44,9 +46,12 @@ export interface WorkspaceTask {
   verification: VerificationConfig;
   policy: TaskPolicy;
   taskDir: string;
-  repoDir: string;
+  repoDir?: string;
   issuePath: string;
-  goldPatchPath: string;
+  goldPatchPath?: string;
+  goldStdoutPath?: string;
+  goldStderrPath?: string;
+  goldActivityLogPath?: string;
 }
 
 export interface AgentRunRequest {
@@ -94,12 +99,14 @@ export interface TaskArtifacts {
   agentStdoutPath: string;
   agentStderrPath: string;
   activityLogPath: string;
+  activitySummaryPath: string;
   workspacePath?: string;
 }
 
 export interface TaskRunResult {
   taskId: string;
   title: string;
+  taskKind: TaskKind;
   category: TaskCategory;
   difficulty: TaskDifficulty;
   language: string;
@@ -134,6 +141,11 @@ export interface ScopeCoverageSummary {
   count: number;
 }
 
+export interface TaskKindCoverageSummary {
+  taskKind: TaskKind;
+  count: number;
+}
+
 export interface TagCoverageSummary {
   tag: string;
   count: number;
@@ -165,6 +177,7 @@ export interface EvaluationSummary {
   passRate: number;
   averageDurationMs: number;
   categories: CategorySummary[];
+  taskKinds: TaskKindCoverageSummary[];
   taxonomyCoverage: TaxonomyCoverageSummary;
   efficiency: EfficiencySummary;
 }

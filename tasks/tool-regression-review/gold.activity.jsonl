@@ -1,0 +1,2 @@
+{"functionCall":{"name":"read_file","args":{"file_path":"fixtures/git-diff.patch"}}}
+{"functionCall":{"name":"read_file","args":{"file_path":"fixtures/failing-command.stderr.txt"}}}

@@ -1,0 +1,28 @@
+{
+  "id": "prompt-review-findings-markdown",
+  "title": "Produce constrained maintainer review findings from local artifacts",
+  "taskKind": "prompt-output",
+  "category": "code-review",
+  "difficulty": "medium",
+  "language": "text",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "review-feedback",
+      "strict-output",
+      "artifact-triage"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Use only ${taskDir}/fixtures/git-diff.patch and ${taskDir}/fixtures/failing-test.txt.",
+  "verification": {
+    "failToPass": [
+      "node \"${taskDir}/verify-review-output.js\" \"${artifactDir}/agent-stdout.txt\" \"${taskDir}/expected-review.md\""
+    ],
+    "passToPass": [
+      "node \"${taskDir}/verify-fixtures.js\" \"${taskDir}/fixtures/git-diff.patch\" \"${taskDir}/fixtures/failing-test.txt\""
+    ]
+  },
+  "policy": "always"
+}

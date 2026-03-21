@@ -1,0 +1,11 @@
+diff --git a/src/cache-key.js b/src/cache-key.js
+index 0d6eb12..f8d54ef 100644
+--- a/src/cache-key.js
++++ b/src/cache-key.js
+@@ -4,7 +4,7 @@ function buildCacheKey(baseKey, params = {}) {
+   const entries = Object.entries(params)
+-    .map(([key, value]) => `${key}=${value}`)
++    .map(([key, value]) => `${key}=${value}`)
+     .join("&");
+ 
+   return entries ? `${baseKey}?${entries}` : baseKey;

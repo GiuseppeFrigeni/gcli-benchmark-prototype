@@ -1,6 +1,7 @@
 {
   "id": "node-router-path-normalization",
   "title": "Normalize trailing slashes in router matches",
+  "taskKind": "workspace-edit",
   "category": "debugging",
   "difficulty": "easy",
   "language": "javascript",

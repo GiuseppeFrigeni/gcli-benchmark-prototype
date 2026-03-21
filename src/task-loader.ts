@@ -4,6 +4,7 @@ import { join } from "node:path";
 import {
   TaskCategory,
   TaskDifficulty,
+  TaskKind,
   TaskPolicy,
   TaskScope,
   TaskTaxonomy,
@@ -14,6 +15,7 @@ import { readJsonFile } from "./utils";
 interface TaskManifest {
   id: unknown;
   title: unknown;
+  taskKind: unknown;
   category: unknown;
   difficulty: unknown;
   language: unknown;
@@ -32,6 +34,7 @@ const VALID_CATEGORIES: TaskCategory[] = [
   "new-feature",
   "code-review",
 ];
+const VALID_TASK_KINDS: TaskKind[] = ["workspace-edit", "prompt-output", "tool-use"];
 const VALID_SCOPES: TaskScope[] = ["single-file", "multi-file"];
 const VALID_DIFFICULTIES: TaskDifficulty[] = ["easy", "medium", "hard"];
 const VALID_POLICIES: TaskPolicy[] = ["always", "usually"];
@@ -92,6 +95,14 @@ function parseCategory(value: unknown, location: string): TaskCategory {
     throw new Error(`${location}: field 'category' must be one of ${VALID_CATEGORIES.join(", ")}`);
   }
   return category as TaskCategory;
+}
+
+function parseTaskKind(value: unknown, location: string): TaskKind {
+  const taskKind = requireString(value, "taskKind", location);
+  if (!VALID_TASK_KINDS.includes(taskKind as TaskKind)) {
+    throw new Error(`${location}: field 'taskKind' must be one of ${VALID_TASK_KINDS.join(", ")}`);
+  }
+  return taskKind as TaskKind;
 }
 
 function parseDifficulty(value: unknown, location: string): TaskDifficulty {
@@ -164,11 +175,21 @@ async function assertExists(path: string, description: string, location: string)
   }
 }
 
+async function pathExists(path: string): Promise<boolean> {
+  try {
+    await access(path, constants.F_OK);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function parseTask(taskDir: string, manifestPath: string): Promise<WorkspaceTask> {
   const raw = await readJsonFile<TaskManifest>(manifestPath);
   const location = manifestPath;
   const id = requireString(raw.id, "id", location);
   const title = requireString(raw.title, "title", location);
+  const taskKind = parseTaskKind(raw.taskKind, location);
   const language = requireString(raw.language, "language", location);
   const problemStatementFile = requireString(raw.problemStatementFile, "problemStatementFile", location);
   const promptAddendum = asOptionalString(raw.promptAddendum, "promptAddendum", location);
@@ -177,14 +198,31 @@ async function parseTask(taskDir: string, manifestPath: string): Promise<Workspa
   const issuePath = join(taskDir, problemStatementFile);
   const repoDir = join(taskDir, "repo");
   const goldPatchPath = join(taskDir, "gold.patch");
+  const goldStdoutPath = join(taskDir, "gold.stdout.txt");
+  const goldStderrPath = join(taskDir, "gold.stderr.txt");
+  const goldActivityLogPath = join(taskDir, "gold.activity.jsonl");
 
   await assertExists(issuePath, "problem statement file", location);
-  await assertExists(repoDir, "repo directory", location);
-  await assertExists(goldPatchPath, "gold patch", location);
+
+  const hasRepoDir = await pathExists(repoDir);
+  const hasGoldPatch = await pathExists(goldPatchPath);
+  const hasGoldStdout = await pathExists(goldStdoutPath);
+  const hasGoldStderr = await pathExists(goldStderrPath);
+  const hasGoldActivityLog = await pathExists(goldActivityLogPath);
+
+  if (taskKind === "workspace-edit") {
+    await assertExists(repoDir, "repo directory", location);
+    await assertExists(goldPatchPath, "gold patch", location);
+  } else if (taskKind === "prompt-output") {
+    await assertExists(goldStdoutPath, "gold stdout", location);
+  } else if (taskKind === "tool-use") {
+    await assertExists(goldActivityLogPath, "gold activity log", location);
+  }
 
   return {
     id,
     title,
+    taskKind,
     category: parseCategory(raw.category, location),
     difficulty: parseDifficulty(raw.difficulty, location),
     language,
@@ -196,9 +234,12 @@ async function parseTask(taskDir: string, manifestPath: string): Promise<Workspa
     verification: parseVerification(raw.verification, location),
     policy: parsePolicy(raw.policy, location),
     taskDir,
-    repoDir,
+    repoDir: hasRepoDir ? repoDir : undefined,
     issuePath,
-    goldPatchPath,
+    goldPatchPath: hasGoldPatch ? goldPatchPath : undefined,
+    goldStdoutPath: hasGoldStdout ? goldStdoutPath : undefined,
+    goldStderrPath: hasGoldStderr ? goldStderrPath : undefined,
+    goldActivityLogPath: hasGoldActivityLog ? goldActivityLogPath : undefined,
   };
 }
 

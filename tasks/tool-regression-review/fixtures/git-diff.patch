@@ -1,0 +1,13 @@
+diff --git a/src/headers.js b/src/headers.js
+index 4b9d312..f31a10d 100644
+--- a/src/headers.js
++++ b/src/headers.js
+@@ -1,7 +1,8 @@
+ function mergeDefaults(defaults, overrides = {}) {
+-  const merged = defaults;
++  const merged = defaults;
+   for (const [key, value] of Object.entries(overrides)) {
+     if (value == null) {
+       continue;
+     }
+     merged[key.toLowerCase()] = value;

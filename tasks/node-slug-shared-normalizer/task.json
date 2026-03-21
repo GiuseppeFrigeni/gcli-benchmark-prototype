@@ -1,6 +1,7 @@
 {
   "id": "node-slug-shared-normalizer",
   "title": "Refactor slug generation to use a shared normalizer",
+  "taskKind": "workspace-edit",
   "category": "refactoring",
   "difficulty": "easy",
   "language": "javascript",

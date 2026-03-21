@@ -2,7 +2,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { GeminiCliAgent } from "./gemini-adapter";
 import { GoldPatchAgent, NoopAgent } from "./mock-agents";
-import { buildTaxonomyCoverageSummary } from "./task-metrics";
+import { buildTaskKindCoverageSummary, buildTaxonomyCoverageSummary } from "./task-metrics";
 import { loadTasks } from "./task-loader";
 import { detectRegressions, loadBaselineIfExists, makeBaseline, saveBaseline } from "./regression";
 import { saveReports } from "./report";
@@ -326,6 +326,11 @@ function printSummary(summary: EvaluationRun["summary"], config: RunConfig, regr
       `- ${category.category}: ${category.passed}/${category.total} (${(category.passRate * 100).toFixed(2)}%), failed ${category.failed}, infra ${category.infraFailed}, invalid ${category.invalidTasks}`,
     );
   }
+  if (summary.taskKinds.length > 0) {
+    console.log(
+      `Task kinds: ${summary.taskKinds.map((entry) => `${entry.taskKind}=${entry.count}`).join(", ")}`,
+    );
+  }
   console.log(`Regression findings: ${regressionsCount}`);
 }
 
@@ -350,10 +355,15 @@ async function listTasks(options: CliOptions): Promise<void> {
     categories.set(task.category, (categories.get(task.category) ?? 0) + 1);
     languages.set(task.language, (languages.get(task.language) ?? 0) + 1);
   }
+  const taskKindCoverage = buildTaskKindCoverageSummary(tasks);
   const taxonomyCoverage = buildTaxonomyCoverageSummary(tasks);
 
   printCounts("Categories", [...categories.entries()].sort((a, b) => a[0].localeCompare(b[0])));
   printCounts("Languages", [...languages.entries()].sort((a, b) => a[0].localeCompare(b[0])));
+  printCounts(
+    "Task kinds",
+    taskKindCoverage.map((entry): [string, number] => [entry.taskKind, entry.count]),
+  );
   printCounts(
     "Taxonomy scopes",
     taxonomyCoverage.scopes.map((entry): [string, number] => [entry.scope, entry.count]),

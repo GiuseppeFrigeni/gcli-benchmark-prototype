@@ -1,0 +1,28 @@
+{
+  "id": "node-config-short-flags",
+  "title": "Honor short CLI flags in config loading",
+  "taskKind": "workspace-edit",
+  "category": "debugging",
+  "difficulty": "medium",
+  "language": "javascript",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "api-compat",
+      "config-precedence",
+      "flag-parsing"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Preserve the existing long-flag behavior and environment fallbacks while making the short aliases work too.",
+  "verification": {
+    "failToPass": [
+      "node --test test/short-flags.test.js"
+    ],
+    "passToPass": [
+      "node --test test/long-flags.test.js"
+    ]
+  },
+  "policy": "always"
+}

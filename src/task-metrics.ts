@@ -3,6 +3,8 @@ import {
   ScopeCoverageSummary,
   TagCoverageSummary,
   TaskEfficiency,
+  TaskKind,
+  TaskKindCoverageSummary,
   TaskScope,
   TaskTaxonomy,
   TaxonomyCoverageSummary,
@@ -19,6 +21,22 @@ function sortTags(tags: Map<string, number>): TagCoverageSummary[] {
   return [...tags.entries()]
     .map(([tag, count]) => ({ tag, count }))
     .sort((a, b) => a.tag.localeCompare(b.tag));
+}
+
+function sortTaskKinds(taskKinds: Map<TaskKind, number>): TaskKindCoverageSummary[] {
+  return [...taskKinds.entries()]
+    .map(([taskKind, count]) => ({ taskKind, count }))
+    .sort((a, b) => a.taskKind.localeCompare(b.taskKind));
+}
+
+export function buildTaskKindCoverageSummary(
+  entries: Array<{ taskKind: TaskKind }>,
+): TaskKindCoverageSummary[] {
+  const taskKinds = new Map<TaskKind, number>();
+  for (const entry of entries) {
+    taskKinds.set(entry.taskKind, (taskKinds.get(entry.taskKind) ?? 0) + 1);
+  }
+  return sortTaskKinds(taskKinds);
 }
 
 export function buildTaxonomyCoverageSummary(

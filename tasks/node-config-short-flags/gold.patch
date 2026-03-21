@@ -1,0 +1,39 @@
+diff --git a/src/argv.js b/src/argv.js
+index 4aaf9eb..f0d1ef8 100644
+--- a/src/argv.js
++++ b/src/argv.js
+@@ -8,10 +8,10 @@ function parseArgs(argv = []) {
+       parsed.port = next;
+       i += 1;
+       continue;
+     }
+     if (current === "-H") {
+-      parsed.hostname = next;
++      parsed.host = next;
+       i += 1;
+       continue;
+     }
+     if (current === "-p") {
+-      parsed.listenPort = next;
++      parsed.port = next;
+       i += 1;
+     }
+   }
+diff --git a/src/config.js b/src/config.js
+index 484f7e1..e8fbf8a 100644
+--- a/src/config.js
++++ b/src/config.js
+@@ -1,8 +1,10 @@
+ const { parseArgs } = require("./argv");
+ 
+ function loadConfig(argv = [], env = process.env) {
+   const args = parseArgs(argv);
++  const host = args.host ?? args.hostname;
++  const port = args.port ?? args.listenPort;
+   return {
+-    host: args.host || env.APP_HOST || "127.0.0.1",
+-    port: Number(args.port || env.APP_PORT || 3000),
++    host: host || env.APP_HOST || "127.0.0.1",
++    port: Number(port || env.APP_PORT || 3000),
+   };
+ }

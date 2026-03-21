@@ -1,0 +1,7 @@
+TAP version 13
+# Subtest: mergeDefaults does not mutate the caller defaults object
+not ok 1 - mergeDefaults does not mutate the caller defaults object
+  ---
+  error: |-
+    Expected "x-debug" not to exist on the original defaults object.
+  ...

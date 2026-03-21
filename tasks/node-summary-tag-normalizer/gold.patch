@@ -1,0 +1,35 @@
+diff --git a/src/index.js b/src/index.js
+index 9dc4f4a..257b805 100644
+--- a/src/index.js
++++ b/src/index.js
+@@ -1,10 +1,8 @@
++const { normalizeTag } = require("./normalize-tag");
++
+ function hasTag(input = "", wanted = "") {
+-  const normalizedWanted = wanted.trim().toLowerCase();
+-  return input
+-    .split(",")
+-    .map((tag) => tag.trim().toLowerCase())
+-    .filter(Boolean)
+-    .includes(normalizedWanted);
++  const normalizedWanted = normalizeTag(wanted);
++  return input.split(",").map(normalizeTag).filter(Boolean).includes(normalizedWanted);
+ }
+ 
+ module.exports = { hasTag };
+diff --git a/src/summary.js b/src/summary.js
+index 6c6114f..98dcf72 100644
+--- a/src/summary.js
++++ b/src/summary.js
+@@ -1,8 +1,7 @@
++const { normalizeTag } = require("./normalize-tag");
++
+ function listTags(input = "") {
+-  return input
+-    .split(",")
+-    .map((tag) => tag.trim())
+-    .filter(Boolean);
++  return input.split(",").map(normalizeTag).filter(Boolean);
+ }
+ 
+ module.exports = { listTags };

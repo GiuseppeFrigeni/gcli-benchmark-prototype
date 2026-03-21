@@ -1,0 +1,2 @@
+{"functionCall":{"name":"read_file","args":{"file_path":"src/router.js"}}}
+{"functionCall":{"name":"read_file","args":{"file_path":"test/trailing-slash.test.js"}}}

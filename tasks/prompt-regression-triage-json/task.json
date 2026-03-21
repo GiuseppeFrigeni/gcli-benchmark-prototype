@@ -1,0 +1,28 @@
+{
+  "id": "prompt-regression-triage-json",
+  "title": "Return strict JSON regression triage from benchmark artifacts",
+  "taskKind": "prompt-output",
+  "category": "debugging",
+  "difficulty": "medium",
+  "language": "text",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "artifact-triage",
+      "strict-output",
+      "regression-reporting"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Use only these local materials: ${taskDir}/fixtures/latest-results.json, ${taskDir}/fixtures/latest-report.md, and ${taskDir}/fixtures/baseline.json.",
+  "verification": {
+    "failToPass": [
+      "node \"${taskDir}/verify-json-output.js\" \"${artifactDir}/agent-stdout.txt\" \"${taskDir}/expected.json\""
+    ],
+    "passToPass": [
+      "node \"${taskDir}/verify-fixtures.js\" \"${taskDir}/fixtures/latest-results.json\" \"${taskDir}/fixtures/latest-report.md\" \"${taskDir}/fixtures/baseline.json\""
+    ]
+  },
+  "policy": "always"
+}

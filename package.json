@@ -2,13 +2,14 @@
   "name": "gcli-benchmark-prototype",
   "version": "0.1.0",
   "private": true,
-  "description": "Prototype contributor-facing eval harness for Gemini CLI, built around deterministic repo-backed tasks, objective verification, and regression reporting",
+  "description": "Contributor-facing eval harness for Gemini CLI, built around deterministic tasks, objective verification, and regression reporting",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "run": "npm run build && node dist/cli.js run",
     "list": "npm run build && node dist/cli.js list",
     "dev:run": "tsx src/cli.ts run",
     "dev:list": "tsx src/cli.ts list",
+    "docs:examples": "tsx src/generate-doc-examples.ts",
     "test": "npm run build && node tests/benchmark.test.js",
     "benchmark": "npm run run",
     "baseline:update": "tsx src/cli.ts run --update-baseline"

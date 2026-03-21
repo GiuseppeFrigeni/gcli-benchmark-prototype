@@ -1,6 +1,7 @@
 {
   "id": "node-cache-key-review",
   "title": "Address review feedback for stable cache keys",
+  "taskKind": "workspace-edit",
   "category": "code-review",
   "difficulty": "easy",
   "language": "javascript",

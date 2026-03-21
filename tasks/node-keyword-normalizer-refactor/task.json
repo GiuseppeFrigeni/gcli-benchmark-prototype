@@ -1,6 +1,7 @@
 {
   "id": "node-keyword-normalizer-refactor",
   "title": "Refactor keyword parsing to share normalization logic",
+  "taskKind": "workspace-edit",
   "category": "refactoring",
   "difficulty": "easy",
   "language": "javascript",

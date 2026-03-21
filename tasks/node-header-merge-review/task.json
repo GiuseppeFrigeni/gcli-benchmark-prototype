@@ -1,6 +1,7 @@
 {
   "id": "node-header-merge-review",
   "title": "Address code review feedback for header merging",
+  "taskKind": "workspace-edit",
   "category": "code-review",
   "difficulty": "easy",
   "language": "javascript",

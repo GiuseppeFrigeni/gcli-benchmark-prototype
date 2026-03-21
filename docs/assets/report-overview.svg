@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="520" viewBox="0 0 980 520">
+  <rect width="100%" height="100%" rx="24" fill="#0f172a"/>
+  <rect x="16" y="16" width="948" height="488" rx="18" fill="#111827" stroke="#38bdf8" stroke-width="2"/>
+  <circle cx="42" cy="44" r="8" fill="#38bdf8"/>
+  <circle cx="66" cy="44" r="8" fill="#f59e0b"/>
+  <circle cx="90" cy="44" r="8" fill="#10b981"/>
+  <text x="120" y="50" fill="#f8fafc" font-family="Consolas, 'Courier New', monospace" font-size="20">Mock Report Overview</text>
+  <text x="36" y="96" fill="#d8dee9" font-family="Consolas, 'Courier New', monospace" font-size="16"># Gemini CLI Contributor Eval Report</text>
+  <text x="36" y="120" fill="#d8dee9" font-family="Consolas, 'Courier New', monospace" font-size="16">Generated at: 2026-03-21T09:00:00.000Z</text>
+  <text x="36" y="144" fill="#d8dee9" font-family="Consolas, 'Courier New', monospace" font-size="16">Tasks: 14</text>
+  <text x="36" y="168" fill="#d8dee9" font-family="Consolas, 'Courier New', monospace" font-size="16">Passed: 14 (100.00%)</text>
+  <text x="36" y="214" fill="#d8dee9" font-family="Consolas, 'Courier New', monospace" font-size="16">## Task Kind Coverage</text>
+  <text x="36" y="238" fill="#d8dee9" font-family="Consolas, 'Courier New', monospace" font-size="16">Task Kinds: prompt-output=2, tool-use=2, workspace-edit=10</text>
+  <text x="36" y="284" fill="#d8dee9" font-family="Consolas, 'Courier New', monospace" font-size="16">## Taxonomy Coverage</text>
+  <text x="36" y="308" fill="#d8dee9" font-family="Consolas, 'Courier New', monospace" font-size="16">Scopes: multi-file=7, single-file=7</text>
+  <text x="36" y="332" fill="#d8dee9" font-family="Consolas, 'Courier New', monospace" font-size="16">Tags: review-feedback=4, shared-logic=3, tool-use=2</text>
+  <text x="36" y="378" fill="#d8dee9" font-family="Consolas, 'Courier New', monospace" font-size="16">## Task Results</text>
+  <text x="36" y="402" fill="#d8dee9" font-family="Consolas, 'Courier New', monospace" font-size="16">node-config-precedence | workspace-edit | debugging | passed</text>
+  <text x="36" y="426" fill="#d8dee9" font-family="Consolas, 'Courier New', monospace" font-size="16">prompt-regression-triage-json | prompt-output | debugging | passed</text>
+  <text x="36" y="450" fill="#d8dee9" font-family="Consolas, 'Courier New', monospace" font-size="16">tool-router-root-cause | tool-use | debugging | passed</text>
+</svg>

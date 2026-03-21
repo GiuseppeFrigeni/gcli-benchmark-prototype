@@ -1,0 +1,1 @@
+Root cause: Router.match looks up the raw incoming path instead of normalizing it first, so `/docs/` misses the `/docs` route (src/router.js).

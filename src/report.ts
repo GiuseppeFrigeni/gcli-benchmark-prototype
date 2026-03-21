@@ -18,6 +18,12 @@ function formatTaxonomy(task: EvaluationRun["tasks"][number]): string {
   return `${task.taxonomy.scope}; ${task.taxonomy.tags.join(", ")}`;
 }
 
+function formatTaskKinds(run: EvaluationRun): string {
+  return run.summary.taskKinds.length === 0
+    ? "none"
+    : run.summary.taskKinds.map((entry) => `${entry.taskKind}=${entry.count}`).join(", ");
+}
+
 export function renderMarkdownReport(run: EvaluationRun): string {
   const lines: string[] = [];
   lines.push("# Gemini CLI Contributor Eval Report");
@@ -60,6 +66,11 @@ export function renderMarkdownReport(run: EvaluationRun): string {
       `| ${category.category} | ${category.passed}/${category.total} | ${category.failed} | ${category.infraFailed} | ${category.invalidTasks} | ${formatPct(category.passRate)} |`,
     );
   }
+  lines.push("");
+
+  lines.push("## Task Kind Coverage");
+  lines.push("");
+  lines.push(`Task Kinds: ${formatTaskKinds(run)}`);
   lines.push("");
 
   lines.push("## Taxonomy Coverage");
@@ -123,14 +134,15 @@ export function renderMarkdownReport(run: EvaluationRun): string {
 
   lines.push("## Task Results");
   lines.push("");
-  lines.push("| Task | Category | Language | Taxonomy | Policy | Status | Harness ms | Agent ms | Files | Changed Lines | Artifacts | Notes |");
-  lines.push("| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |");
+  lines.push("| Task | Kind | Category | Language | Taxonomy | Policy | Status | Harness ms | Agent ms | Files | Changed Lines | Artifacts | Notes |");
+  lines.push("| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |");
   for (const task of run.tasks) {
     const artifacts = [
       task.artifacts.diffPath,
       task.artifacts.agentStdoutPath,
       task.artifacts.agentStderrPath,
       task.artifacts.activityLogPath,
+      task.artifacts.activitySummaryPath,
     ]
       .filter((value, idx, all) => value && all.indexOf(value) === idx)
       .map((value) => relativePath(task.artifacts.artifactDir, value))
@@ -139,7 +151,7 @@ export function renderMarkdownReport(run: EvaluationRun): string {
     const filesChanged = task.efficiency ? String(task.efficiency.filesChanged) : "-";
     const changedLines = task.efficiency ? String(task.efficiency.changedLines) : "-";
     lines.push(
-      `| ${task.taskId} | ${task.category} | ${task.language} | ${formatTaxonomy(task)} | ${task.policy} | ${task.status} | ${task.durationMs} | ${agentDuration} | ${filesChanged} | ${changedLines} | ${artifacts || "-"} | ${task.notes.join("; ") || "-"} |`,
+      `| ${task.taskId} | ${task.taskKind} | ${task.category} | ${task.language} | ${formatTaxonomy(task)} | ${task.policy} | ${task.status} | ${task.durationMs} | ${agentDuration} | ${filesChanged} | ${changedLines} | ${artifacts || "-"} | ${task.notes.join("; ") || "-"} |`,
     );
   }
   lines.push("");

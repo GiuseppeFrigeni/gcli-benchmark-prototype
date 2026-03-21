@@ -1,0 +1,10 @@
+{
+  "generatedAt": "2026-03-20T08:00:00.000Z",
+  "total": 14,
+  "overallPassRate": 0.9286,
+  "taskStatuses": {
+    "node-cache-key-review": "passed",
+    "node-header-merge-review": "passed",
+    "node-summary-tag-normalizer": "passed"
+  }
+}

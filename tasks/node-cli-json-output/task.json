@@ -1,6 +1,7 @@
 {
   "id": "node-cli-json-output",
   "title": "Add JSON output mode to the CLI formatter",
+  "taskKind": "workspace-edit",
   "category": "new-feature",
   "difficulty": "easy",
   "language": "javascript",

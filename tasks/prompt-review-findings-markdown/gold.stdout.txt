@@ -1,0 +1,2 @@
+- [high] [src/cache-key.js:7] The cache key still uses raw object iteration order, so equivalent param objects can miss the cache.
+- [medium] [test/stable-param-order.test.js:8] The regression test shows insertion order still changes the rendered key, which confirms the behavioral gap.

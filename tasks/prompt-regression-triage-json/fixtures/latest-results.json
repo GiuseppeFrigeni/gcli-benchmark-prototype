@@ -1,0 +1,32 @@
+{
+  "summary": {
+    "generatedAt": "2026-03-21T08:00:00.000Z",
+    "total": 14,
+    "passed": 9,
+    "failed": 3,
+    "infraFailed": 2,
+    "invalidTasks": 0,
+    "passRate": 0.6429
+  },
+  "tasks": [
+    {
+      "taskId": "node-cache-key-review",
+      "status": "failed"
+    },
+    {
+      "taskId": "node-header-merge-review",
+      "status": "failed"
+    },
+    {
+      "taskId": "node-summary-tag-normalizer",
+      "status": "failed"
+    }
+  ],
+  "regressions": [
+    {
+      "scope": "overall-pass-rate",
+      "severity": "high",
+      "message": "Overall pass rate regressed."
+    }
+  ]
+}

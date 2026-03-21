@@ -1,0 +1,28 @@
+{
+  "id": "node-cli-category-filter",
+  "title": "Add category filtering to the tiny reporter CLI",
+  "taskKind": "workspace-edit",
+  "category": "new-feature",
+  "difficulty": "medium",
+  "language": "javascript",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "api-compat",
+      "output-format",
+      "filtering"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Support a repeatable `--category <name>` flag while keeping the existing unfiltered output exactly the same when the flag is absent.",
+  "verification": {
+    "failToPass": [
+      "node --test test/category-filter.test.js"
+    ],
+    "passToPass": [
+      "node --test test/default-output.test.js"
+    ]
+  },
+  "policy": "always"
+}
