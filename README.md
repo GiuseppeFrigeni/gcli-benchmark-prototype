@@ -1,12 +1,12 @@
 # gcli-benchmark-prototype
 
-Prototype contributor-facing eval harness for Gemini CLI. It runs deterministic repo-backed tasks, verifies outcomes with objective checks, and surfaces regressions with inspectable artifacts.
+Prototype contributor-facing eval harness for Gemini CLI, built around deterministic repo-backed tasks, objective verification, and regression reporting.
 
-## Why this matters for Gemini CLI contributors
+## Why this matters for contributors
 
 - repeatable local validation before PRs
 - inspectable artifacts for debugging failures
-- a path to grow coverage for debugging, code review, refactoring, and prompt/tool behavior
+- a path to expand quality coverage with deterministic fixtures
 
 See the [contributor eval roadmap](./docs/ROADMAP.md) for the planned growth path.
 
