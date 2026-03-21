@@ -4,6 +4,13 @@
   "category": "refactoring",
   "difficulty": "easy",
   "language": "javascript",
+  "taxonomy": {
+    "scope": "single-file",
+    "tags": [
+      "api-compat",
+      "shared-logic"
+    ]
+  },
   "timeoutMs": 120000,
   "problemStatementFile": "issue.md",
   "promptAddendum": "Keep the existing exports and case-insensitive lookup behavior intact.",

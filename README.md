@@ -1,17 +1,27 @@
 # gcli-benchmark-prototype
 
-Prototype local workspace benchmark for Gemini CLI agents, implemented in TypeScript + Node.js.
+External contributor harness for deterministic behavioral/evals-style benchmarking of Gemini CLI on repo-backed tasks, implemented in TypeScript + Node.js.
 
-## Why this project
+## Why this matters for Gemini CLI OSS contributors
 
-- Run repo-backed coding tasks against Gemini CLI
-- Judge success with objective verification commands, not keyword heuristics
-- Detect regressions against a baseline
-- Generate JSON + Markdown reports with per-task artifacts
+- coverage gaps
+- repeatable local validation
+- PR/regression visibility
 
-## What this is
+## What this harness does
 
-This project is intentionally `SWE-bench Verified-like`, not a full reproduction of the official Docker-based benchmark. It uses local fixture repositories that run on Node 20+ without network access or per-task installs.
+- Runs repo-backed coding tasks against Gemini CLI
+- Judges success with objective verification commands instead of keyword heuristics
+- Compares pass/fail outcomes against a saved baseline
+- Produces JSON, Markdown, and per-task artifacts contributors can inspect locally or in CI
+
+## Mapping the prototype to current Gemini CLI gaps
+
+- seed support for debugging and code-review eval-style tasks
+- a starter taxonomy for slicing coverage quality
+- regression artifacts contributors can inspect locally and in CI
+
+This is intentionally a seed framework contributors can extend, not a complete benchmark solution. Today it includes 7 seed tasks, mostly easy JavaScript fixtures, they are currently single-file in scope, and efficiency tracking is informational only with no efficiency gating yet.
 
 ## Installation
 
@@ -132,6 +142,8 @@ Output files:
 - archived timestamped copies in `reports/`
 - per-task artifacts in `reports/artifacts/<run-id>/`
 
+The JSON output includes per-task taxonomy and efficiency details plus summary-level taxonomy coverage and efficiency aggregates. The Markdown report mirrors that with compact contributor-facing sections.
+
 ## Included Tasks
 
 - `node-config-precedence`
@@ -149,14 +161,18 @@ Current category coverage:
 - `refactoring`: 2 tasks
 - `code-review`: 2 tasks
 
+Current taxonomy scope coverage:
+
+- `single-file`: 7 tasks
+
 ## Roadmap
 
-Short-term roadmap for growing this into a stronger GSoC-ready framework:
+Short-term roadmap for growing this into a stronger contributor eval harness:
 
-1. Expand from 7 seed tasks to 15-20 deterministic fixtures covering more languages and failure modes.
-2. Add richer regression policies such as per-category thresholds, flake tracking, and model-to-model comparisons.
-3. Publish PR-friendly reports or artifacts from CI so contributors can inspect regressions quickly.
-4. Grow toward a 50+ task suite with contributor templates and documented baseline refreshes.
+1. Expand from 7 seed tasks to 15-20 deterministic fixtures, especially more debugging and code-review tasks.
+2. Add harder multi-file reasoning tasks and richer taxonomy slicing.
+3. Strengthen efficiency tracking and PR-facing regression visibility.
+4. Grow toward a 50+ task suite with contributor templates and repeatable baseline refreshes.
 
 See [docs/ROADMAP.md](./docs/ROADMAP.md) for the fuller milestone plan.
 

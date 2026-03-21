@@ -4,6 +4,14 @@
   "category": "code-review",
   "difficulty": "easy",
   "language": "javascript",
+  "taxonomy": {
+    "scope": "single-file",
+    "tags": [
+      "behavior-preservation",
+      "non-mutating-change",
+      "review-feedback"
+    ]
+  },
   "timeoutMs": 120000,
   "problemStatementFile": "issue.md",
   "promptAddendum": "Do not change the function name, and continue ignoring nullish override values.",

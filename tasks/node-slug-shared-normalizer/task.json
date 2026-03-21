@@ -4,6 +4,13 @@
   "category": "refactoring",
   "difficulty": "easy",
   "language": "javascript",
+  "taxonomy": {
+    "scope": "single-file",
+    "tags": [
+      "behavior-preservation",
+      "shared-logic"
+    ]
+  },
   "timeoutMs": 120000,
   "problemStatementFile": "issue.md",
   "promptAddendum": "Preserve the current public function names and output format while making slug behavior consistent.",

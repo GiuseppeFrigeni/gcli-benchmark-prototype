@@ -7,6 +7,7 @@ export type TaskCategory =
 export type TaskDifficulty = "easy" | "medium" | "hard";
 
 export type TaskPolicy = "always" | "usually";
+export type TaskScope = "single-file" | "multi-file";
 
 export type TaskStatus = "passed" | "failed" | "infra_failed" | "invalid_task";
 export type AgentMode = "gemini-cli" | "gold-patch" | "noop";
@@ -16,12 +17,26 @@ export interface VerificationConfig {
   passToPass: string[];
 }
 
+export interface TaskTaxonomy {
+  scope: TaskScope;
+  tags: string[];
+}
+
+export interface TaskEfficiency {
+  agentDurationMs: number;
+  filesChanged: number;
+  insertions: number;
+  deletions: number;
+  changedLines: number;
+}
+
 export interface WorkspaceTask {
   id: string;
   title: string;
   category: TaskCategory;
   difficulty: TaskDifficulty;
   language: string;
+  taxonomy?: TaskTaxonomy;
   timeoutMs?: number;
   problemStatementFile: string;
   promptAddendum?: string;
@@ -88,9 +103,11 @@ export interface TaskRunResult {
   category: TaskCategory;
   difficulty: TaskDifficulty;
   language: string;
+  taxonomy?: TaskTaxonomy;
   policy: TaskPolicy;
   status: TaskStatus;
   durationMs: number;
+  efficiency?: TaskEfficiency;
   notes: string[];
   preflight: VerificationSnapshot;
   verification?: VerificationSnapshot;
@@ -112,6 +129,32 @@ export interface CategorySummary {
   passRate: number;
 }
 
+export interface ScopeCoverageSummary {
+  scope: TaskScope;
+  count: number;
+}
+
+export interface TagCoverageSummary {
+  tag: string;
+  count: number;
+}
+
+export interface TaxonomyCoverageSummary {
+  tasksWithTaxonomy: number;
+  tasksWithoutTaxonomy: number;
+  scopes: ScopeCoverageSummary[];
+  tags: TagCoverageSummary[];
+}
+
+export interface EfficiencySummary {
+  measuredTasks: number;
+  averageAgentDurationMs: number;
+  averageFilesChanged: number;
+  averageChangedLines: number;
+  totalInsertions: number;
+  totalDeletions: number;
+}
+
 export interface EvaluationSummary {
   generatedAt: string;
   total: number;
@@ -122,6 +165,8 @@ export interface EvaluationSummary {
   passRate: number;
   averageDurationMs: number;
   categories: CategorySummary[];
+  taxonomyCoverage: TaxonomyCoverageSummary;
+  efficiency: EfficiencySummary;
 }
 
 export interface BaselineMetrics {

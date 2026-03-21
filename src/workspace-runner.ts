@@ -1,10 +1,12 @@
 import { spawn } from "node:child_process";
 import { mkdtemp } from "node:fs/promises";
 import { join } from "node:path";
+import { buildEfficiencySummary, buildTaxonomyCoverageSummary } from "./task-metrics";
 import {
   CategorySummary,
   EvaluationSummary,
   TaskAgent,
+  TaskEfficiency,
   TaskRunResult,
   VerificationCommandResult,
   VerificationSnapshot,
@@ -188,6 +190,39 @@ async function captureDiff(workspaceDir: string, artifactDir: string): Promise<s
   return diffPath;
 }
 
+function parseDiffStatValue(value: string): number {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+async function captureEfficiency(
+  workspaceDir: string,
+  agentDurationMs: number,
+): Promise<TaskEfficiency> {
+  const result = await runShellCommand("git diff --numstat --no-ext-diff", workspaceDir, 30000);
+  let filesChanged = 0;
+  let insertions = 0;
+  let deletions = 0;
+
+  for (const line of result.stdout.split(/\r?\n/)) {
+    if (line.trim() === "") {
+      continue;
+    }
+    filesChanged += 1;
+    const [added = "", removed = ""] = line.split("\t");
+    insertions += parseDiffStatValue(added);
+    deletions += parseDiffStatValue(removed);
+  }
+
+  return {
+    agentDurationMs,
+    filesChanged,
+    insertions,
+    deletions,
+    changedLines: insertions + deletions,
+  };
+}
+
 function buildPrompt(task: WorkspaceTask, problemStatement: string): string {
   const sections = [
     "You are working inside a local git repository.",
@@ -220,6 +255,7 @@ function makeResult(
   diffPath: string,
   preflight: VerificationSnapshot,
   agent: TaskRunResult["agent"],
+  efficiency?: TaskEfficiency,
   verification?: VerificationSnapshot,
   workspacePath?: string,
 ): TaskRunResult {
@@ -229,9 +265,11 @@ function makeResult(
     category: task.category,
     difficulty: task.difficulty,
     language: task.language,
+    taxonomy: task.taxonomy,
     policy: task.policy,
     status,
     durationMs,
+    efficiency,
     notes,
     preflight,
     verification,
@@ -283,6 +321,7 @@ async function runTask(
       { failToPass: setupResults, passToPass: [] },
       { exitCode: null, timedOut: false },
       undefined,
+      undefined,
       options.keepWorkspaces ? workspaceDir : undefined,
     );
     if (!options.keepWorkspaces) {
@@ -306,6 +345,7 @@ async function runTask(
         diffPath,
         { failToPass: taskSetup, passToPass: [] },
         { exitCode: null, timedOut: false },
+        undefined,
         undefined,
         options.keepWorkspaces ? workspaceDir : undefined,
       );
@@ -359,6 +399,7 @@ async function runTask(
       preflight,
       { exitCode: null, timedOut: false },
       undefined,
+      undefined,
       options.keepWorkspaces ? workspaceDir : undefined,
     );
     if (!options.keepWorkspaces) {
@@ -375,6 +416,7 @@ async function runTask(
     timeoutMs: task.timeoutMs ?? options.defaultTaskTimeoutMs,
   });
   const diffPath = await captureDiff(workspaceDir, artifactDir);
+  const efficiency = await captureEfficiency(workspaceDir, agentResult.durationMs);
 
   if (agentResult.error || agentResult.exitCode !== 0 || agentResult.timedOut) {
     const result = makeResult(
@@ -391,6 +433,7 @@ async function runTask(
         timedOut: agentResult.timedOut,
         error: agentResult.error,
       },
+      efficiency,
       undefined,
       options.keepWorkspaces ? workspaceDir : undefined,
     );
@@ -435,6 +478,7 @@ async function runTask(
       timedOut: agentResult.timedOut,
       error: agentResult.error,
     },
+    efficiency,
     verification,
     options.keepWorkspaces ? workspaceDir : undefined,
   );
@@ -505,6 +549,8 @@ export async function runTasks(
     passRate: roundTo(total === 0 ? 0 : passed / total, 4),
     averageDurationMs: roundTo(averageDurationMs, 2),
     categories: buildCategorySummaries(results),
+    taxonomyCoverage: buildTaxonomyCoverageSummary(results),
+    efficiency: buildEfficiencySummary(results),
   };
 
   return { summary, tasks: results };

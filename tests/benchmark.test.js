@@ -90,6 +90,78 @@ async function testTaskLoaderValidation() {
     await assert.rejects(() => loadTasks(root), /missing problem statement file/);
   });
 
+  await withTempDir("gcli-loader-valid-taxonomy", async (root) => {
+    await createBasicTask(
+      root,
+      "task-a",
+      {
+        ...baseManifest,
+        id: "valid-taxonomy",
+        taxonomy: {
+          scope: "single-file",
+          tags: ["behavior-preservation", "shared-logic"],
+        },
+      },
+      repoFiles,
+    );
+    const tasks = await loadTasks(root);
+    assert.deepEqual(tasks[0].taxonomy, {
+      scope: "single-file",
+      tags: ["behavior-preservation", "shared-logic"],
+    });
+  });
+
+  await withTempDir("gcli-loader-invalid-taxonomy-scope", async (root) => {
+    await createBasicTask(
+      root,
+      "task-a",
+      {
+        ...baseManifest,
+        id: "invalid-taxonomy-scope",
+        taxonomy: {
+          scope: "repo-wide",
+          tags: ["behavior-preservation"],
+        },
+      },
+      repoFiles,
+    );
+    await assert.rejects(() => loadTasks(root), /taxonomy.scope/);
+  });
+
+  await withTempDir("gcli-loader-empty-taxonomy-tags", async (root) => {
+    await createBasicTask(
+      root,
+      "task-a",
+      {
+        ...baseManifest,
+        id: "empty-taxonomy-tags",
+        taxonomy: {
+          scope: "single-file",
+          tags: [],
+        },
+      },
+      repoFiles,
+    );
+    await assert.rejects(() => loadTasks(root), /taxonomy.tags/);
+  });
+
+  await withTempDir("gcli-loader-nonstring-taxonomy-tags", async (root) => {
+    await createBasicTask(
+      root,
+      "task-a",
+      {
+        ...baseManifest,
+        id: "nonstring-taxonomy-tags",
+        taxonomy: {
+          scope: "single-file",
+          tags: ["behavior-preservation", 42],
+        },
+      },
+      repoFiles,
+    );
+    await assert.rejects(() => loadTasks(root), /must be a string\[\]/);
+  });
+
   await withTempDir("gcli-loader-empty-verification", async (root) => {
     await createBasicTask(
       root,
@@ -220,6 +292,8 @@ async function testPreflightInvalidation() {
       results.tasks.map((taskResult) => taskResult.status),
       ["invalid_task", "invalid_task"],
     );
+    assert.ok(results.tasks.every((taskResult) => taskResult.efficiency === undefined));
+    assert.equal(results.summary.efficiency.measuredTasks, 0);
   });
 }
 
@@ -227,6 +301,8 @@ async function testMockAgentsDriveRealTasks() {
   const tasksDir = resolve("tasks");
   const tasks = await loadTasks(tasksDir);
   assert.equal(tasks.length, 7);
+  assert.ok(tasks.every((task) => task.taxonomy));
+  assert.ok(tasks.every((task) => task.taxonomy.scope === "single-file"));
 
   await withTempDir("gcli-runner-tests", async (tempRoot) => {
     const passingRun = await runTasks(tasks, new GoldPatchAgent(), {
@@ -242,6 +318,23 @@ async function testMockAgentsDriveRealTasks() {
       passingRun.tasks.map((taskResult) => taskResult.status),
       ["passed", "passed", "passed", "passed", "passed", "passed", "passed"],
     );
+    assert.ok(passingRun.tasks.every((taskResult) => taskResult.taxonomy));
+    assert.ok(
+      passingRun.tasks.every(
+        (taskResult) =>
+          taskResult.efficiency &&
+          taskResult.efficiency.filesChanged > 0 &&
+          taskResult.efficiency.changedLines > 0,
+      ),
+    );
+    assert.equal(passingRun.summary.taxonomyCoverage.tasksWithTaxonomy, 7);
+    assert.equal(passingRun.summary.taxonomyCoverage.tasksWithoutTaxonomy, 0);
+    assert.deepEqual(passingRun.summary.taxonomyCoverage.scopes, [
+      { scope: "single-file", count: 7 },
+    ]);
+    assert.equal(passingRun.summary.efficiency.measuredTasks, 7);
+    assert.ok(passingRun.summary.efficiency.totalInsertions > 0);
+    assert.ok(passingRun.summary.efficiency.totalDeletions >= 0);
 
     const failingRun = await runTasks(tasks, new NoopAgent(), {
       generatedAt: "2026-03-15T01:10:00.000Z",
@@ -256,7 +349,33 @@ async function testMockAgentsDriveRealTasks() {
       failingRun.tasks.map((taskResult) => taskResult.status),
       ["failed", "failed", "failed", "failed", "failed", "failed", "failed"],
     );
+    assert.ok(
+      failingRun.tasks.every(
+        (taskResult) =>
+          taskResult.efficiency &&
+          taskResult.efficiency.filesChanged === 0 &&
+          taskResult.efficiency.changedLines === 0 &&
+          taskResult.efficiency.agentDurationMs >= 0,
+      ),
+    );
+    assert.equal(failingRun.summary.efficiency.measuredTasks, 7);
+    assert.equal(failingRun.summary.efficiency.averageFilesChanged, 0);
+    assert.equal(failingRun.summary.efficiency.averageChangedLines, 0);
   });
+}
+
+async function captureCliLogs(argv, deps) {
+  const logs = [];
+  const originalLog = console.log;
+  console.log = (...args) => {
+    logs.push(args.map(String).join(" "));
+  };
+  try {
+    const exitCode = await runCli(argv, deps);
+    return { exitCode, output: logs.join("\n") };
+  } finally {
+    console.log = originalLog;
+  }
 }
 
 async function testCliBaselineAndReports() {
@@ -266,8 +385,13 @@ async function testCliBaselineAndReports() {
     const reportsDir = join(tempRoot, "reports");
     const baselinePath = join(tempRoot, "baseline.json");
 
-    const listCode = await runCli(["list", "--tasks", tasksDir]);
-    assert.equal(listCode, 0);
+    const listResult = await captureCliLogs(["list", "--tasks", tasksDir]);
+    assert.equal(listResult.exitCode, 0);
+    assert.match(listResult.output, /Taxonomy scopes:/);
+    assert.match(listResult.output, /- single-file: 7/);
+    assert.match(listResult.output, /Taxonomy tags:/);
+    assert.match(listResult.output, /- review-feedback: 2/);
+    assert.match(listResult.output, /Tasks missing taxonomy: 0/);
 
     const updateCode = await runCli(
       [
@@ -311,9 +435,19 @@ async function testCliBaselineAndReports() {
     assert.equal(latestResults.summary.failed, 7);
     assert.equal(latestResults.summary.infraFailed, 0);
     assert.ok(latestResults.tasks.every((taskResult) => taskResult.status === "failed"));
+    assert.ok(latestResults.tasks.every((taskResult) => taskResult.taxonomy));
+    assert.ok(latestResults.tasks.every((taskResult) => taskResult.efficiency));
     assert.equal(latestResults.config.mode, "noop");
+    assert.equal(latestResults.summary.taxonomyCoverage.tasksWithTaxonomy, 7);
+    assert.equal(latestResults.summary.taxonomyCoverage.tasksWithoutTaxonomy, 0);
+    assert.equal(latestResults.summary.efficiency.measuredTasks, 7);
+    assert.equal(latestResults.summary.efficiency.averageFilesChanged, 0);
+    assert.equal(latestResults.summary.efficiency.averageChangedLines, 0);
 
     const latestReport = await readFile(join(reportsDir, "latest-report.md"), "utf8");
+    assert.match(latestReport, /# Gemini CLI Contributor Eval Report/);
+    assert.match(latestReport, /## Taxonomy Coverage/);
+    assert.match(latestReport, /## Efficiency Snapshot/);
     assert.match(latestReport, /Task 'node-config-precedence' regressed from passed to failed/);
     assert.match(latestReport, /Mode: noop/);
   });

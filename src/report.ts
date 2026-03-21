@@ -7,9 +7,20 @@ function formatPct(value: number): string {
   return `${(value * 100).toFixed(2)}%`;
 }
 
+function formatDecimal(value: number): string {
+  return value.toFixed(2);
+}
+
+function formatTaxonomy(task: EvaluationRun["tasks"][number]): string {
+  if (!task.taxonomy) {
+    return "-";
+  }
+  return `${task.taxonomy.scope}; ${task.taxonomy.tags.join(", ")}`;
+}
+
 export function renderMarkdownReport(run: EvaluationRun): string {
   const lines: string[] = [];
-  lines.push("# Workspace Task Evaluation Report");
+  lines.push("# Gemini CLI Contributor Eval Report");
   lines.push("");
   lines.push(`Generated at: ${run.summary.generatedAt}`);
   lines.push(`Tasks: ${run.summary.total}`);
@@ -51,6 +62,44 @@ export function renderMarkdownReport(run: EvaluationRun): string {
   }
   lines.push("");
 
+  lines.push("## Taxonomy Coverage");
+  lines.push("");
+  lines.push(`Tasks With Taxonomy: ${run.summary.taxonomyCoverage.tasksWithTaxonomy}`);
+  lines.push(`Tasks Without Taxonomy: ${run.summary.taxonomyCoverage.tasksWithoutTaxonomy}`);
+  lines.push(
+    `Scopes: ${
+      run.summary.taxonomyCoverage.scopes.length === 0
+        ? "none"
+        : run.summary.taxonomyCoverage.scopes
+            .map((entry) => `${entry.scope}=${entry.count}`)
+            .join(", ")
+    }`,
+  );
+  lines.push(
+    `Tags: ${
+      run.summary.taxonomyCoverage.tags.length === 0
+        ? "none"
+        : run.summary.taxonomyCoverage.tags.map((entry) => `${entry.tag}=${entry.count}`).join(", ")
+    }`,
+  );
+  lines.push("");
+
+  lines.push("## Efficiency Snapshot");
+  lines.push("");
+  lines.push(`Measured Tasks: ${run.summary.efficiency.measuredTasks}`);
+  lines.push(
+    `Average Agent Duration: ${formatDecimal(run.summary.efficiency.averageAgentDurationMs)}ms`,
+  );
+  lines.push(
+    `Average Files Changed: ${formatDecimal(run.summary.efficiency.averageFilesChanged)}`,
+  );
+  lines.push(
+    `Average Changed Lines: ${formatDecimal(run.summary.efficiency.averageChangedLines)}`,
+  );
+  lines.push(`Total Insertions: ${run.summary.efficiency.totalInsertions}`);
+  lines.push(`Total Deletions: ${run.summary.efficiency.totalDeletions}`);
+  lines.push("");
+
   lines.push("## Regression Findings");
   lines.push("");
   if (run.regressions.length === 0) {
@@ -74,8 +123,8 @@ export function renderMarkdownReport(run: EvaluationRun): string {
 
   lines.push("## Task Results");
   lines.push("");
-  lines.push("| Task | Category | Language | Policy | Status | Duration (ms) | Artifacts | Notes |");
-  lines.push("| --- | --- | --- | --- | --- | --- | --- | --- |");
+  lines.push("| Task | Category | Language | Taxonomy | Policy | Status | Harness ms | Agent ms | Files | Changed Lines | Artifacts | Notes |");
+  lines.push("| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |");
   for (const task of run.tasks) {
     const artifacts = [
       task.artifacts.diffPath,
@@ -86,8 +135,11 @@ export function renderMarkdownReport(run: EvaluationRun): string {
       .filter((value, idx, all) => value && all.indexOf(value) === idx)
       .map((value) => relativePath(task.artifacts.artifactDir, value))
       .join(", ");
+    const agentDuration = task.efficiency ? formatDecimal(task.efficiency.agentDurationMs) : "-";
+    const filesChanged = task.efficiency ? String(task.efficiency.filesChanged) : "-";
+    const changedLines = task.efficiency ? String(task.efficiency.changedLines) : "-";
     lines.push(
-      `| ${task.taskId} | ${task.category} | ${task.language} | ${task.policy} | ${task.status} | ${task.durationMs} | ${artifacts || "-"} | ${task.notes.join("; ") || "-"} |`,
+      `| ${task.taskId} | ${task.category} | ${task.language} | ${formatTaxonomy(task)} | ${task.policy} | ${task.status} | ${task.durationMs} | ${agentDuration} | ${filesChanged} | ${changedLines} | ${artifacts || "-"} | ${task.notes.join("; ") || "-"} |`,
     );
   }
   lines.push("");

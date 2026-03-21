@@ -2,7 +2,7 @@
   "name": "gcli-benchmark-prototype",
   "version": "0.1.0",
   "private": true,
-  "description": "Prototype behavioral evaluation framework for a coding agent",
+  "description": "External contributor harness for deterministic behavioral/evals-style benchmarking of Gemini CLI on repo-backed tasks",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "run": "npm run build && node dist/cli.js run",

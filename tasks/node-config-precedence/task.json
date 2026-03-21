@@ -4,6 +4,13 @@
   "category": "debugging",
   "difficulty": "easy",
   "language": "javascript",
+  "taxonomy": {
+    "scope": "single-file",
+    "tags": [
+      "behavior-preservation",
+      "config-precedence"
+    ]
+  },
   "timeoutMs": 120000,
   "problemStatementFile": "issue.md",
   "promptAddendum": "Preserve the current fallback behavior for environment values and hard-coded defaults.",

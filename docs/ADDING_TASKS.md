@@ -26,9 +26,42 @@ Required fields:
 
 Optional fields:
 
+- `taxonomy`
 - `timeoutMs`
 - `promptAddendum`
 - `setupCommands`
+
+## Taxonomy
+
+`taxonomy` is optional for backward compatibility, but new tasks should include it:
+
+```json
+{
+  "taxonomy": {
+    "scope": "single-file",
+    "tags": ["behavior-preservation", "shared-logic"]
+  }
+}
+```
+
+Rules:
+
+- `taxonomy.scope` is required when `taxonomy` is present and must be `single-file` or `multi-file`
+- `taxonomy.tags` is required when `taxonomy` is present and must be a non-empty `string[]`
+
+Starter shared vocabulary:
+
+- `behavior-preservation`
+- `api-compat`
+- `output-format`
+- `shared-logic`
+- `review-feedback`
+- `ordering`
+- `non-mutating-change`
+- `config-precedence`
+- `path-normalization`
+
+Prefer lowercase kebab-case tags and reuse the shared vocabulary when it materially fits the task.
 
 ## Verification Contract
 
@@ -41,4 +74,5 @@ Optional fields:
 - Keep each repo fixture small and deterministic.
 - Use only checked-in files and built-in runtimes when possible.
 - Prefer one targeted failing command and one or two stability commands.
+- Add taxonomy so list/report output can show scope and tag coverage.
 - Record the intended solution in `gold.patch` so the mock-agent smoke tests can apply it.

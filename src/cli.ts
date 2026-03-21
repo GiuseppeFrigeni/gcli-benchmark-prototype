@@ -2,6 +2,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { GeminiCliAgent } from "./gemini-adapter";
 import { GoldPatchAgent, NoopAgent } from "./mock-agents";
+import { buildTaxonomyCoverageSummary } from "./task-metrics";
 import { loadTasks } from "./task-loader";
 import { detectRegressions, loadBaselineIfExists, makeBaseline, saveBaseline } from "./regression";
 import { saveReports } from "./report";
@@ -328,6 +329,17 @@ function printSummary(summary: EvaluationRun["summary"], config: RunConfig, regr
   console.log(`Regression findings: ${regressionsCount}`);
 }
 
+function printCounts(title: string, entries: Array<[string, number]>): void {
+  console.log(`${title}:`);
+  if (entries.length === 0) {
+    console.log("- none");
+    return;
+  }
+  for (const [label, count] of entries) {
+    console.log(`- ${label}: ${count}`);
+  }
+}
+
 async function listTasks(options: CliOptions): Promise<void> {
   const tasks = await loadTasks(resolve(options.tasksDir));
   console.log(`Loaded ${tasks.length} tasks from ${resolve(options.tasksDir)}`);
@@ -338,19 +350,19 @@ async function listTasks(options: CliOptions): Promise<void> {
     categories.set(task.category, (categories.get(task.category) ?? 0) + 1);
     languages.set(task.language, (languages.get(task.language) ?? 0) + 1);
   }
-  for (const [category, count] of [...categories.entries()].sort((a, b) =>
-    a[0].localeCompare(b[0]),
-  )) {
-    console.log(`- ${category}: ${count}`);
-  }
-  if (languages.size > 0) {
-    console.log("Languages:");
-    for (const [language, count] of [...languages.entries()].sort((a, b) =>
-      a[0].localeCompare(b[0]),
-    )) {
-      console.log(`- ${language}: ${count}`);
-    }
-  }
+  const taxonomyCoverage = buildTaxonomyCoverageSummary(tasks);
+
+  printCounts("Categories", [...categories.entries()].sort((a, b) => a[0].localeCompare(b[0])));
+  printCounts("Languages", [...languages.entries()].sort((a, b) => a[0].localeCompare(b[0])));
+  printCounts(
+    "Taxonomy scopes",
+    taxonomyCoverage.scopes.map((entry): [string, number] => [entry.scope, entry.count]),
+  );
+  printCounts(
+    "Taxonomy tags",
+    taxonomyCoverage.tags.map((entry): [string, number] => [entry.tag, entry.count]),
+  );
+  console.log(`Tasks missing taxonomy: ${taxonomyCoverage.tasksWithoutTaxonomy}`);
 }
 
 async function runEvaluation(options: CliOptions, deps: CliDependencies): Promise<number> {

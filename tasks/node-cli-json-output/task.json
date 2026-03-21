@@ -4,6 +4,13 @@
   "category": "new-feature",
   "difficulty": "easy",
   "language": "javascript",
+  "taxonomy": {
+    "scope": "single-file",
+    "tags": [
+      "api-compat",
+      "output-format"
+    ]
+  },
   "timeoutMs": 120000,
   "problemStatementFile": "issue.md",
   "promptAddendum": "Keep the default text output exactly as it is today.",

@@ -1,7 +1,14 @@
 import { access, readdir } from "node:fs/promises";
 import { constants } from "node:fs";
 import { join } from "node:path";
-import { TaskCategory, TaskDifficulty, TaskPolicy, WorkspaceTask } from "./types";
+import {
+  TaskCategory,
+  TaskDifficulty,
+  TaskPolicy,
+  TaskScope,
+  TaskTaxonomy,
+  WorkspaceTask,
+} from "./types";
 import { readJsonFile } from "./utils";
 
 interface TaskManifest {
@@ -10,6 +17,7 @@ interface TaskManifest {
   category: unknown;
   difficulty: unknown;
   language: unknown;
+  taxonomy?: unknown;
   timeoutMs?: unknown;
   problemStatementFile: unknown;
   promptAddendum?: unknown;
@@ -24,7 +32,7 @@ const VALID_CATEGORIES: TaskCategory[] = [
   "new-feature",
   "code-review",
 ];
-
+const VALID_SCOPES: TaskScope[] = ["single-file", "multi-file"];
 const VALID_DIFFICULTIES: TaskDifficulty[] = ["easy", "medium", "hard"];
 const VALID_POLICIES: TaskPolicy[] = ["always", "usually"];
 
@@ -123,6 +131,31 @@ function parseVerification(
   return { failToPass, passToPass };
 }
 
+function parseTaxonomy(value: unknown, location: string): TaskTaxonomy | undefined {
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+  if (typeof value !== "object") {
+    throw new Error(`${location}: field 'taxonomy' must be an object`);
+  }
+
+  const taxonomy = value as Record<string, unknown>;
+  const scope = requireString(taxonomy.scope, "taxonomy.scope", location);
+  if (!VALID_SCOPES.includes(scope as TaskScope)) {
+    throw new Error(`${location}: field 'taxonomy.scope' must be one of ${VALID_SCOPES.join(", ")}`);
+  }
+
+  const tags = asStringArray(taxonomy.tags, "taxonomy.tags", location, true);
+  if (tags.length === 0) {
+    throw new Error(`${location}: field 'taxonomy.tags' cannot be empty`);
+  }
+
+  return {
+    scope: scope as TaskScope,
+    tags,
+  };
+}
+
 async function assertExists(path: string, description: string, location: string): Promise<void> {
   try {
     await access(path, constants.F_OK);
@@ -155,6 +188,7 @@ async function parseTask(taskDir: string, manifestPath: string): Promise<Workspa
     category: parseCategory(raw.category, location),
     difficulty: parseDifficulty(raw.difficulty, location),
     language,
+    taxonomy: parseTaxonomy(raw.taxonomy, location),
     timeoutMs,
     problemStatementFile,
     promptAddendum,

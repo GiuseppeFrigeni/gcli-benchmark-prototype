@@ -4,6 +4,14 @@
   "category": "code-review",
   "difficulty": "easy",
   "language": "javascript",
+  "taxonomy": {
+    "scope": "single-file",
+    "tags": [
+      "ordering",
+      "output-format",
+      "review-feedback"
+    ]
+  },
   "timeoutMs": 120000,
   "problemStatementFile": "issue.md",
   "promptAddendum": "Keep the output format unchanged when there are no params or only one param.",

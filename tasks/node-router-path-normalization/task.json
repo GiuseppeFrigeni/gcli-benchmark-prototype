@@ -4,6 +4,13 @@
   "category": "debugging",
   "difficulty": "easy",
   "language": "javascript",
+  "taxonomy": {
+    "scope": "single-file",
+    "tags": [
+      "behavior-preservation",
+      "path-normalization"
+    ]
+  },
   "timeoutMs": 120000,
   "problemStatementFile": "issue.md",
   "promptAddendum": "Keep root path behavior intact and do not change the public Router API.",
