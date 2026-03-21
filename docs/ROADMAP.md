@@ -1,6 +1,6 @@
 # Contributor Eval Harness Roadmap
 
-This repo is a seed contributor framework for deterministic behavioral/evals-style benchmarking of Gemini CLI on repo-backed tasks. It already proves the core evaluation loop:
+This repo is a seed contributor-ready eval framework for Gemini CLI on deterministic repo-backed tasks. It already proves the core evaluation loop:
 
 - load validated task manifests
 - copy a fixture repo into an isolated workspace
@@ -9,7 +9,7 @@ This repo is a seed contributor framework for deterministic behavioral/evals-sty
 - score the result with objective verification commands
 - compare the run against a saved baseline
 
-The growth plan from here is to make that seed framework more useful for contributors, not to claim the harness is already complete.
+The growth plan from here is to make that seed framework more useful for contributors and maintainers, not to claim the harness is already complete.
 
 ## Phase 1: Harden the harness
 
@@ -31,7 +31,7 @@ The growth plan from here is to make that seed framework more useful for contrib
 - Add richer regression policies such as per-category thresholds and baseline drift reporting.
 - Improve PR-facing regression visibility through clearer reports and CI artifacts.
 
-## Phase 4: Reach GSoC target scale
+## Phase 4: Reach contributor-ready scale
 
 - Expand to 50+ curated scenarios.
 - Add contributor templates and task-authoring checklists.

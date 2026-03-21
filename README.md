@@ -1,12 +1,14 @@
 # gcli-benchmark-prototype
 
-External contributor harness for deterministic behavioral/evals-style benchmarking of Gemini CLI on repo-backed tasks, implemented in TypeScript + Node.js.
+Prototype contributor-facing eval harness for Gemini CLI. It runs deterministic repo-backed tasks, verifies outcomes with objective checks, and surfaces regressions with inspectable artifacts.
 
-## Why this matters for Gemini CLI OSS contributors
+## Why this matters for Gemini CLI contributors
 
-- coverage gaps
-- repeatable local validation
-- PR/regression visibility
+- repeatable local validation before PRs
+- inspectable artifacts for debugging failures
+- a path to grow coverage for debugging, code review, refactoring, and prompt/tool behavior
+
+See the [contributor eval roadmap](./docs/ROADMAP.md) for the planned growth path.
 
 ## What this harness does
 
@@ -21,7 +23,7 @@ External contributor harness for deterministic behavioral/evals-style benchmarki
 - a starter taxonomy for slicing coverage quality
 - regression artifacts contributors can inspect locally and in CI
 
-This is intentionally a seed framework contributors can extend, not a complete benchmark solution. Today it includes 7 seed tasks, mostly easy JavaScript fixtures, they are currently single-file in scope, and efficiency tracking is informational only with no efficiency gating yet.
+This is intentionally a seed framework contributors can extend, not a complete eval solution. Today it includes 7 seed tasks, mostly easy JavaScript fixtures, they are currently single-file in scope, and efficiency tracking is informational only with no efficiency gating yet.
 
 ## Installation
 
