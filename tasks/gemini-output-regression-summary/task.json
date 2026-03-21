@@ -1,0 +1,28 @@
+{
+  "id": "gemini-output-regression-summary",
+  "title": "Summarize a Gemini CLI output-format regression in one compatibility sentence",
+  "taskKind": "prompt-output",
+  "category": "debugging",
+  "difficulty": "easy",
+  "language": "text",
+  "taxonomy": {
+    "scope": "single-file",
+    "tags": [
+      "output-format",
+      "regression-reporting",
+      "strict-output"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Use only ${taskDir}/fixtures/models-output-diff.txt.",
+  "verification": {
+    "failToPass": [
+      "node \"${taskDir}/verify-output.js\" \"${artifactDir}/agent-stdout.txt\" \"${taskDir}/expected.txt\""
+    ],
+    "passToPass": [
+      "node \"${taskDir}/verify-fixtures.js\" \"${taskDir}/fixtures/models-output-diff.txt\""
+    ]
+  },
+  "policy": "always"
+}

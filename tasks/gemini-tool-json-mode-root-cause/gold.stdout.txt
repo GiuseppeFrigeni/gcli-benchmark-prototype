@@ -1,0 +1,1 @@
+Root cause: The JSON renderer logs `Rendering result...` before serializing the payload, so `--json` mode mixes human progress text into machine-readable output (src/commands/render.js).

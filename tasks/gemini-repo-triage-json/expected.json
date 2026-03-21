@@ -1,0 +1,9 @@
+{
+  "area": "auth",
+  "firstFiles": [
+    "src/commands/extensions-login.js",
+    "src/session/token-store.js"
+  ],
+  "owner": "auth-flow",
+  "nextCommand": "node --test test/extensions-login-refresh.test.js"
+}

@@ -127,6 +127,7 @@ Starter shared vocabulary:
 - `filtering`
 - `output-format`
 - `path-normalization`
+- `repo-triage`
 - `regression-reporting`
 - `review-feedback`
 - `shared-logic`

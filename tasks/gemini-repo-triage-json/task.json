@@ -1,0 +1,28 @@
+{
+  "id": "gemini-repo-triage-json",
+  "title": "Return strict JSON triage for a Gemini CLI repo regression",
+  "taskKind": "prompt-output",
+  "category": "debugging",
+  "difficulty": "medium",
+  "language": "text",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "repo-triage",
+      "strict-output",
+      "artifact-triage"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Use only these repo files: ${workspaceDir}/src/commands/extensions-login.js, ${workspaceDir}/src/session/token-store.js, and ${workspaceDir}/test/extensions-login-refresh.test.js.",
+  "verification": {
+    "failToPass": [
+      "node \"${taskDir}/verify-json-output.js\" \"${artifactDir}/agent-stdout.txt\" \"${taskDir}/expected.json\""
+    ],
+    "passToPass": [
+      "node \"${taskDir}/verify-fixtures.js\" \"${workspaceDir}/src/commands/extensions-login.js\" \"${workspaceDir}/src/session/token-store.js\" \"${workspaceDir}/test/extensions-login-refresh.test.js\""
+    ]
+  },
+  "policy": "always"
+}

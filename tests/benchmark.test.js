@@ -488,11 +488,11 @@ async function testNonWorkspaceTaskKindsAndInterpolation() {
 async function testMockAgentsDriveRealTasks() {
   const tasksDir = resolve("tasks");
   const tasks = await loadTasks(tasksDir);
-  assert.equal(tasks.length, 14);
+  assert.equal(tasks.length, 18);
   assert.ok(tasks.every((task) => task.taxonomy));
   assert.equal(tasks.filter((task) => task.taskKind === "workspace-edit").length, 10);
-  assert.equal(tasks.filter((task) => task.taskKind === "prompt-output").length, 2);
-  assert.equal(tasks.filter((task) => task.taskKind === "tool-use").length, 2);
+  assert.equal(tasks.filter((task) => task.taskKind === "prompt-output").length, 5);
+  assert.equal(tasks.filter((task) => task.taskKind === "tool-use").length, 3);
 
   await withTempDir("gcli-runner-tests", async (tempRoot) => {
     const passingRun = await runTasks(tasks, new GoldPatchAgent(), {
@@ -503,18 +503,18 @@ async function testMockAgentsDriveRealTasks() {
       keepWorkspaces: false,
       defaultTaskTimeoutMs: 10000,
     });
-    assert.equal(passingRun.summary.passed, 14);
+    assert.equal(passingRun.summary.passed, 18);
     assert.ok(passingRun.tasks.every((taskResult) => taskResult.status === "passed"));
     assert.deepEqual(passingRun.summary.taskKinds, [
-      { taskKind: "prompt-output", count: 2 },
-      { taskKind: "tool-use", count: 2 },
+      { taskKind: "prompt-output", count: 5 },
+      { taskKind: "tool-use", count: 3 },
       { taskKind: "workspace-edit", count: 10 },
     ]);
     assert.deepEqual(passingRun.summary.taxonomyCoverage.scopes, [
-      { scope: "multi-file", count: 7 },
-      { scope: "single-file", count: 7 },
+      { scope: "multi-file", count: 9 },
+      { scope: "single-file", count: 9 },
     ]);
-    assert.equal(passingRun.summary.efficiency.measuredTasks, 14);
+    assert.equal(passingRun.summary.efficiency.measuredTasks, 18);
     assert.ok(
       passingRun.tasks.every((taskResult) => existsSync(taskResult.artifacts.activitySummaryPath)),
     );
@@ -527,9 +527,9 @@ async function testMockAgentsDriveRealTasks() {
       keepWorkspaces: false,
       defaultTaskTimeoutMs: 10000,
     });
-    assert.equal(failingRun.summary.failed, 14);
+    assert.equal(failingRun.summary.failed, 18);
     assert.ok(failingRun.tasks.every((taskResult) => taskResult.status === "failed"));
-    assert.equal(failingRun.summary.efficiency.measuredTasks, 14);
+    assert.equal(failingRun.summary.efficiency.measuredTasks, 18);
     assert.equal(failingRun.summary.efficiency.averageChangedLines, 0);
   });
 }
@@ -558,10 +558,10 @@ async function testCliBaselineAndReports() {
     const listResult = await captureCliLogs(["list", "--tasks", tasksDir]);
     assert.equal(listResult.exitCode, 0);
     assert.match(listResult.output, /Task kinds:/);
-    assert.match(listResult.output, /- prompt-output: 2/);
-    assert.match(listResult.output, /- tool-use: 2/);
+    assert.match(listResult.output, /- prompt-output: 5/);
+    assert.match(listResult.output, /- tool-use: 3/);
     assert.match(listResult.output, /- workspace-edit: 10/);
-    assert.match(listResult.output, /- multi-file: 7/);
+    assert.match(listResult.output, /- multi-file: 9/);
     assert.match(listResult.output, /Tasks missing taxonomy: 0/);
 
     const updateCode = await runCli(
@@ -583,7 +583,7 @@ async function testCliBaselineAndReports() {
 
     const baseline = await readJsonFile(baselinePath);
     assert.equal(baseline.overallPassRate, 1);
-    assert.equal(Object.keys(baseline.taskStatuses).length, 14);
+    assert.equal(Object.keys(baseline.taskStatuses).length, 18);
     assert.ok(Object.values(baseline.taskStatuses).every((status) => status === "passed"));
 
     const regressionCode = await runCli(
@@ -603,10 +603,10 @@ async function testCliBaselineAndReports() {
     assert.equal(regressionCode, 2);
 
     const latestResults = await readJsonFile(join(reportsDir, "latest-results.json"));
-    assert.equal(latestResults.summary.failed, 14);
+    assert.equal(latestResults.summary.failed, 18);
     assert.deepEqual(latestResults.summary.taskKinds, [
-      { taskKind: "prompt-output", count: 2 },
-      { taskKind: "tool-use", count: 2 },
+      { taskKind: "prompt-output", count: 5 },
+      { taskKind: "tool-use", count: 3 },
       { taskKind: "workspace-edit", count: 10 },
     ]);
     assert.ok(latestResults.tasks.every((taskResult) => taskResult.taskKind));
@@ -615,7 +615,7 @@ async function testCliBaselineAndReports() {
     const latestReport = await readFile(join(reportsDir, "latest-report.md"), "utf8");
     assert.match(latestReport, /# Gemini CLI Contributor Eval Report/);
     assert.match(latestReport, /## Task Kind Coverage/);
-    assert.match(latestReport, /prompt-output=2, tool-use=2, workspace-edit=10/);
+    assert.match(latestReport, /prompt-output=5, tool-use=3, workspace-edit=10/);
     assert.match(latestReport, /activity-summary.json/);
     assert.match(latestReport, /Task 'node-config-precedence' regressed from passed to failed/);
   });

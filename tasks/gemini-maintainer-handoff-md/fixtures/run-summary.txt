@@ -1,0 +1,5 @@
+Task: gemini-tool-json-mode-root-cause
+Status: infra_failed
+Failure: JSON-mode output includes `Rendering result...` before the payload.
+Primary file: src/commands/render.js
+Rerun command: node --test test/json-mode.test.js

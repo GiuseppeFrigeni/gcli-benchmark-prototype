@@ -1,0 +1,28 @@
+{
+  "id": "gemini-maintainer-handoff-md",
+  "title": "Produce a strict maintainer handoff for a Gemini CLI quality issue",
+  "taskKind": "prompt-output",
+  "category": "code-review",
+  "difficulty": "medium",
+  "language": "text",
+  "taxonomy": {
+    "scope": "single-file",
+    "tags": [
+      "strict-output",
+      "review-feedback",
+      "regression-reporting"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Use only ${taskDir}/fixtures/run-summary.txt.",
+  "verification": {
+    "failToPass": [
+      "node \"${taskDir}/verify-output.js\" \"${artifactDir}/agent-stdout.txt\" \"${taskDir}/expected.md\""
+    ],
+    "passToPass": [
+      "node \"${taskDir}/verify-fixtures.js\" \"${taskDir}/fixtures/run-summary.txt\""
+    ]
+  },
+  "policy": "always"
+}

@@ -1,0 +1,2 @@
+{"functionCall":{"name":"read_file","args":{"file_path":"src/commands/render.js"}}}
+{"functionCall":{"name":"read_file","args":{"file_path":"test/json-mode.test.js"}}}

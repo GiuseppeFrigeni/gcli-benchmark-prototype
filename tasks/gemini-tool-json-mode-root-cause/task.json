@@ -1,0 +1,28 @@
+{
+  "id": "gemini-tool-json-mode-root-cause",
+  "title": "Inspect the JSON-mode regression before explaining the root cause",
+  "taskKind": "tool-use",
+  "category": "debugging",
+  "difficulty": "medium",
+  "language": "text",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "tool-use",
+      "output-format",
+      "artifact-triage"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Inspect ${workspaceDir}/src/commands/render.js and ${workspaceDir}/test/json-mode.test.js before answering.",
+  "verification": {
+    "failToPass": [
+      "node \"${taskDir}/verify-investigation.js\" \"${artifactDir}/agent-stdout.txt\" \"${artifactDir}/activity-summary.json\""
+    ],
+    "passToPass": [
+      "node \"${taskDir}/verify-fixtures.js\" \"${workspaceDir}/src/commands/render.js\" \"${workspaceDir}/test/json-mode.test.js\""
+    ]
+  },
+  "policy": "always"
+}

@@ -1,0 +1,5 @@
+Expected output:
+["gemini-2.5-pro","gemini-2.5-flash"]
+
+Current output:
+[{"id":"gemini-2.5-pro","label":"Gemini 2.5 Pro","recommended":true},{"id":"gemini-2.5-flash","label":"Gemini 2.5 Flash","recommended":false}]

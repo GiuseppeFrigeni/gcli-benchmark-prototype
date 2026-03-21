@@ -1,0 +1,1 @@
+Regression: `gemini models --json` now emits labeled objects instead of the previous bare string array, so scripts using model ids will break.

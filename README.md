@@ -1,6 +1,6 @@
 # gcli-benchmark-prototype
 
-Contributor-facing eval harness for Gemini CLI, built around deterministic tasks, objective verification, and inspectable regression artifacts.
+Contributor eval harness for Gemini CLI quality work, built around deterministic tasks, objective verification, and inspectable regression artifacts.
 
 ## Why Contributors Use This
 
@@ -11,20 +11,27 @@ Contributor-facing eval harness for Gemini CLI, built around deterministic tasks
 
 ## What The Harness Evaluates
 
-The suite currently includes 14 deterministic tasks across three task kinds:
+The suite currently includes 18 deterministic tasks across three task kinds:
 
 - `workspace-edit`: repo-backed fixes verified by fail-to-pass and pass-to-pass commands
 - `prompt-output`: strict response-shape tasks scored from agent stdout
 - `tool-use`: investigation tasks scored from both the final answer and normalized tool-usage activity
 
+Gemini-CLI-specific contributor coverage now includes:
+
+- tool-use inspection for CLI JSON-mode regressions
+- strict repo triage for Gemini CLI ownership and first-file selection
+- output-format regression summaries for script-facing compatibility breaks
+- maintainer handoff prompts with exact Markdown structure
+
 Current suite shape:
 
-- 14 total tasks
+- 18 total tasks
 - 10 `workspace-edit` tasks
-- 2 `prompt-output` tasks
-- 2 `tool-use` tasks
-- 7 `multi-file` tasks
-- 7 `single-file` tasks
+- 5 `prompt-output` tasks
+- 3 `tool-use` tasks
+- 9 `multi-file` tasks
+- 9 `single-file` tasks
 
 ## Example Artifacts
 
@@ -73,6 +80,12 @@ Run a focused subset:
 
 ```bash
 npm run dev:run -- --task=node-config-precedence --task=tool-router-root-cause
+```
+
+Run a Gemini-quality subset:
+
+```bash
+npm run dev:run -- --task=gemini-tool-json-mode-root-cause --task=gemini-repo-triage-json --task=gemini-output-regression-summary
 ```
 
 Run the deterministic mock path used in CI:
@@ -129,6 +142,34 @@ More detail:
 - [`docs/ADDING_TASKS.md`](./docs/ADDING_TASKS.md)
 - [`docs/ROADMAP.md`](./docs/ROADMAP.md)
 
+## Real Gemini CLI Example
+
+The repo already includes one archived real Gemini CLI subset run from March 15, 2026:
+
+```bash
+npm run dev:run -- --agent-mode=gemini-cli --task=node-cache-key-review --task=node-cli-json-output --task=node-config-precedence --task=node-header-merge-review --task=node-keyword-normalizer-refactor --task=node-router-path-normalization --task=node-slug-shared-normalizer
+```
+
+Artifacts:
+
+- [`reports/report-20260315-181002.md`](./reports/report-20260315-181002.md)
+- [`reports/results-20260315-181002.json`](./reports/results-20260315-181002.json)
+
+Report excerpt:
+
+```text
+Generated at: 2026-03-15T18:10:02.028Z
+Tasks: 7
+Passed: 5 (71.43%)
+Infra Failed: 2
+Mode: gemini-cli
+Model: Gemini CLI default
+```
+
+One failure analysis from that run:
+
+- `node-cache-key-review` timed out after 120000ms while another code-review task in the same subset passed, which makes the harness useful for contributor quality work beyond simple correctness. It surfaces when Gemini CLI can solve the patch but struggles to finish a review-style task inside the evaluation budget.
+
 ## Reports
 
 Each run writes:
@@ -161,4 +202,4 @@ npm test
 
 ## Roadmap
 
-The harness now covers repo edits, prompt-output behavior, and tool-use behavior. The next upgrades are focused on stronger regression policy, richer tool-usage assertions, and more contributor-curated tasks rather than changing the core harness model.
+The harness now covers repo edits, prompt-output behavior, tool-use behavior, and Gemini-CLI-specific contributor quality tasks. The next upgrades are focused on stronger regression policy, richer tool-usage assertions, and more contributor-curated tasks rather than changing the core harness model.
