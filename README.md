@@ -2,6 +2,20 @@
 
 Contributor eval harness for Gemini CLI quality work, built around deterministic tasks, objective verification, and inspectable regression artifacts.
 
+## Current Snapshot
+
+As of March 21, 2026, the checked-in benchmark baseline covers 26 tasks and passes at 100%.
+
+- 26 total tasks across `workspace-edit`, `prompt-output`, and `tool-use`
+- 26/26 passing in the checked-in gold baseline
+- full report and JSON artifacts committed in-repo for inspection
+
+Primary references:
+
+- [`baseline/baseline.json`](./baseline/baseline.json)
+- [`reports/latest-report.md`](./reports/latest-report.md)
+- [`reports/latest-results.json`](./reports/latest-results.json)
+
 ## Why Contributors Use This
 
 - validate changes locally before opening a PR
@@ -164,9 +178,25 @@ More detail:
 - [`docs/ADDING_TASKS.md`](./docs/ADDING_TASKS.md)
 - [`docs/ROADMAP.md`](./docs/ROADMAP.md)
 
-## Real Gemini CLI Example
+## Checked-In Benchmark Proof
 
-The repo already includes one archived real Gemini CLI subset run from March 15, 2026:
+The strongest front-page proof point is the current checked-in benchmark snapshot from March 21, 2026:
+
+```text
+Generated at: 2026-03-21T08:45:00.000Z
+Tasks: 26
+Passed: 26 (100.00%)
+Failed: 0
+Infra Failed: 0
+Invalid Tasks: 0
+Mode: gold-patch
+```
+
+That snapshot is deterministic and inspectable in-repo, which makes it a better statement of harness maturity than the older subset example below. It shows the harness already supports the core contributor loop end to end: curated task loading, objective scoring, baseline comparison, and per-task artifact inspection across all three task kinds.
+
+## Archived Real Gemini CLI Subset Run
+
+The repo also includes one archived real Gemini CLI subset run from March 15, 2026:
 
 ```bash
 npm run dev:run -- --agent-mode=gemini-cli --task=node-cache-key-review --task=node-cli-json-output --task=node-config-precedence --task=node-header-merge-review --task=node-keyword-normalizer-refactor --task=node-router-path-normalization --task=node-slug-shared-normalizer
@@ -187,6 +217,8 @@ Infra Failed: 2
 Mode: gemini-cli
 Model: Gemini CLI default
 ```
+
+This is still useful as a real-agent reference point, but it should be read as a narrower historical subset run, not as the current size or capability of the harness.
 
 One failure analysis from that run:
 
@@ -238,4 +270,4 @@ Precedence is explicit CLI flag, then environment variable, then the compatibili
 
 ## Roadmap
 
-The harness now covers repo edits, prompt-output behavior, tool-use behavior, contributor authoring support, and Gemini-CLI-specific debugging workflows. The next upgrades are focused on deeper contributor templates, more explicit subagent/skills coverage once it exists in the harness, and continued deterministic mock coverage rather than changing the core harness model.
+The harness is already past the initial bootstrap stage. It covers repo edits, prompt-output behavior, tool-use behavior, contributor authoring support, and Gemini-CLI-specific debugging workflows today. From here, the roadmap is about expanding coverage beyond the current 26-task suite, tightening regression policy, improving contributor templates, and keeping the deterministic mock examples fresh rather than changing the core harness model.
