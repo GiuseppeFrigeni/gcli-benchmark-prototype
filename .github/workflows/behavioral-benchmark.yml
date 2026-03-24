@@ -1,4 +1,4 @@
-name: Gemini CLI Contributor Eval Harness
+name: Mock Benchmark Calibration
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 jobs:
-  benchmark:
+  calibration:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,11 +26,8 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Run harness tests
-        run: npm test
-
-      - name: Validate task loading
-        run: npm run list
+      - name: Run mock calibration tests
+        run: npm run test:e2e
 
       - name: Mocked baseline run
         shell: bash

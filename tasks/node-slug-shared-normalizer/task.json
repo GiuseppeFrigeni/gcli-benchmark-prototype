@@ -1,7 +1,9 @@
 {
+  "$schema": "../../docs/task.schema.json",
   "id": "node-slug-shared-normalizer",
   "title": "Refactor slug generation to use a shared normalizer",
   "taskKind": "workspace-edit",
+  "suite": "harness-calibration",
   "category": "refactoring",
   "difficulty": "easy",
   "language": "javascript",

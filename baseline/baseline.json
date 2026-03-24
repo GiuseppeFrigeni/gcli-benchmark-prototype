@@ -1,17 +1,23 @@
 {
-  "generatedAt": "2026-03-21T08:45:00.000Z",
-  "total": 26,
+  "generatedAt": "2026-03-24T12:38:59.598Z",
+  "total": 32,
   "overallPassRate": 1,
   "taskStatuses": {
     "eval-flaky-verifier-tighten-md": "passed",
     "eval-gap-inventory-json": "passed",
     "gemini-auth-refresh-review": "passed",
+    "gemini-flaky-eval-stabilization-json": "passed",
+    "gemini-json-mode-regression-triage-json": "passed",
     "gemini-maintainer-handoff-md": "passed",
+    "gemini-maintainer-repro-reply-md": "passed",
     "gemini-models-json-compat": "passed",
     "gemini-output-regression-summary": "passed",
     "gemini-repo-triage-json": "passed",
+    "gemini-repo-triage-owner-selection-json": "passed",
+    "gemini-tool-debug-trace-repro-workflow": "passed",
     "gemini-tool-debug-workflow-command-choice": "passed",
     "gemini-tool-first-inspection-root-cause": "passed",
+    "gemini-tool-json-mode-log-order-root-cause": "passed",
     "gemini-tool-json-mode-root-cause": "passed",
     "gemini-tool-maintainer-regression-handoff": "passed",
     "gemini-tool-output-routing-review": "passed",
@@ -29,5 +35,22 @@
     "prompt-review-findings-markdown": "passed",
     "tool-regression-review": "passed",
     "tool-router-root-cause": "passed"
+  },
+  "metadata": {
+    "runId": "20260324-123859",
+    "generatedAt": "2026-03-24T12:38:59.598Z",
+    "mode": "gold-patch",
+    "gitCommitSha": "21f54ff",
+    "suites": [
+      "contributor-workflows",
+      "gemini-core",
+      "harness-calibration"
+    ],
+    "environment": {
+      "platform": "win32",
+      "arch": "x64",
+      "nodeVersion": "v20.19.0",
+      "workingDirectory": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype"
+    }
   }
 }

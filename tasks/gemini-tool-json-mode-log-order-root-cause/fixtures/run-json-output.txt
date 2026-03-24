@@ -1,0 +1,3 @@
+$ gemini run --json
+Starting task execution...
+{"status":"ok","filesModified":0}

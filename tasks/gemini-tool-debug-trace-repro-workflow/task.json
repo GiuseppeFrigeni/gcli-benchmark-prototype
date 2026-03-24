@@ -1,0 +1,56 @@
+{
+  "$schema": "../../docs/task.schema.json",
+  "id": "gemini-tool-debug-trace-repro-workflow",
+  "title": "Use the trace repro command before recommending the next debug step",
+  "taskKind": "tool-use",
+  "suite": "contributor-workflows",
+  "category": "debugging",
+  "difficulty": "hard",
+  "language": "text",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "tool-use",
+      "artifact-triage",
+      "regression-reporting"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "First run `node \"${taskDir}/print-trace.js\"`, then inspect ${taskDir}/fixtures/render-run.js before answering.",
+  "toolExpectations": {
+    "firstCall": {
+      "name": "run_shell_command",
+      "targetIncludes": "print-trace.js"
+    },
+    "requiredCalls": [
+      {
+        "name": "run_shell_command",
+        "targetIncludes": "print-trace.js"
+      },
+      {
+        "name": "read_file",
+        "targetIncludes": "fixtures/render-run.js"
+      }
+    ],
+    "orderedCalls": [
+      {
+        "name": "run_shell_command",
+        "targetIncludes": "print-trace.js"
+      },
+      {
+        "name": "read_file",
+        "targetIncludes": "fixtures/render-run.js"
+      }
+    ]
+  },
+  "verification": {
+    "failToPass": [
+      "node \"${taskDir}/verify-output.js\" \"${artifactDir}/agent-stdout.txt\" \"${artifactDir}/activity-summary.json\""
+    ],
+    "passToPass": [
+      "node \"${taskDir}/verify-fixtures.js\" \"${taskDir}/print-trace.js\" \"${taskDir}/fixtures/trace.txt\" \"${taskDir}/fixtures/render-run.js\""
+    ]
+  },
+  "policy": "always"
+}

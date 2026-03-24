@@ -1,0 +1,6 @@
+{
+  "regression": "models-json-banner",
+  "failingSurface": "gemini models --json",
+  "rootCauseFile": "src/render-models.js",
+  "safeFix": "Suppress the alias banner when JSON mode is enabled."
+}

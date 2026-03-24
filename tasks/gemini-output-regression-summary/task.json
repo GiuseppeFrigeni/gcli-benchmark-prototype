@@ -1,7 +1,9 @@
 {
+  "$schema": "../../docs/task.schema.json",
   "id": "gemini-output-regression-summary",
   "title": "Summarize a Gemini CLI output-format regression in one compatibility sentence",
   "taskKind": "prompt-output",
+  "suite": "gemini-core",
   "category": "debugging",
   "difficulty": "easy",
   "language": "text",

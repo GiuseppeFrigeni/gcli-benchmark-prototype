@@ -1,0 +1,56 @@
+{
+  "$schema": "../../docs/task.schema.json",
+  "id": "gemini-tool-json-mode-log-order-root-cause",
+  "title": "Inspect the JSON output log before explaining a Gemini run regression",
+  "taskKind": "tool-use",
+  "suite": "gemini-core",
+  "category": "debugging",
+  "difficulty": "medium",
+  "language": "text",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "tool-use",
+      "output-format",
+      "artifact-triage"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Inspect ${taskDir}/fixtures/run-json-output.txt first, then inspect ${taskDir}/fixtures/src-commands-run.js before answering.",
+  "toolExpectations": {
+    "firstCall": {
+      "name": "read_file",
+      "targetIncludes": "fixtures/run-json-output.txt"
+    },
+    "requiredCalls": [
+      {
+        "name": "read_file",
+        "targetIncludes": "fixtures/run-json-output.txt"
+      },
+      {
+        "name": "read_file",
+        "targetIncludes": "fixtures/src-commands-run.js"
+      }
+    ],
+    "orderedCalls": [
+      {
+        "name": "read_file",
+        "targetIncludes": "fixtures/run-json-output.txt"
+      },
+      {
+        "name": "read_file",
+        "targetIncludes": "fixtures/src-commands-run.js"
+      }
+    ]
+  },
+  "verification": {
+    "failToPass": [
+      "node \"${taskDir}/verify-output.js\" \"${artifactDir}/agent-stdout.txt\" \"${artifactDir}/activity-summary.json\""
+    ],
+    "passToPass": [
+      "node \"${taskDir}/verify-fixtures.js\" \"${taskDir}/fixtures/run-json-output.txt\" \"${taskDir}/fixtures/src-commands-run.js\""
+    ]
+  },
+  "policy": "always"
+}

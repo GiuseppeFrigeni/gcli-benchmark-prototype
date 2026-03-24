@@ -1,0 +1,2 @@
+{"functionCall":{"name":"read_file","args":{"file_path":"fixtures/run-json-output.txt"}}}
+{"functionCall":{"name":"read_file","args":{"file_path":"fixtures/src-commands-run.js"}}}

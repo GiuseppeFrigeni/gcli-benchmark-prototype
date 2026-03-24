@@ -9,6 +9,7 @@ export type TaskDifficulty = "easy" | "medium" | "hard";
 export type TaskPolicy = "always" | "usually";
 export type TaskScope = "single-file" | "multi-file";
 export type TaskKind = "workspace-edit" | "prompt-output" | "tool-use";
+export type TaskSuite = "gemini-core" | "contributor-workflows" | "harness-calibration";
 
 export type TaskStatus = "passed" | "failed" | "infra_failed" | "invalid_task";
 export type AgentMode = "gemini-cli" | "gold-patch" | "noop";
@@ -59,6 +60,7 @@ export interface WorkspaceTask {
   id: string;
   title: string;
   taskKind: TaskKind;
+  suite: TaskSuite;
   category: TaskCategory;
   difficulty: TaskDifficulty;
   language: string;
@@ -167,6 +169,7 @@ export interface TaskRunResult {
   taskId: string;
   title: string;
   taskKind: TaskKind;
+  suite: TaskSuite;
   category: TaskCategory;
   difficulty: TaskDifficulty;
   language: string;
@@ -207,6 +210,11 @@ export interface TaskKindCoverageSummary {
   count: number;
 }
 
+export interface SuiteCoverageSummary {
+  suite: TaskSuite;
+  count: number;
+}
+
 export interface TagCoverageSummary {
   tag: string;
   count: number;
@@ -235,6 +243,7 @@ export interface FailureBreakdownEntry {
 
 export interface FailureBreakdown {
   byReason: FailureBreakdownEntry[];
+  bySuite: FailureBreakdownEntry[];
   byTaskKind: FailureBreakdownEntry[];
   byCategory: FailureBreakdownEntry[];
 }
@@ -249,10 +258,31 @@ export interface EvaluationSummary {
   passRate: number;
   averageDurationMs: number;
   categories: CategorySummary[];
+  suites: SuiteCoverageSummary[];
   taskKinds: TaskKindCoverageSummary[];
   taxonomyCoverage: TaxonomyCoverageSummary;
   efficiency: EfficiencySummary;
   failureBreakdown: FailureBreakdown;
+}
+
+export interface RunEnvironmentSummary {
+  platform: string;
+  arch: string;
+  nodeVersion: string;
+  workingDirectory: string;
+}
+
+export interface RunMetadata {
+  runId: string;
+  generatedAt: string;
+  mode: AgentMode;
+  gitCommitSha?: string;
+  geminiCliVersion?: string;
+  model?: string;
+  approvalMode?: string;
+  suites: TaskSuite[];
+  selectedTaskIds?: string[];
+  environment: RunEnvironmentSummary;
 }
 
 export interface BaselineMetrics {
@@ -260,6 +290,7 @@ export interface BaselineMetrics {
   total: number;
   overallPassRate: number;
   taskStatuses: Record<string, TaskStatus>;
+  metadata?: RunMetadata;
 }
 
 export interface RegressionFinding {
@@ -283,10 +314,12 @@ export interface RunConfig {
   keepWorkspaces: boolean;
   liveOutput?: boolean;
   maxTasks?: number;
+  selectedSuites?: TaskSuite[];
   selectedTaskIds?: string[];
 }
 
 export interface EvaluationRun {
+  metadata: RunMetadata;
   summary: EvaluationSummary;
   tasks: TaskRunResult[];
   regressions: RegressionFinding[];

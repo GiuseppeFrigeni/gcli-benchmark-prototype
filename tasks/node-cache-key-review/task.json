@@ -1,7 +1,9 @@
 {
+  "$schema": "../../docs/task.schema.json",
   "id": "node-cache-key-review",
   "title": "Address review feedback for stable cache keys",
   "taskKind": "workspace-edit",
+  "suite": "harness-calibration",
   "category": "code-review",
   "difficulty": "easy",
   "language": "javascript",

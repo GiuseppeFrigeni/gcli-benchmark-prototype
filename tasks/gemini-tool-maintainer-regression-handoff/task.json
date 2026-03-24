@@ -1,7 +1,9 @@
 {
+  "$schema": "../../docs/task.schema.json",
   "id": "gemini-tool-maintainer-regression-handoff",
   "title": "Inspect local regression artifacts before writing a maintainer handoff",
   "taskKind": "tool-use",
+  "suite": "contributor-workflows",
   "category": "code-review",
   "difficulty": "medium",
   "language": "text",

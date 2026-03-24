@@ -1,8 +1,35 @@
 {
   "name": "gcli-benchmark-prototype",
   "version": "0.1.0",
-  "private": true,
-  "description": "Contributor-facing eval harness for Gemini CLI, built around deterministic tasks, objective verification, and regression reporting",
+  "description": "Deterministic contributor eval harness for Gemini CLI, with benchmark suites, regression reporting, and inspectable artifacts",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GiuseppeFrigeni/gcli-benchmark-prototype.git"
+  },
+  "bugs": {
+    "url": "https://github.com/GiuseppeFrigeni/gcli-benchmark-prototype/issues"
+  },
+  "homepage": "https://github.com/GiuseppeFrigeni/gcli-benchmark-prototype#readme",
+  "main": "dist/cli.js",
+  "bin": {
+    "gcli-benchmark": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "tasks",
+    "baseline",
+    "docs/ADDING_TASKS.md",
+    "docs/task.schema.json",
+    "docs/minimal-task-examples",
+    "README.md",
+    "LICENSE",
+    "CONTRIBUTING.md",
+    "CODE_OF_CONDUCT.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "run": "npm run build && node dist/cli.js run",
@@ -16,9 +43,13 @@
     "dev:compare": "tsx src/cli.ts compare",
     "dev:draft-task": "tsx src/cli.ts draft-task",
     "docs:examples": "tsx src/generate-doc-examples.ts",
-    "test": "npm run build && node tests/benchmark.test.js",
+    "test": "npm run test:unit && npm run test:integration && npm run test:e2e",
+    "test:unit": "npm run build && node --test tests/unit/task-loader.test.js tests/unit/scoring-reporting.test.js",
+    "test:integration": "npm run build && node --test tests/integration/task-execution.test.js tests/integration/cli-commands.test.js tests/docs-assets.test.js",
+    "test:e2e": "npm run build && node --test tests/e2e/mock-calibration.test.js",
     "benchmark": "npm run run",
-    "baseline:update": "tsx src/cli.ts run --update-baseline"
+    "baseline:update": "tsx src/cli.ts run --update-baseline",
+    "prepack": "npm run build"
   },
   "devDependencies": {
     "@types/node": "^22.13.11",

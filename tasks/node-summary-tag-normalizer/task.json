@@ -1,7 +1,9 @@
 {
+  "$schema": "../../docs/task.schema.json",
   "id": "node-summary-tag-normalizer",
   "title": "Refactor summary tags to use a shared normalizer",
   "taskKind": "workspace-edit",
+  "suite": "harness-calibration",
   "category": "refactoring",
   "difficulty": "medium",
   "language": "javascript",

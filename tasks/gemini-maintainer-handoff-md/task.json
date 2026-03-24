@@ -1,7 +1,9 @@
 {
+  "$schema": "../../docs/task.schema.json",
   "id": "gemini-maintainer-handoff-md",
   "title": "Produce a strict maintainer handoff for a Gemini CLI quality issue",
   "taskKind": "prompt-output",
+  "suite": "contributor-workflows",
   "category": "code-review",
   "difficulty": "medium",
   "language": "text",

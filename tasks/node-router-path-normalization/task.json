@@ -1,7 +1,9 @@
 {
+  "$schema": "../../docs/task.schema.json",
   "id": "node-router-path-normalization",
   "title": "Normalize trailing slashes in router matches",
   "taskKind": "workspace-edit",
+  "suite": "harness-calibration",
   "category": "debugging",
   "difficulty": "easy",
   "language": "javascript",

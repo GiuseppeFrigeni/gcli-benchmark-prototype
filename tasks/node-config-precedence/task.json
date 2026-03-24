@@ -1,7 +1,9 @@
 {
+  "$schema": "../../docs/task.schema.json",
   "id": "node-config-precedence",
   "title": "Fix config precedence for explicit CLI values",
   "taskKind": "workspace-edit",
+  "suite": "harness-calibration",
   "category": "debugging",
   "difficulty": "easy",
   "language": "javascript",

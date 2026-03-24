@@ -1,57 +1,114 @@
 # gcli-benchmark-prototype
 
-Contributor eval harness for Gemini CLI quality work, built around deterministic tasks, objective verification, and inspectable regression artifacts.
+Deterministic contributor eval harness for Gemini CLI quality work. The live Gemini CLI runs below are the primary evidence; the gold-patch path exists to prove the harness itself is behaving deterministically.
 
-## Current Snapshot
+## Live Gemini CLI Evidence
 
-As of March 21, 2026, the checked-in benchmark baseline covers 26 tasks and passes at 100%.
+These March 24, 2026 runs are the front-page signal for the project. They are not flattering yet, and that is useful: a good contributor eval harness should show strict-output misses, missing inspections, and time-budget infra failures clearly instead of hiding them behind a mocked success path.
 
-- 26 total tasks across `workspace-edit`, `prompt-output`, and `tool-use`
-- 26/26 passing in the checked-in gold baseline
-- full report and JSON artifacts committed in-repo for inspection
+| Live run | Date (UTC) | Tasks | Passed | Failed | Infra failed | What the harness surfaced | Exact artifacts |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `gemini-core` | 2026-03-24 12:50 | 11 | 0 | 7 | 4 | strict JSON/output mismatches, wrong first inspections, missing required inspections, 120000ms timeouts | [`report-20260324-125017.md`](./reports/live-gemini-core/report-20260324-125017.md), [`results-20260324-125017.json`](./reports/live-gemini-core/results-20260324-125017.json) |
+| `contributor-workflows` | 2026-03-24 13:18 | 10 | 0 | 6 | 4 | maintainer-output mismatches, missing inspection evidence, 120000ms timeouts on review-style prompts | [`report-20260324-131841.md`](./reports/live-contributor-workflows/report-20260324-131841.md), [`results-20260324-131841.json`](./reports/live-contributor-workflows/results-20260324-131841.json) |
 
-Primary references:
+If a live task fails because of a Gemini CLI limitation, that is still a useful benchmark outcome. The point is that the harness can classify the failure and preserve the artifacts needed to inspect it.
 
-- [`baseline/baseline.json`](./baseline/baseline.json)
-- [`reports/latest-report.md`](./reports/latest-report.md)
-- [`reports/latest-results.json`](./reports/latest-results.json)
+### `gemini-core` Per-Task Outcomes
 
-## Why Contributors Use This
+| Task | Status | Why the harness marked it that way |
+| --- | --- | --- |
+| [`gemini-auth-refresh-review`](./tasks/gemini-auth-refresh-review/) | `infra_failed` | Gemini CLI timed out after 120000ms on the workspace-edit auth task. |
+| [`gemini-json-mode-regression-triage-json`](./tasks/gemini-json-mode-regression-triage-json/) | `failed` | Strict JSON output did not match the expected regression-triage payload. |
+| [`gemini-models-json-compat`](./tasks/gemini-models-json-compat/) | `infra_failed` | Gemini CLI timed out after 120000ms on the workspace-edit JSON-compat task. |
+| [`gemini-output-regression-summary`](./tasks/gemini-output-regression-summary/) | `failed` | Exact summary output did not match the expected compatibility report text. |
+| [`gemini-repo-triage-json`](./tasks/gemini-repo-triage-json/) | `failed` | Strict JSON repo-triage answer did not match the expected structure/content. |
+| [`gemini-repo-triage-owner-selection-json`](./tasks/gemini-repo-triage-owner-selection-json/) | `failed` | Strict JSON owner-selection answer did not match the expected structure/content. |
+| [`gemini-tool-debug-workflow-command-choice`](./tasks/gemini-tool-debug-workflow-command-choice/) | `failed` | Tool path was wrong: the first tool call was expected to inspect `node --test test/repro-json.test.js`. |
+| [`gemini-tool-first-inspection-root-cause`](./tasks/gemini-tool-first-inspection-root-cause/) | `infra_failed` | Gemini CLI timed out after 120000ms on the investigation task. |
+| [`gemini-tool-json-mode-log-order-root-cause`](./tasks/gemini-tool-json-mode-log-order-root-cause/) | `failed` | Tool path was wrong: the first inspection was expected to hit `fixtures/run-json-output.txt`. |
+| [`gemini-tool-json-mode-root-cause`](./tasks/gemini-tool-json-mode-root-cause/) | `infra_failed` | Gemini CLI timed out after 120000ms on the investigation task. |
+| [`gemini-tool-output-routing-review`](./tasks/gemini-tool-output-routing-review/) | `failed` | Required inspection was missing: `test/models-json.test.js` was not read before answering. |
 
-- validate changes locally before opening a PR
-- compare current behavior against a saved baseline
-- inspect per-task prompts, diffs, stdout, stderr, and tool-usage summaries
-- extend coverage with small, reviewable task fixtures instead of ad hoc one-off scripts
+### `contributor-workflows` Per-Task Outcomes
 
-## What The Harness Evaluates
+| Task | Status | Why the harness marked it that way |
+| --- | --- | --- |
+| [`eval-flaky-verifier-tighten-md`](./tasks/eval-flaky-verifier-tighten-md/) | `infra_failed` | Gemini CLI timed out after 120000ms on the maintainer-guidance prompt. |
+| [`eval-gap-inventory-json`](./tasks/eval-gap-inventory-json/) | `failed` | Strict JSON coverage-gap output did not match the expected payload. |
+| [`gemini-flaky-eval-stabilization-json`](./tasks/gemini-flaky-eval-stabilization-json/) | `failed` | Strict JSON stabilization plan did not match the expected payload. |
+| [`gemini-maintainer-handoff-md`](./tasks/gemini-maintainer-handoff-md/) | `infra_failed` | Gemini CLI timed out after 120000ms on the maintainer-handoff prompt. |
+| [`gemini-maintainer-repro-reply-md`](./tasks/gemini-maintainer-repro-reply-md/) | `failed` | Exact Markdown maintainer reply did not match the expected structure/content. |
+| [`gemini-tool-debug-trace-repro-workflow`](./tasks/gemini-tool-debug-trace-repro-workflow/) | `infra_failed` | Gemini CLI timed out after 120000ms on the debug-workflow tool task. |
+| [`gemini-tool-maintainer-regression-handoff`](./tasks/gemini-tool-maintainer-regression-handoff/) | `failed` | Required inspection was missing: `fixtures/run-report.md` was not read before the handoff answer. |
+| [`prompt-regression-triage-json`](./tasks/prompt-regression-triage-json/) | `failed` | Strict JSON regression triage output did not match the expected payload. |
+| [`prompt-review-findings-markdown`](./tasks/prompt-review-findings-markdown/) | `infra_failed` | Gemini CLI timed out after 120000ms on the review-style prompt. |
+| [`tool-regression-review`](./tasks/tool-regression-review/) | `failed` | The final answer and investigation path did not satisfy the review verification checks. |
 
-The suite currently includes 26 deterministic tasks across three task kinds:
+## How This Maps To The GSoC Project
 
-- `workspace-edit`: repo-backed fixes verified by fail-to-pass and pass-to-pass commands
-- `prompt-output`: strict response-shape tasks scored from agent stdout
-- `tool-use`: investigation tasks scored from both the final answer and normalized tool-usage activity
+This repo is meant to be read against the official "Behavioral Evaluation Test Framework" bullets, not as a generic benchmark experiment.
 
-Gemini-CLI-specific contributor coverage now includes:
+| GSoC project outcome | Repo evidence today |
+| --- | --- |
+| Evaluation framework with standardized test harness | Deterministic runner, shared task contract, objective verification commands, artifact capture, and suite-aware CLI in [`src/`](./src/). |
+| Benchmark suite covering 50+ coding scenarios across categories | Current corpus is 32 deterministic tasks across 3 suites and 4 categories, with the roadmap explicitly aimed at pushing this past 50 before the project is "done". |
+| Automated scoring and success rate metrics | Markdown/JSON reports compute pass rate, failure breakdowns, suite coverage, task-kind coverage, taxonomy coverage, and per-task failure analysis. |
+| Regression detection system integrated with CI/CD | Baseline comparison is built in, regressions surface in reports, and CI runs both mock calibration and Node test matrix workflows. |
+| Dashboard or report generation for evaluation results | Every run emits inspectable Markdown, JSON, and per-task artifacts under [`reports/`](./reports/). |
+| Documentation for adding new evaluation scenarios | [`docs/ADDING_TASKS.md`](./docs/ADDING_TASKS.md), [`docs/task.schema.json`](./docs/task.schema.json), and [`docs/minimal-task-examples/README.md`](./docs/minimal-task-examples/README.md) document the authoring contract. |
+| Baseline metrics for current Gemini CLI version | Archived March 24, 2026 live runs are checked in for Gemini CLI `0.32.1`, alongside a 32/32 deterministic gold-patch harness calibration baseline. |
 
-- tool-use inspection for CLI JSON-mode regressions
-- strict repo triage for Gemini CLI ownership and first-file selection
-- output-format regression summaries for script-facing compatibility breaks
-- maintainer handoff prompts with exact Markdown structure
-- eval gap inventory and flaky-verifier maintenance prompts
-- contributor-tooling commands for coverage gaps, run comparison, and chat-log task drafts
+## Suite Taxonomy
 
-Current suite shape:
+The benchmark is split into reviewer-facing suites instead of one undifferentiated pile of tasks.
 
-- 26 total tasks
+| Suite | Tasks | What it covers | Why it matters |
+| --- | --- | --- | --- |
+| `gemini-core` | 11 | direct Gemini CLI quality evidence: JSON mode, repo triage, output routing, debugging, and tool-use sequencing | this is the most direct evidence for the GSoC proposal |
+| `contributor-workflows` | 10 | maintainer replies, review findings, eval triage, flaky-eval investigation, and contributor-facing reporting | this shows whether the harness helps real OSS contribution workflows |
+| `harness-calibration` | 11 | generic deterministic fixtures for benchmark integrity and regression detection | this proves the harness is working even when live-agent quality is weak |
+
+Current corpus shape:
+
+- 32 total tasks
 - 12 `workspace-edit` tasks
-- 7 `prompt-output` tasks
-- 7 `tool-use` tasks
-- 17 `multi-file` tasks
+- 11 `prompt-output` tasks
+- 9 `tool-use` tasks
+- 23 `multi-file` tasks
 - 9 `single-file` tasks
 
-## Example Artifacts
+## Architecture
 
-Deterministic mock examples live under [`docs/examples`](./docs/examples) and can be refreshed with `npm run docs:examples`.
+Simple system view:
+
+![Architecture flow](./docs/assets/architecture-flow.svg)
+
+Editable source: [`docs/assets/architecture-flow.mmd`](./docs/assets/architecture-flow.mmd)
+
+## Reproducible Run Metadata
+
+Reviewers should not have to guess what changed between runs.
+
+| Run | Run ID | Date (UTC) | Mode | Suite(s) | Tasks | Gemini CLI | Model | Approval | Git SHA | Node / platform | Exact artifacts |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Gold-patch harness calibration | `20260324-123859` | 2026-03-24 12:38 | `gold-patch` | all 3 suites | 32 | n/a | n/a | n/a | `21f54ff` | `v20.19.0` on `win32/x64` | [`report-20260324-123859.md`](./reports/report-20260324-123859.md), [`results-20260324-123859.json`](./reports/results-20260324-123859.json), [`baseline.json`](./baseline/baseline.json) |
+| Live Gemini run | `20260324-125017` | 2026-03-24 12:50 | `gemini-cli` | `gemini-core` | 11 | `0.32.1` | Gemini CLI default | `yolo` | `21f54ff` | `v20.19.0` on `win32/x64` | [`report-20260324-125017.md`](./reports/live-gemini-core/report-20260324-125017.md), [`results-20260324-125017.json`](./reports/live-gemini-core/results-20260324-125017.json) |
+| Live Gemini run | `20260324-131841` | 2026-03-24 13:18 | `gemini-cli` | `contributor-workflows` | 10 | `0.32.1` | Gemini CLI default | `yolo` | `21f54ff` | `v20.19.0` on `win32/x64` | [`report-20260324-131841.md`](./reports/live-contributor-workflows/report-20260324-131841.md), [`results-20260324-131841.json`](./reports/live-contributor-workflows/results-20260324-131841.json) |
+
+## Gold-Patch Harness Calibration
+
+The deterministic harness-calibration path is still important, but it is a harness-integrity signal, not a live Gemini quality claim.
+
+- 32/32 passing on March 24, 2026
+- exact baseline committed in [`baseline/baseline.json`](./baseline/baseline.json)
+- latest full-suite calibration report in [`reports/latest-report.md`](./reports/latest-report.md)
+- latest full-suite calibration JSON in [`reports/latest-results.json`](./reports/latest-results.json)
+
+The gold-patch path is what validates task loading, verification, artifact generation, suite accounting, and regression comparison end to end. It should not be read as "Gemini CLI scored 32/32."
+
+## Mock Examples
+
+Deterministic example artifacts for docs and screenshots live under [`docs/examples`](./docs/examples) and are refreshed with `npm run docs:examples`.
 
 ![Mock report overview](./docs/assets/report-overview.svg)
 
@@ -59,7 +116,7 @@ Deterministic mock examples live under [`docs/examples`](./docs/examples) and ca
 
 ![Regression snapshot](./docs/assets/regression-pr-view.svg)
 
-See the checked-in examples directly:
+Direct references:
 
 - [`docs/examples/mock-report.md`](./docs/examples/mock-report.md)
 - [`docs/examples/mock-results.json`](./docs/examples/mock-results.json)
@@ -70,7 +127,7 @@ See the checked-in examples directly:
 Prerequisites:
 
 - Node.js 20+
-- Gemini CLI installed and authenticated as `gemini` for real-agent runs
+- Gemini CLI installed and authenticated as `gemini` for live runs
 
 Install dependencies:
 
@@ -80,40 +137,40 @@ npm install
 
 ## Quick Start
 
-List the available tasks and coverage slices:
+List the current corpus with suite counts:
 
 ```bash
-npm run dev:list
+npm run dev:list -- --json
 ```
 
-Run the full suite with Gemini CLI:
+List only the direct Gemini suite:
 
 ```bash
-npm run dev:run
+npm run dev:list -- --suite=gemini-core --json
 ```
 
-Run a focused subset:
+Run deterministic harness calibration:
 
 ```bash
-npm run dev:run -- --task=node-config-precedence --task=tool-router-root-cause
+npm run dev:run -- --agent-mode=gold-patch
 ```
 
-Run a Gemini-quality subset:
+Run the live Gemini CLI `gemini-core` suite:
 
 ```bash
-npm run dev:run -- --task=gemini-tool-json-mode-root-cause --task=gemini-repo-triage-json --task=gemini-output-regression-summary
+npm run dev:run -- --agent-mode=gemini-cli --suite=gemini-core --reports reports/live-gemini-core
 ```
 
-Find under-covered slices and a recommended starting template:
+Run the live Gemini CLI `contributor-workflows` suite:
 
 ```bash
-npm run dev:gaps
+npm run dev:run -- --agent-mode=gemini-cli --suite=contributor-workflows --reports reports/live-contributor-workflows
 ```
 
-Compare a run against its baseline with contributor-facing summaries:
+Compare a run against the deterministic baseline:
 
 ```bash
-npm run dev:compare -- --results reports/latest-results.json --baseline baseline/baseline.json
+npm run dev:compare -- --results reports/live-gemini-core/latest-results.json --baseline baseline/baseline.json
 ```
 
 Draft a new task from a structured chat log:
@@ -122,152 +179,37 @@ Draft a new task from a structured chat log:
 npm run dev:draft-task -- --chat-log examples/chat-log.json --task-id draft-task --task-kind tool-use --category debugging --language text --out drafts/draft-task
 ```
 
-Run the deterministic mock path used in CI:
+## Task Authoring
 
-```bash
-npm run dev:run -- --agent-mode=gold-patch
-```
+Task authoring is schema-backed and suite-aware.
 
-## How A Contributor Would Catch A Regression
+- Authoring guide: [`docs/ADDING_TASKS.md`](./docs/ADDING_TASKS.md)
+- Manifest schema: [`docs/task.schema.json`](./docs/task.schema.json)
+- Minimal examples: [`docs/minimal-task-examples/README.md`](./docs/minimal-task-examples/README.md)
+- Draft-task scaffold command: `npm run dev:draft-task`
 
-1. Run the tasks that cover the area you changed.
+Every task now declares one primary `suite`:
 
-```bash
-npm run dev:run -- --task=node-config-precedence --task=prompt-regression-triage-json
-```
+- `gemini-core`
+- `contributor-workflows`
+- `harness-calibration`
 
-2. Compare the run against the baseline.
+Cross-cutting behavior belongs in taxonomy tags, not in multi-suite membership.
 
-The harness exits with `2` when regressions are detected against the current baseline.
+## Testing, Packaging, And OSS Basics
 
-3. Inspect the generated artifacts.
+The repo is shaped to look like outside contributors can actually use it.
 
-- `reports/latest-report.md`
-- `reports/latest-results.json`
-- `reports/artifacts/<run-id>/<task-id>/prompt.txt`
-- `reports/artifacts/<run-id>/<task-id>/activity-summary.json`
-- `reports/artifacts/<run-id>/<task-id>/git-diff.patch`
+- Unit, integration, and e2e benchmark tests are split across `npm run test:unit`, `npm run test:integration`, and `npm run test:e2e`.
+- CI now has a Node 20/22 matrix plus a separate mock calibration workflow.
+- `package.json` is no longer private; it has `bin`, `files`, `engines`, repository metadata, and an `npm pack --dry-run` guardrail in CI.
+- The package is in a publishable shape, but it is not published to npm yet.
+- OSS basics are checked in: [`LICENSE`](./LICENSE), [`CONTRIBUTING.md`](./CONTRIBUTING.md), and [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md).
 
-4. Refresh the baseline only when the expected benchmark behavior intentionally changed.
+## Roadmap And Tracking
 
-```bash
-npm run baseline:update
-```
+- High-level roadmap: [`docs/ROADMAP.md`](./docs/ROADMAP.md)
+- Issue-ready work items: [`docs/ROADMAP_ISSUES.md`](./docs/ROADMAP_ISSUES.md)
+- This implementation pass log: [`docs/IMPLEMENTATION_LOG.md`](./docs/IMPLEMENTATION_LOG.md)
 
-## Task Authoring Model
-
-Every task lives under `tasks/<task-id>/` and declares a `taskKind` in `task.json`.
-
-- `workspace-edit` requires `repo/` and `gold.patch`
-- `prompt-output` requires `gold.stdout.txt`
-- `tool-use` requires `gold.activity.jsonl`
-- `gold.stderr.txt` is optional for non-workspace tasks
-
-Verification and setup commands support:
-
-- `${taskDir}`
-- `${workspaceDir}`
-- `${artifactDir}`
-
-Tool-use tasks also get a normalized `activity-summary.json` artifact so they can assert on ordered tool calls and inspected targets without depending on provider-specific raw logs.
-
-Tool-use tasks can also declare `toolExpectations` so the harness can surface missing required inspections, wrong first inspections, and ordered-path violations directly in reports and JSON results.
-
-More detail:
-
-- [`docs/ADDING_TASKS.md`](./docs/ADDING_TASKS.md)
-- [`docs/ROADMAP.md`](./docs/ROADMAP.md)
-
-## Checked-In Benchmark Proof
-
-The strongest front-page proof point is the current checked-in benchmark snapshot from March 21, 2026:
-
-```text
-Generated at: 2026-03-21T08:45:00.000Z
-Tasks: 26
-Passed: 26 (100.00%)
-Failed: 0
-Infra Failed: 0
-Invalid Tasks: 0
-Mode: gold-patch
-```
-
-That snapshot is deterministic and inspectable in-repo, which makes it a better statement of harness maturity than the older subset example below. It shows the harness already supports the core contributor loop end to end: curated task loading, objective scoring, baseline comparison, and per-task artifact inspection across all three task kinds.
-
-## Archived Real Gemini CLI Subset Run
-
-The repo also includes one archived real Gemini CLI subset run from March 15, 2026:
-
-```bash
-npm run dev:run -- --agent-mode=gemini-cli --task=node-cache-key-review --task=node-cli-json-output --task=node-config-precedence --task=node-header-merge-review --task=node-keyword-normalizer-refactor --task=node-router-path-normalization --task=node-slug-shared-normalizer
-```
-
-Artifacts:
-
-- [`reports/report-20260315-181002.md`](./reports/report-20260315-181002.md)
-- [`reports/results-20260315-181002.json`](./reports/results-20260315-181002.json)
-
-Report excerpt:
-
-```text
-Generated at: 2026-03-15T18:10:02.028Z
-Tasks: 7
-Passed: 5 (71.43%)
-Infra Failed: 2
-Mode: gemini-cli
-Model: Gemini CLI default
-```
-
-This is still useful as a real-agent reference point, but it should be read as a narrower historical subset run, not as the current size or capability of the harness.
-
-One failure analysis from that run:
-
-- `node-cache-key-review` timed out after 120000ms while another code-review task in the same subset passed, which makes the harness useful for contributor quality work beyond simple correctness. It surfaces when Gemini CLI can solve the patch but struggles to finish a review-style task inside the evaluation budget.
-
-## Reports
-
-Each run writes:
-
-- `reports/latest-results.json`
-- `reports/latest-report.md`
-- archived timestamped copies in `reports/`
-- per-task artifacts in `reports/artifacts/<run-id>/`
-
-The Markdown and JSON reports now surface:
-
-- category coverage
-- task-kind coverage
-- taxonomy coverage
-- efficiency metrics
-- failure breakdowns by reason, category, and task kind
-- regression findings
-- per-task failure analysis, including first failing verifier and first observed tool call
-- per-task artifact paths, including `activity-summary.json`
-
-## Commands
-
-```bash
-npm run dev:list
-npm run dev:gaps
-npm run dev:compare
-npm run dev:draft-task
-npm run dev:run
-npm run dev:run -- --agent-mode=gold-patch
-npm run dev:run -- --agent-mode=noop
-npm run baseline:update
-npm run docs:examples
-npm test
-```
-
-## Approval Policy
-
-The Gemini adapter now exposes approval mode as harness policy:
-
-- `--approval-mode <value>`
-- `GCLI_BENCHMARK_APPROVAL_MODE=<value>`
-
-Precedence is explicit CLI flag, then environment variable, then the compatibility default of `yolo`.
-
-## Roadmap
-
-The harness is already past the initial bootstrap stage. It covers repo edits, prompt-output behavior, tool-use behavior, contributor authoring support, and Gemini-CLI-specific debugging workflows today. From here, the roadmap is about expanding coverage beyond the current 26-task suite, tightening regression policy, improving contributor templates, and keeping the deterministic mock examples fresh rather than changing the core harness model.
+The remaining external-facing gap here is GitHub-side social proof: issue seeds are checked in, but actual GitHub issues/labels still need to be opened on the hosted repo.

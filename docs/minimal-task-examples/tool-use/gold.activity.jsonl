@@ -1,0 +1,1 @@
+{"functionCall":{"name":"read_file","args":{"file_path":"fixtures/note.txt"}}}

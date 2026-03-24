@@ -1,11 +1,13 @@
 import {
   EfficiencySummary,
   ScopeCoverageSummary,
+  SuiteCoverageSummary,
   TagCoverageSummary,
   TaskEfficiency,
   TaskKind,
   TaskKindCoverageSummary,
   TaskScope,
+  TaskSuite,
   TaskTaxonomy,
   TaxonomyCoverageSummary,
 } from "./types";
@@ -29,6 +31,12 @@ function sortTaskKinds(taskKinds: Map<TaskKind, number>): TaskKindCoverageSummar
     .sort((a, b) => a.taskKind.localeCompare(b.taskKind));
 }
 
+function sortSuites(suites: Map<TaskSuite, number>): SuiteCoverageSummary[] {
+  return [...suites.entries()]
+    .map(([suite, count]) => ({ suite, count }))
+    .sort((a, b) => a.suite.localeCompare(b.suite));
+}
+
 export function buildTaskKindCoverageSummary(
   entries: Array<{ taskKind: TaskKind }>,
 ): TaskKindCoverageSummary[] {
@@ -37,6 +45,16 @@ export function buildTaskKindCoverageSummary(
     taskKinds.set(entry.taskKind, (taskKinds.get(entry.taskKind) ?? 0) + 1);
   }
   return sortTaskKinds(taskKinds);
+}
+
+export function buildSuiteCoverageSummary(
+  entries: Array<{ suite: TaskSuite }>,
+): SuiteCoverageSummary[] {
+  const suites = new Map<TaskSuite, number>();
+  for (const entry of entries) {
+    suites.set(entry.suite, (suites.get(entry.suite) ?? 0) + 1);
+  }
+  return sortSuites(suites);
 }
 
 export function buildTaxonomyCoverageSummary(

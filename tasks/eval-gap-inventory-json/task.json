@@ -1,7 +1,9 @@
 {
+  "$schema": "../../docs/task.schema.json",
   "id": "eval-gap-inventory-json",
   "title": "Return strict JSON for contributor-facing eval coverage gaps",
   "taskKind": "prompt-output",
+  "suite": "contributor-workflows",
   "category": "debugging",
   "difficulty": "medium",
   "language": "text",

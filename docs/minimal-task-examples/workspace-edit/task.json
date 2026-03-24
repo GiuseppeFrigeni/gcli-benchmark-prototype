@@ -1,0 +1,27 @@
+{
+  "$schema": "../../task.schema.json",
+  "id": "minimal-workspace-edit",
+  "title": "Restore the counter increment",
+  "taskKind": "workspace-edit",
+  "suite": "harness-calibration",
+  "category": "debugging",
+  "difficulty": "easy",
+  "language": "javascript",
+  "taxonomy": {
+    "scope": "single-file",
+    "tags": [
+      "behavior-preservation",
+      "minimal-example"
+    ]
+  },
+  "problemStatementFile": "issue.md",
+  "verification": {
+    "failToPass": [
+      "node --test test/counter.test.js"
+    ],
+    "passToPass": [
+      "node --test test/stable.test.js"
+    ]
+  },
+  "policy": "always"
+}

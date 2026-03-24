@@ -1,7 +1,9 @@
 {
+  "$schema": "../../docs/task.schema.json",
   "id": "node-keyword-normalizer-refactor",
   "title": "Refactor keyword parsing to share normalization logic",
   "taskKind": "workspace-edit",
+  "suite": "harness-calibration",
   "category": "refactoring",
   "difficulty": "easy",
   "language": "javascript",

@@ -24,6 +24,12 @@ function formatTaskKinds(run: EvaluationRun): string {
     : run.summary.taskKinds.map((entry) => `${entry.taskKind}=${entry.count}`).join(", ");
 }
 
+function formatSuites(run: EvaluationRun): string {
+  return run.summary.suites.length === 0
+    ? "none"
+    : run.summary.suites.map((entry) => `${entry.suite}=${entry.count}`).join(", ");
+}
+
 function formatFailureBreakdown(
   entries: EvaluationRun["summary"]["failureBreakdown"]["byReason"],
 ): string {
@@ -62,19 +68,41 @@ export function renderMarkdownReport(run: EvaluationRun): string {
   lines.push(`Average Duration: ${run.summary.averageDurationMs.toFixed(2)}ms`);
   lines.push("");
 
+  lines.push("## Run Metadata");
+  lines.push("");
+  lines.push("| Field | Value |");
+  lines.push("| --- | --- |");
+  lines.push(`| Run ID | ${run.metadata.runId} |`);
+  lines.push(`| Mode | ${run.metadata.mode} |`);
+  lines.push(`| Git Commit | ${run.metadata.gitCommitSha ?? "unknown"} |`);
+  lines.push(`| Gemini CLI Version | ${run.metadata.geminiCliVersion ?? "n/a"} |`);
+  lines.push(`| Model | ${run.metadata.model ?? "n/a"} |`);
+  lines.push(`| Approval Mode | ${run.metadata.approvalMode ?? "n/a"} |`);
+  lines.push(`| Suites | ${run.metadata.suites.join(", ") || "none"} |`);
+  lines.push(
+    `| Selected Task IDs | ${run.metadata.selectedTaskIds?.join(", ") ?? "all tasks in selected suites"} |`,
+  );
+  lines.push(
+    `| Environment | ${run.metadata.environment.platform}/${run.metadata.environment.arch}; ${run.metadata.environment.nodeVersion} |`,
+  );
+  lines.push(`| Working Directory | ${run.metadata.environment.workingDirectory} |`);
+  lines.push("");
+
   if (run.config) {
     lines.push("## Run Configuration");
     lines.push("");
-    lines.push(`Mode: ${run.config.mode}`);
-    if (run.config.mode === "gemini-cli") {
-      lines.push(`Gemini Binary: ${run.config.geminiBin}`);
-      lines.push(`Model: ${run.config.model ?? "Gemini CLI default"}`);
-    }
     lines.push(`Tasks Dir: ${run.config.tasksDir}`);
     lines.push(`Workspace Root: ${run.config.workspaceRoot}`);
     lines.push(`Keep Workspaces: ${run.config.keepWorkspaces ? "yes" : "no"}`);
+    if (run.config.selectedSuites && run.config.selectedSuites.length > 0) {
+      lines.push(`Selected Suites: ${run.config.selectedSuites.join(", ")}`);
+    }
     if (run.config.selectedTaskIds && run.config.selectedTaskIds.length > 0) {
       lines.push(`Selected Tasks: ${run.config.selectedTaskIds.join(", ")}`);
+    }
+    if (run.config.mode === "gemini-cli") {
+      lines.push(`Gemini Binary: ${run.config.geminiBin}`);
+      lines.push(`Model: ${run.config.model ?? "Gemini CLI default"}`);
     }
     if (run.config.geminiArgs && run.config.geminiArgs.length > 0) {
       lines.push(`Gemini Args: \`${run.config.geminiArgs.join(" ")}\``);
@@ -96,6 +124,11 @@ export function renderMarkdownReport(run: EvaluationRun): string {
   lines.push("## Task Kind Coverage");
   lines.push("");
   lines.push(`Task Kinds: ${formatTaskKinds(run)}`);
+  lines.push("");
+
+  lines.push("## Suite Coverage");
+  lines.push("");
+  lines.push(`Suites: ${formatSuites(run)}`);
   lines.push("");
 
   lines.push("## Taxonomy Coverage");
@@ -139,6 +172,7 @@ export function renderMarkdownReport(run: EvaluationRun): string {
   lines.push("## Failure Breakdown");
   lines.push("");
   lines.push(`Reasons: ${formatFailureBreakdown(run.summary.failureBreakdown.byReason)}`);
+  lines.push(`Suites: ${formatFailureBreakdown(run.summary.failureBreakdown.bySuite)}`);
   lines.push(
     `Task Kinds: ${formatFailureBreakdown(run.summary.failureBreakdown.byTaskKind)}`,
   );
@@ -170,8 +204,8 @@ export function renderMarkdownReport(run: EvaluationRun): string {
 
   lines.push("## Task Results");
   lines.push("");
-  lines.push("| Task | Kind | Category | Language | Taxonomy | Policy | Status | Failure Reason | First Failure | First Tool | Baseline | Harness ms | Agent ms | Files | Changed Lines | Artifacts | Notes |");
-  lines.push("| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |");
+  lines.push("| Task | Suite | Kind | Category | Language | Taxonomy | Policy | Status | Failure Reason | First Failure | First Tool | Baseline | Harness ms | Agent ms | Files | Changed Lines | Artifacts | Notes |");
+  lines.push("| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |");
   for (const task of run.tasks) {
     const artifacts = [
       task.artifacts.diffPath,
@@ -191,7 +225,7 @@ export function renderMarkdownReport(run: EvaluationRun): string {
         ? task.failureAnalysis.baselineDelta ?? "-"
         : `${task.failureAnalysis.baselineStatus} -> ${task.failureAnalysis.baselineDelta ?? "unchanged"}`;
     lines.push(
-      `| ${task.taskId} | ${task.taskKind} | ${task.category} | ${task.language} | ${formatTaxonomy(task)} | ${task.policy} | ${task.status} | ${task.failureAnalysis.reason} | ${formatFirstFailure(task)} | ${formatToolCall(task.failureAnalysis.firstObservedToolCall)} | ${baseline} | ${task.durationMs} | ${agentDuration} | ${filesChanged} | ${changedLines} | ${artifacts || "-"} | ${task.notes.join("; ") || "-"} |`,
+      `| ${task.taskId} | ${task.suite} | ${task.taskKind} | ${task.category} | ${task.language} | ${formatTaxonomy(task)} | ${task.policy} | ${task.status} | ${task.failureAnalysis.reason} | ${formatFirstFailure(task)} | ${formatToolCall(task.failureAnalysis.firstObservedToolCall)} | ${baseline} | ${task.durationMs} | ${agentDuration} | ${filesChanged} | ${changedLines} | ${artifacts || "-"} | ${task.notes.join("; ") || "-"} |`,
     );
   }
   lines.push("");

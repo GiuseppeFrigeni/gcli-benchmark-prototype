@@ -1,32 +1,18 @@
 # Contributor Eval Harness Roadmap
 
-This repository already supports the core contributor loop:
+The core harness is now organized around three suites:
 
-- load validated task manifests
-- run deterministic workspace, prompt-output, and tool-use tasks
-- score the run with objective verification commands
-- compare current behavior against a baseline
-- emit inspectable reports and per-task artifacts
+- `gemini-core` for direct Gemini CLI quality evidence
+- `contributor-workflows` for maintainer and eval-maintenance flows
+- `harness-calibration` for deterministic harness validation
 
-The roadmap from here is about growing coverage and tightening regression policy, not reinventing the harness shape.
+## Near-Term Priorities
 
-## Near Term
+- Keep live Gemini evidence current for `gemini-core` and `contributor-workflows`.
+- Expand Gemini-heavy coverage before adding more generic coding fixtures.
+- Keep the mock baseline trustworthy as a harness-calibration signal.
+- Tighten authoring ergonomics through schema-backed manifests and minimal examples.
 
-- Expand beyond the current 26-task suite with more medium and hard fixtures.
-- Add more tool-use tasks that verify inspected targets, first-inspection choices, and debug workflow commands.
-- Add more prompt-output tasks for maintainer workflows like summarization, triage, review replies, and eval maintenance.
-- Keep the mocked gold/noop flow reliable so contributors can trust CI artifacts and draft-task outputs.
+## Tracked Work
 
-## Next Quality Bar
-
-- Add per-category and per-task-kind regression thresholds.
-- Surface richer baseline drift reporting when behavior changes intentionally.
-- Track stronger efficiency signals for large edits and investigative tasks.
-- Improve artifact summaries for PR reviews, manual triage, and contributor-authored eval drafts.
-
-## Contributor Scale
-
-- Reach 30+ curated tasks with balanced category, difficulty, and task-kind coverage.
-- Add contributor templates for each task kind and stronger authoring helpers for eval maintenance work.
-- Document a lightweight checklist for proposing new tasks, drafting from chat logs, and refreshing examples.
-- Keep checked-in examples and screenshot assets refreshed from deterministic mock runs.
+Issue-ready follow-ups live in [`docs/ROADMAP_ISSUES.md`](./ROADMAP_ISSUES.md). They are written so they can be copied directly into GitHub issues if repository access is not available in the current environment.

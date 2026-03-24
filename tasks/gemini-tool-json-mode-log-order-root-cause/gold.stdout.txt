@@ -1,0 +1,1 @@
+Root cause: src/commands/run.js prints `Starting task execution...` before the JSON payload, so `gemini run --json` mixes human progress text into machine-readable stdout (src/commands/run.js).

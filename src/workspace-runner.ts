@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { createActivitySummary } from "./activity-summary";
 import {
   buildEfficiencySummary,
+  buildSuiteCoverageSummary,
   buildTaskKindCoverageSummary,
   buildTaxonomyCoverageSummary,
 } from "./task-metrics";
@@ -83,6 +84,14 @@ function terminateChildProcess(pid: number | undefined): void {
   }
 }
 
+function buildCommandEnv(): NodeJS.ProcessEnv {
+  const env = { ...process.env };
+  delete env.NODE_OPTIONS;
+  delete env.NODE_TEST_CONTEXT;
+  delete env.NODE_UNIQUE_ID;
+  return env;
+}
+
 async function runShellCommand(
   command: string,
   cwd: string,
@@ -97,6 +106,7 @@ async function runShellCommand(
 
     const child = spawn(command, {
       cwd,
+      env: buildCommandEnv(),
       shell: true,
       stdio: ["ignore", "pipe", "pipe"],
       windowsHide: true,
@@ -271,6 +281,7 @@ function buildPrompt(task: WorkspaceTask, problemStatement: string, context: Tas
     "",
     `Task ID: ${task.id}`,
     `Task Kind: ${task.taskKind}`,
+    `Suite: ${task.suite}`,
     `Category: ${task.category}`,
     `Language: ${task.language}`,
     `Task Directory: ${context.task?.taskDir ?? ""}`,
@@ -450,6 +461,7 @@ function makeResult(
     taskId: task.id,
     title: task.title,
     taskKind: task.taskKind,
+    suite: task.suite,
     category: task.category,
     difficulty: task.difficulty,
     language: task.language,
@@ -754,6 +766,7 @@ function buildCategorySummaries(results: TaskRunResult[]): CategorySummary[] {
 
 function buildFailureBreakdown(results: TaskRunResult[]): EvaluationSummary["failureBreakdown"] {
   const byReason = new Map<string, number>();
+  const bySuite = new Map<string, number>();
   const byTaskKind = new Map<string, number>();
   const byCategory = new Map<string, number>();
 
@@ -765,6 +778,7 @@ function buildFailureBreakdown(results: TaskRunResult[]): EvaluationSummary["fai
       result.failureAnalysis.reason,
       (byReason.get(result.failureAnalysis.reason) ?? 0) + 1,
     );
+    bySuite.set(result.suite, (bySuite.get(result.suite) ?? 0) + 1);
     byTaskKind.set(result.taskKind, (byTaskKind.get(result.taskKind) ?? 0) + 1);
     byCategory.set(result.category, (byCategory.get(result.category) ?? 0) + 1);
   }
@@ -776,6 +790,7 @@ function buildFailureBreakdown(results: TaskRunResult[]): EvaluationSummary["fai
 
   return {
     byReason: toSortedEntries(byReason),
+    bySuite: toSortedEntries(bySuite),
     byTaskKind: toSortedEntries(byTaskKind),
     byCategory: toSortedEntries(byCategory),
   };
@@ -814,6 +829,7 @@ export async function runTasks(
     passRate: roundTo(total === 0 ? 0 : passed / total, 4),
     averageDurationMs: roundTo(averageDurationMs, 2),
     categories: buildCategorySummaries(results),
+    suites: buildSuiteCoverageSummary(results),
     taskKinds: buildTaskKindCoverageSummary(results),
     taxonomyCoverage: buildTaxonomyCoverageSummary(results),
     efficiency: buildEfficiencySummary(results),

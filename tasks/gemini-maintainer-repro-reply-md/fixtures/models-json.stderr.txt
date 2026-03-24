@@ -1,0 +1,2 @@
+Error: Unexpected token R in JSON at position 0
+while parsing stdout from `gemini models --json`

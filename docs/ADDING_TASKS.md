@@ -1,6 +1,6 @@
 # Adding Tasks
 
-Each task lives in its own directory under `tasks/`:
+Every benchmark task lives in its own directory under `tasks/`:
 
 ```text
 tasks/<task-id>/
@@ -8,18 +8,45 @@ tasks/<task-id>/
   issue.md
   repo/                     # required for workspace-edit, optional otherwise
   gold.patch                # required for workspace-edit
-  gold.stdout.txt           # required for prompt-output
+  gold.stdout.txt           # required for prompt-output, recommended for tool-use
   gold.activity.jsonl       # required for tool-use
   gold.stderr.txt           # optional for prompt-output/tool-use
+  fixtures/                 # optional local materials for prompt-output/tool-use tasks
 ```
 
-## `task.json`
+For minimal starter fixtures, see [`docs/minimal-task-examples`](./minimal-task-examples/README.md).
 
-Required fields:
+## Manifest Schema
+
+Every checked-in task should declare:
+
+```json
+{
+  "$schema": "../../docs/task.schema.json"
+}
+```
+
+The schema lives at [`docs/task.schema.json`](./task.schema.json).
+
+Fast validation loops:
+
+```bash
+npm run dev:list -- --tasks ./tasks
+npm run dev:gaps -- --tasks ./tasks
+```
+
+Editor and external validator examples:
+
+```bash
+npx ajv-cli validate -s docs/task.schema.json -d tasks/<task-id>/task.json
+```
+
+## Required `task.json` Fields
 
 - `id`
 - `title`
 - `taskKind`
+- `suite`
 - `category`
 - `difficulty`
 - `language`
@@ -35,6 +62,16 @@ Optional fields:
 - `promptAddendum`
 - `setupCommands`
 - `toolExpectations` for `tool-use`
+
+## Suites
+
+Each task gets one primary suite:
+
+- `gemini-core`: direct Gemini CLI quality evidence such as JSON mode regressions, repo triage, and debugging workflows
+- `contributor-workflows`: maintainer replies, regression triage, eval maintenance, and contributor-facing summaries
+- `harness-calibration`: generic deterministic fixtures that validate the harness itself
+
+Use taxonomy tags for cross-cutting behavior; do not multi-home one task across several suites.
 
 ## Task Kinds
 
@@ -58,7 +95,7 @@ Required assets:
 Typical verification:
 
 - compare `agent-stdout.txt` with an expected JSON or Markdown output
-- optionally inspect `activity-summary.json` if the response should come after some local investigation
+- optionally inspect `activity-summary.json` if the response should follow local investigation
 
 ### `tool-use`
 
@@ -68,17 +105,15 @@ Required assets:
 
 - `gold.activity.jsonl`
 
-Optional assets:
+Recommended assets:
 
-- `repo/` if you want a workspace to inspect
-- `gold.stdout.txt` if the gold mock should also supply a final answer
-- `gold.stderr.txt`
+- `gold.stdout.txt`
 
 Typical verification:
 
 - compare `agent-stdout.txt` with an expected conclusion
 - assert on `activity-summary.json` to confirm required tools and targets were used
-- optionally declare `toolExpectations` in `task.json` so the harness can diagnose wrong first inspections and ordered-path failures directly
+- declare `toolExpectations` in `task.json` when order or first inspection matters
 
 ## Variable Interpolation
 
@@ -90,21 +125,9 @@ Typical verification:
 
 This keeps tasks shell-based and inspectable without adding a custom verification DSL.
 
-## Activity Summary
-
-Every run writes `activity-summary.json` beside the raw `activity.jsonl`.
-
-`activity-summary.json` is the stable verification surface for tool-use tasks. It includes:
-
-- ordered tool/function calls
-- per-tool counts
-- a compact target string when the call arguments include a file path, command, pattern, or prompt
-
-Prefer asserting on `activity-summary.json` instead of the raw provider log.
-
 ## Tool Expectations
 
-`tool-use` tasks can add an optional `toolExpectations` block:
+`tool-use` tasks can add a `toolExpectations` block:
 
 ```json
 {
@@ -163,40 +186,27 @@ Starter shared vocabulary:
 - `strict-output`
 - `tool-use`
 
-Useful template families for contributor tooling:
-
-- `gemini-tool-investigation`
-- `maintainer-prompt-response`
-- `repo-edit-debugging`
-- `hard-debugging-investigation`
-
 ## Verification Contract
 
 - Every command in `verification.failToPass` must fail before the agent runs and pass after the expected fix or response.
 - Every command in `verification.passToPass` must already pass before the agent runs and remain passing after the run.
 - If that contract is broken on the pristine task, the harness marks the task as `invalid_task`.
 
-## Authoring Tips
+## Smallest Acceptable Task
 
-- Keep fixtures small and deterministic.
-- Prefer one targeted fail-to-pass check and one or two stability checks.
-- For `prompt-output`, score the exact response shape.
-- For `tool-use`, score both the conclusion and the required inspection path.
-- Keep mock gold artifacts reviewable so contributors can understand what "good" looks like at a glance.
+- One clear problem statement
+- One primary suite
+- One targeted fail-to-pass check
+- One or two stable pass-to-pass checks
+- One reviewable gold artifact
+- Fixtures small enough to understand in a code review without opening ten files
 
 ## Drafting From Chat Logs
 
-The harness also supports a narrow task-drafting flow:
+The harness supports a narrow draft flow:
 
 ```bash
 npm run dev:draft-task -- --chat-log ./chat-log.json --task-id draft-task --task-kind tool-use --category debugging --language text --out ./drafts/draft-task
 ```
 
-The generated draft includes:
-
-- `task.json`
-- `issue.md`
-- `chat-log.json`
-- placeholder gold assets for the chosen task kind
-
-Drafts are intentionally not production-ready. Tighten the fixtures, verification commands, and taxonomy before adding them to `tasks/`.
+Drafts default to `suite: contributor-workflows` and include placeholder gold artifacts. Tighten the fixtures, suite assignment, verification commands, and taxonomy before promoting them into `tasks/`.

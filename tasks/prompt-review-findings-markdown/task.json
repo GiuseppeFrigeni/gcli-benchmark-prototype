@@ -1,7 +1,9 @@
 {
+  "$schema": "../../docs/task.schema.json",
   "id": "prompt-review-findings-markdown",
   "title": "Produce constrained maintainer review findings from local artifacts",
   "taskKind": "prompt-output",
+  "suite": "contributor-workflows",
   "category": "code-review",
   "difficulty": "medium",
   "language": "text",

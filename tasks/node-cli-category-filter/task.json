@@ -1,7 +1,9 @@
 {
+  "$schema": "../../docs/task.schema.json",
   "id": "node-cli-category-filter",
   "title": "Add category filtering to the tiny reporter CLI",
   "taskKind": "workspace-edit",
+  "suite": "harness-calibration",
   "category": "new-feature",
   "difficulty": "medium",
   "language": "javascript",

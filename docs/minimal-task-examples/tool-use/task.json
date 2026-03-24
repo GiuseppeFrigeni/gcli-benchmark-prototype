@@ -1,0 +1,40 @@
+{
+  "$schema": "../../task.schema.json",
+  "id": "minimal-tool-use",
+  "title": "Read the note before answering",
+  "taskKind": "tool-use",
+  "suite": "gemini-core",
+  "category": "debugging",
+  "difficulty": "easy",
+  "language": "text",
+  "taxonomy": {
+    "scope": "single-file",
+    "tags": [
+      "tool-use",
+      "minimal-example"
+    ]
+  },
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Inspect ${taskDir}/fixtures/note.txt before answering.",
+  "toolExpectations": {
+    "firstCall": {
+      "name": "read_file",
+      "targetIncludes": "fixtures/note.txt"
+    },
+    "requiredCalls": [
+      {
+        "name": "read_file",
+        "targetIncludes": "fixtures/note.txt"
+      }
+    ]
+  },
+  "verification": {
+    "failToPass": [
+      "node \"${taskDir}/verify-output.js\" \"${artifactDir}/agent-stdout.txt\""
+    ],
+    "passToPass": [
+      "node \"${taskDir}/verify-fixtures.js\" \"${taskDir}/fixtures/note.txt\""
+    ]
+  },
+  "policy": "always"
+}

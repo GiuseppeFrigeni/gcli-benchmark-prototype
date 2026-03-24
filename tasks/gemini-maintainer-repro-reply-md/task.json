@@ -1,0 +1,30 @@
+{
+  "$schema": "../../docs/task.schema.json",
+  "id": "gemini-maintainer-repro-reply-md",
+  "title": "Write a concise maintainer reply for a Gemini CLI JSON regression",
+  "taskKind": "prompt-output",
+  "suite": "contributor-workflows",
+  "category": "code-review",
+  "difficulty": "medium",
+  "language": "text",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "review-feedback",
+      "strict-output",
+      "regression-reporting"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Use only ${taskDir}/fixtures/models-json-run.md and ${taskDir}/fixtures/models-json.stderr.txt.",
+  "verification": {
+    "failToPass": [
+      "node \"${taskDir}/verify-output.js\" \"${artifactDir}/agent-stdout.txt\" \"${taskDir}/expected.md\""
+    ],
+    "passToPass": [
+      "node \"${taskDir}/verify-fixtures.js\" \"${taskDir}/fixtures/models-json-run.md\" \"${taskDir}/fixtures/models-json.stderr.txt\""
+    ]
+  },
+  "policy": "always"
+}

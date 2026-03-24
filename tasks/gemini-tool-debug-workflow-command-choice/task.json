@@ -1,7 +1,9 @@
 {
+  "$schema": "../../docs/task.schema.json",
   "id": "gemini-tool-debug-workflow-command-choice",
   "title": "Use the right debug command before reading Gemini CLI JSON routing code",
   "taskKind": "tool-use",
+  "suite": "gemini-core",
   "category": "debugging",
   "difficulty": "hard",
   "language": "text",

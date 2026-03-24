@@ -1,0 +1,3 @@
+TRACE json=true
+TRACE spinner=enabled
+TRACE stdout=spinner-line-before-json

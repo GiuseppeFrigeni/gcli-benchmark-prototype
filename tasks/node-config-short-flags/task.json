@@ -1,7 +1,9 @@
 {
+  "$schema": "../../docs/task.schema.json",
   "id": "node-config-short-flags",
   "title": "Honor short CLI flags in config loading",
   "taskKind": "workspace-edit",
+  "suite": "harness-calibration",
   "category": "debugging",
   "difficulty": "medium",
   "language": "javascript",

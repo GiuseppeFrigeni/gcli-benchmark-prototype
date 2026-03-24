@@ -1,0 +1,30 @@
+{
+  "$schema": "../../docs/task.schema.json",
+  "id": "gemini-flaky-eval-stabilization-json",
+  "title": "Return strict JSON for a flaky eval stabilization plan",
+  "taskKind": "prompt-output",
+  "suite": "contributor-workflows",
+  "category": "debugging",
+  "difficulty": "medium",
+  "language": "text",
+  "taxonomy": {
+    "scope": "multi-file",
+    "tags": [
+      "artifact-triage",
+      "strict-output",
+      "regression-reporting"
+    ]
+  },
+  "timeoutMs": 120000,
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Use only ${taskDir}/fixtures/flaky-run-a.md, ${taskDir}/fixtures/flaky-run-b.md, and ${taskDir}/fixtures/current-verifier.js.",
+  "verification": {
+    "failToPass": [
+      "node \"${taskDir}/verify-json-output.js\" \"${artifactDir}/agent-stdout.txt\" \"${taskDir}/expected.json\""
+    ],
+    "passToPass": [
+      "node \"${taskDir}/verify-fixtures.js\" \"${taskDir}/fixtures/flaky-run-a.md\" \"${taskDir}/fixtures/flaky-run-b.md\" \"${taskDir}/fixtures/current-verifier.js\""
+    ]
+  },
+  "policy": "always"
+}

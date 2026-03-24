@@ -1,7 +1,9 @@
 {
+  "$schema": "../../docs/task.schema.json",
   "id": "gemini-tool-output-routing-review",
   "title": "Inspect the expected routing path before reviewing a Gemini CLI output regression",
   "taskKind": "tool-use",
+  "suite": "gemini-core",
   "category": "code-review",
   "difficulty": "medium",
   "language": "text",

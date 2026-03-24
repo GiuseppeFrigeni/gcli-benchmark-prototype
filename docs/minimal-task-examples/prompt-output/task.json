@@ -1,0 +1,28 @@
+{
+  "$schema": "../../task.schema.json",
+  "id": "minimal-prompt-output",
+  "title": "Return strict JSON from a local note",
+  "taskKind": "prompt-output",
+  "suite": "contributor-workflows",
+  "category": "debugging",
+  "difficulty": "easy",
+  "language": "text",
+  "taxonomy": {
+    "scope": "single-file",
+    "tags": [
+      "strict-output",
+      "minimal-example"
+    ]
+  },
+  "problemStatementFile": "issue.md",
+  "promptAddendum": "Use only ${taskDir}/expected.json.",
+  "verification": {
+    "failToPass": [
+      "node \"${taskDir}/verify-output.js\" \"${artifactDir}/agent-stdout.txt\" \"${taskDir}/expected.json\""
+    ],
+    "passToPass": [
+      "node \"${taskDir}/verify-fixtures.js\" \"${taskDir}/expected.json\""
+    ]
+  },
+  "policy": "always"
+}

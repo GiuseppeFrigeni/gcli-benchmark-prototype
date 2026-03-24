@@ -7,6 +7,7 @@ import {
   TaskKind,
   TaskPolicy,
   TaskScope,
+  TaskSuite,
   TaskTaxonomy,
   ToolExpectationCall,
   ToolExpectations,
@@ -18,6 +19,7 @@ interface TaskManifest {
   id: unknown;
   title: unknown;
   taskKind: unknown;
+  suite: unknown;
   category: unknown;
   difficulty: unknown;
   language: unknown;
@@ -38,6 +40,11 @@ const VALID_CATEGORIES: TaskCategory[] = [
   "code-review",
 ];
 const VALID_TASK_KINDS: TaskKind[] = ["workspace-edit", "prompt-output", "tool-use"];
+const VALID_SUITES: TaskSuite[] = [
+  "contributor-workflows",
+  "gemini-core",
+  "harness-calibration",
+];
 const VALID_SCOPES: TaskScope[] = ["single-file", "multi-file"];
 const VALID_DIFFICULTIES: TaskDifficulty[] = ["easy", "medium", "hard"];
 const VALID_POLICIES: TaskPolicy[] = ["always", "usually"];
@@ -106,6 +113,14 @@ function parseTaskKind(value: unknown, location: string): TaskKind {
     throw new Error(`${location}: field 'taskKind' must be one of ${VALID_TASK_KINDS.join(", ")}`);
   }
   return taskKind as TaskKind;
+}
+
+function parseSuite(value: unknown, location: string): TaskSuite {
+  const suite = requireString(value, "suite", location);
+  if (!VALID_SUITES.includes(suite as TaskSuite)) {
+    throw new Error(`${location}: field 'suite' must be one of ${VALID_SUITES.join(", ")}`);
+  }
+  return suite as TaskSuite;
 }
 
 function parseDifficulty(value: unknown, location: string): TaskDifficulty {
@@ -311,6 +326,7 @@ async function parseTask(taskDir: string, manifestPath: string): Promise<Workspa
     id,
     title,
     taskKind,
+    suite: parseSuite(raw.suite, location),
     category: parseCategory(raw.category, location),
     difficulty: parseDifficulty(raw.difficulty, location),
     language,

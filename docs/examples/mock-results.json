@@ -1,28 +1,45 @@
 {
+  "metadata": {
+    "runId": "20260321-091000",
+    "generatedAt": "2026-03-21T09:10:00.000Z",
+    "mode": "noop",
+    "gitCommitSha": "21f54ff",
+    "suites": [
+      "contributor-workflows",
+      "gemini-core",
+      "harness-calibration"
+    ],
+    "environment": {
+      "platform": "win32",
+      "arch": "x64",
+      "nodeVersion": "v20.19.0",
+      "workingDirectory": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype"
+    }
+  },
   "summary": {
     "generatedAt": "2026-03-21T09:10:00.000Z",
-    "total": 26,
+    "total": 32,
     "passed": 0,
-    "failed": 26,
+    "failed": 32,
     "infraFailed": 0,
     "invalidTasks": 0,
     "passRate": 0,
-    "averageDurationMs": 1809.35,
+    "averageDurationMs": 2547.66,
     "categories": [
       {
         "category": "code-review",
-        "total": 8,
+        "total": 9,
         "passed": 0,
-        "failed": 8,
+        "failed": 9,
         "infraFailed": 0,
         "invalidTasks": 0,
         "passRate": 0
       },
       {
         "category": "debugging",
-        "total": 13,
+        "total": 18,
         "passed": 0,
-        "failed": 13,
+        "failed": 18,
         "infraFailed": 0,
         "invalidTasks": 0,
         "passRate": 0
@@ -46,14 +63,28 @@
         "passRate": 0
       }
     ],
+    "suites": [
+      {
+        "suite": "contributor-workflows",
+        "count": 10
+      },
+      {
+        "suite": "gemini-core",
+        "count": 11
+      },
+      {
+        "suite": "harness-calibration",
+        "count": 11
+      }
+    ],
     "taskKinds": [
       {
         "taskKind": "prompt-output",
-        "count": 7
+        "count": 11
       },
       {
         "taskKind": "tool-use",
-        "count": 7
+        "count": 9
       },
       {
         "taskKind": "workspace-edit",
@@ -61,12 +92,12 @@
       }
     ],
     "taxonomyCoverage": {
-      "tasksWithTaxonomy": 26,
+      "tasksWithTaxonomy": 32,
       "tasksWithoutTaxonomy": 0,
       "scopes": [
         {
           "scope": "multi-file",
-          "count": 17
+          "count": 23
         },
         {
           "scope": "single-file",
@@ -80,7 +111,7 @@
         },
         {
           "tag": "artifact-triage",
-          "count": 9
+          "count": 13
         },
         {
           "tag": "behavior-preservation",
@@ -108,7 +139,7 @@
         },
         {
           "tag": "output-format",
-          "count": 9
+          "count": 11
         },
         {
           "tag": "path-normalization",
@@ -116,15 +147,15 @@
         },
         {
           "tag": "regression-reporting",
-          "count": 6
+          "count": 10
         },
         {
           "tag": "repo-triage",
-          "count": 2
+          "count": 3
         },
         {
           "tag": "review-feedback",
-          "count": 8
+          "count": 9
         },
         {
           "tag": "shared-logic",
@@ -132,17 +163,17 @@
         },
         {
           "tag": "strict-output",
-          "count": 7
+          "count": 11
         },
         {
           "tag": "tool-use",
-          "count": 7
+          "count": 9
         }
       ]
     },
     "efficiency": {
-      "measuredTasks": 26,
-      "averageAgentDurationMs": 3.12,
+      "measuredTasks": 32,
+      "averageAgentDurationMs": 4.88,
       "averageFilesChanged": 0,
       "averageChangedLines": 0,
       "totalInsertions": 0,
@@ -152,11 +183,25 @@
       "byReason": [
         {
           "label": "verification-failed",
-          "count": 22
+          "count": 26
         },
         {
           "label": "tool-expectation-failed",
-          "count": 4
+          "count": 6
+        }
+      ],
+      "bySuite": [
+        {
+          "label": "gemini-core",
+          "count": 11
+        },
+        {
+          "label": "harness-calibration",
+          "count": 11
+        },
+        {
+          "label": "contributor-workflows",
+          "count": 10
         }
       ],
       "byTaskKind": [
@@ -166,21 +211,21 @@
         },
         {
           "label": "prompt-output",
-          "count": 7
+          "count": 11
         },
         {
           "label": "tool-use",
-          "count": 7
+          "count": 9
         }
       ],
       "byCategory": [
         {
           "label": "debugging",
-          "count": 13
+          "count": 18
         },
         {
           "label": "code-review",
-          "count": 8
+          "count": 9
         },
         {
           "label": "refactoring",
@@ -198,6 +243,7 @@
       "taskId": "eval-flaky-verifier-tighten-md",
       "title": "Turn flaky eval verifier evidence into deterministic maintainer guidance",
       "taskKind": "prompt-output",
+      "suite": "contributor-workflows",
       "category": "code-review",
       "difficulty": "hard",
       "language": "text",
@@ -211,7 +257,7 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 1386,
+      "durationMs": 2207,
       "efficiency": {
         "agentDurationMs": 4,
         "filesChanged": 0,
@@ -251,7 +297,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-flaky-verifier-tighten-md/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-flaky-verifier-tighten-md/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-flaky-verifier-tighten-md/expected.md\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 105,
+            "durationMs": 165,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-flaky-verifier-tighten-md\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-flaky-verifier-tighten-md\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -262,7 +308,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-flaky-verifier-tighten-md/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-flaky-verifier-tighten-md/fixtures/flaky-run-log.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-flaky-verifier-tighten-md/fixtures/current-verifier.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-flaky-verifier-tighten-md/fixtures/chat-log.md\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 143,
+            "durationMs": 135,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-flaky-verifier-tighten-md\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-flaky-verifier-tighten-md\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -275,7 +321,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-flaky-verifier-tighten-md/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-flaky-verifier-tighten-md/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-flaky-verifier-tighten-md/expected.md\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 137,
+            "durationMs": 132,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-flaky-verifier-tighten-md\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-flaky-verifier-tighten-md\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -286,7 +332,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-flaky-verifier-tighten-md/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-flaky-verifier-tighten-md/fixtures/flaky-run-log.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-flaky-verifier-tighten-md/fixtures/current-verifier.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-flaky-verifier-tighten-md/fixtures/chat-log.md\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 89,
+            "durationMs": 385,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-flaky-verifier-tighten-md\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-flaky-verifier-tighten-md\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -311,6 +357,7 @@
       "taskId": "eval-gap-inventory-json",
       "title": "Return strict JSON for contributor-facing eval coverage gaps",
       "taskKind": "prompt-output",
+      "suite": "contributor-workflows",
       "category": "debugging",
       "difficulty": "medium",
       "language": "text",
@@ -324,9 +371,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 1364,
+      "durationMs": 1933,
       "efficiency": {
-        "agentDurationMs": 2,
+        "agentDurationMs": 6,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -364,7 +411,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-gap-inventory-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/expected.json\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 100,
+            "durationMs": 129,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-gap-inventory-json\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-gap-inventory-json\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -375,7 +422,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/fixtures/coverage-summary.json\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/fixtures/roadmap.md\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 92,
+            "durationMs": 160,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-gap-inventory-json\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-gap-inventory-json\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -388,7 +435,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-gap-inventory-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/expected.json\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 83,
+            "durationMs": 173,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-gap-inventory-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-gap-inventory-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -399,7 +446,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/fixtures/coverage-summary.json\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/fixtures/roadmap.md\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 94,
+            "durationMs": 220,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-gap-inventory-json\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\eval-gap-inventory-json\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -424,6 +471,7 @@
       "taskId": "gemini-auth-refresh-review",
       "title": "Preserve refresh-token behavior while restoring Gemini auth fallback",
       "taskKind": "workspace-edit",
+      "suite": "gemini-core",
       "category": "debugging",
       "difficulty": "hard",
       "language": "javascript",
@@ -437,9 +485,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 2711,
+      "durationMs": 2908,
       "efficiency": {
-        "agentDurationMs": 2,
+        "agentDurationMs": 3,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -477,7 +525,7 @@
             "command": "node --test test/login-refresh-fallback.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 314,
+            "durationMs": 354,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-auth-refresh-review\\preflight-fail-to-pass-01-node---test-test-login-refresh-fallback.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-auth-refresh-review\\preflight-fail-to-pass-01-node---test-test-login-refresh-fallback.test.js.stderr.txt"
@@ -488,7 +536,7 @@
             "command": "node --test test/existing-refresh-token.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 192,
+            "durationMs": 251,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-auth-refresh-review\\preflight-pass-to-pass-01-node---test-test-existing-refresh-token.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-auth-refresh-review\\preflight-pass-to-pass-01-node---test-test-existing-refresh-token.test.js.stderr.txt"
@@ -501,7 +549,7 @@
             "command": "node --test test/login-refresh-fallback.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 202,
+            "durationMs": 321,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-auth-refresh-review\\post-run-fail-to-pass-01-node---test-test-login-refresh-fallback.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-auth-refresh-review\\post-run-fail-to-pass-01-node---test-test-login-refresh-fallback.test.js.stderr.txt"
@@ -512,7 +560,7 @@
             "command": "node --test test/existing-refresh-token.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 191,
+            "durationMs": 242,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-auth-refresh-review\\post-run-pass-to-pass-01-node---test-test-existing-refresh-token.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-auth-refresh-review\\post-run-pass-to-pass-01-node---test-test-existing-refresh-token.test.js.stderr.txt"
@@ -534,9 +582,238 @@
       }
     },
     {
+      "taskId": "gemini-flaky-eval-stabilization-json",
+      "title": "Return strict JSON for a flaky eval stabilization plan",
+      "taskKind": "prompt-output",
+      "suite": "contributor-workflows",
+      "category": "debugging",
+      "difficulty": "medium",
+      "language": "text",
+      "taxonomy": {
+        "scope": "multi-file",
+        "tags": [
+          "artifact-triage",
+          "strict-output",
+          "regression-reporting"
+        ]
+      },
+      "policy": "always",
+      "status": "failed",
+      "durationMs": 1806,
+      "efficiency": {
+        "agentDurationMs": 5,
+        "filesChanged": 0,
+        "insertions": 0,
+        "deletions": 0,
+        "changedLines": 0
+      },
+      "notes": [
+        "One or more verification commands failed after the agent run."
+      ],
+      "failureAnalysis": {
+        "reason": "verification-failed",
+        "failedVerificationCommands": [
+          {
+            "phase": "failToPass",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/expected.json\"",
+            "exitCode": 1,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "firstFailedVerification": {
+          "phase": "failToPass",
+          "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/expected.json\"",
+          "exitCode": 1,
+          "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+          "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+        },
+        "missingExpectedInspections": [],
+        "toolExpectationFailures": [],
+        "baselineStatus": "passed",
+        "baselineDelta": "regressed"
+      },
+      "preflight": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/expected.json\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 161,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/fixtures/flaky-run-a.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/fixtures/flaky-run-b.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/fixtures/current-verifier.js\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 126,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "verification": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/expected.json\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 121,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/fixtures/flaky-run-a.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/fixtures/flaky-run-b.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/fixtures/current-verifier.js\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 130,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "artifacts": {
+        "artifactDir": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json",
+        "promptPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json\\prompt.txt",
+        "diffPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json\\git-diff.patch",
+        "agentStdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json\\agent-stdout.txt",
+        "agentStderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json\\agent-stderr.txt",
+        "activityLogPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json\\activity.jsonl",
+        "activitySummaryPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-flaky-eval-stabilization-json\\activity-summary.json"
+      },
+      "agent": {
+        "exitCode": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "taskId": "gemini-json-mode-regression-triage-json",
+      "title": "Return strict JSON triage for a Gemini CLI models JSON regression",
+      "taskKind": "prompt-output",
+      "suite": "gemini-core",
+      "category": "debugging",
+      "difficulty": "medium",
+      "language": "text",
+      "taxonomy": {
+        "scope": "multi-file",
+        "tags": [
+          "output-format",
+          "strict-output",
+          "regression-reporting"
+        ]
+      },
+      "policy": "always",
+      "status": "failed",
+      "durationMs": 1911,
+      "efficiency": {
+        "agentDurationMs": 5,
+        "filesChanged": 0,
+        "insertions": 0,
+        "deletions": 0,
+        "changedLines": 0
+      },
+      "notes": [
+        "One or more verification commands failed after the agent run."
+      ],
+      "failureAnalysis": {
+        "reason": "verification-failed",
+        "failedVerificationCommands": [
+          {
+            "phase": "failToPass",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-json-mode-regression-triage-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-json-mode-regression-triage-json/expected.json\"",
+            "exitCode": 1,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "firstFailedVerification": {
+          "phase": "failToPass",
+          "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-json-mode-regression-triage-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-json-mode-regression-triage-json/expected.json\"",
+          "exitCode": 1,
+          "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+          "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+        },
+        "missingExpectedInspections": [],
+        "toolExpectationFailures": [],
+        "baselineStatus": "passed",
+        "baselineDelta": "regressed"
+      },
+      "preflight": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-json-mode-regression-triage-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-json-mode-regression-triage-json/expected.json\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 124,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-json-mode-regression-triage-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-json-mode-regression-triage-json/fixtures/models-json-output.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-json-mode-regression-triage-json/fixtures/render-models.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-json-mode-regression-triage-json/fixtures/models-json.test.js\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 113,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "verification": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-json-mode-regression-triage-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-json-mode-regression-triage-json/expected.json\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 125,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-json-mode-regression-triage-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-json-mode-regression-triage-json/fixtures/models-json-output.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-json-mode-regression-triage-json/fixtures/render-models.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-json-mode-regression-triage-json/fixtures/models-json.test.js\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 151,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "artifacts": {
+        "artifactDir": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json",
+        "promptPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json\\prompt.txt",
+        "diffPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json\\git-diff.patch",
+        "agentStdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json\\agent-stdout.txt",
+        "agentStderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json\\agent-stderr.txt",
+        "activityLogPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json\\activity.jsonl",
+        "activitySummaryPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-json-mode-regression-triage-json\\activity-summary.json"
+      },
+      "agent": {
+        "exitCode": 0,
+        "timedOut": false
+      }
+    },
+    {
       "taskId": "gemini-maintainer-handoff-md",
       "title": "Produce a strict maintainer handoff for a Gemini CLI quality issue",
       "taskKind": "prompt-output",
+      "suite": "contributor-workflows",
       "category": "code-review",
       "difficulty": "medium",
       "language": "text",
@@ -550,9 +827,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 1315,
+      "durationMs": 1921,
       "efficiency": {
-        "agentDurationMs": 2,
+        "agentDurationMs": 4,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -590,7 +867,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-handoff-md/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-handoff-md/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-handoff-md/expected.md\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 102,
+            "durationMs": 126,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-handoff-md\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-handoff-md\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -601,7 +878,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-handoff-md/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-handoff-md/fixtures/run-summary.txt\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 82,
+            "durationMs": 138,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-handoff-md\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-handoff-md\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -614,7 +891,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-handoff-md/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-handoff-md/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-handoff-md/expected.md\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 93,
+            "durationMs": 236,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-handoff-md\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-handoff-md\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -625,7 +902,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-handoff-md/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-handoff-md/fixtures/run-summary.txt\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 84,
+            "durationMs": 205,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-handoff-md\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-handoff-md\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -647,9 +924,124 @@
       }
     },
     {
+      "taskId": "gemini-maintainer-repro-reply-md",
+      "title": "Write a concise maintainer reply for a Gemini CLI JSON regression",
+      "taskKind": "prompt-output",
+      "suite": "contributor-workflows",
+      "category": "code-review",
+      "difficulty": "medium",
+      "language": "text",
+      "taxonomy": {
+        "scope": "multi-file",
+        "tags": [
+          "review-feedback",
+          "strict-output",
+          "regression-reporting"
+        ]
+      },
+      "policy": "always",
+      "status": "failed",
+      "durationMs": 1861,
+      "efficiency": {
+        "agentDurationMs": 2,
+        "filesChanged": 0,
+        "insertions": 0,
+        "deletions": 0,
+        "changedLines": 0
+      },
+      "notes": [
+        "One or more verification commands failed after the agent run."
+      ],
+      "failureAnalysis": {
+        "reason": "verification-failed",
+        "failedVerificationCommands": [
+          {
+            "phase": "failToPass",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/expected.md\"",
+            "exitCode": 1,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "firstFailedVerification": {
+          "phase": "failToPass",
+          "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/expected.md\"",
+          "exitCode": 1,
+          "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+          "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+        },
+        "missingExpectedInspections": [],
+        "toolExpectationFailures": [],
+        "baselineStatus": "passed",
+        "baselineDelta": "regressed"
+      },
+      "preflight": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/expected.md\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 126,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/fixtures/models-json-run.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/fixtures/models-json.stderr.txt\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 110,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "verification": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/expected.md\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 119,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/fixtures/models-json-run.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/fixtures/models-json.stderr.txt\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 113,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "artifacts": {
+        "artifactDir": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md",
+        "promptPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md\\prompt.txt",
+        "diffPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md\\git-diff.patch",
+        "agentStdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md\\agent-stdout.txt",
+        "agentStderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md\\agent-stderr.txt",
+        "activityLogPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md\\activity.jsonl",
+        "activitySummaryPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-maintainer-repro-reply-md\\activity-summary.json"
+      },
+      "agent": {
+        "exitCode": 0,
+        "timedOut": false
+      }
+    },
+    {
       "taskId": "gemini-models-json-compat",
       "title": "Keep Gemini CLI models JSON output machine-readable",
       "taskKind": "workspace-edit",
+      "suite": "gemini-core",
       "category": "debugging",
       "difficulty": "medium",
       "language": "javascript",
@@ -663,9 +1055,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 2534,
+      "durationMs": 3120,
       "efficiency": {
-        "agentDurationMs": 3,
+        "agentDurationMs": 5,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -703,7 +1095,7 @@
             "command": "node --test test/json-mode.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 174,
+            "durationMs": 276,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-models-json-compat\\preflight-fail-to-pass-01-node---test-test-json-mode.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-models-json-compat\\preflight-fail-to-pass-01-node---test-test-json-mode.test.js.stderr.txt"
@@ -714,7 +1106,7 @@
             "command": "node --test test/text-mode.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 169,
+            "durationMs": 252,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-models-json-compat\\preflight-pass-to-pass-01-node---test-test-text-mode.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-models-json-compat\\preflight-pass-to-pass-01-node---test-test-text-mode.test.js.stderr.txt"
@@ -727,7 +1119,7 @@
             "command": "node --test test/json-mode.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 193,
+            "durationMs": 354,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-models-json-compat\\post-run-fail-to-pass-01-node---test-test-json-mode.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-models-json-compat\\post-run-fail-to-pass-01-node---test-test-json-mode.test.js.stderr.txt"
@@ -738,7 +1130,7 @@
             "command": "node --test test/text-mode.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 225,
+            "durationMs": 404,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-models-json-compat\\post-run-pass-to-pass-01-node---test-test-text-mode.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-models-json-compat\\post-run-pass-to-pass-01-node---test-test-text-mode.test.js.stderr.txt"
@@ -763,6 +1155,7 @@
       "taskId": "gemini-output-regression-summary",
       "title": "Summarize a Gemini CLI output-format regression in one compatibility sentence",
       "taskKind": "prompt-output",
+      "suite": "gemini-core",
       "category": "debugging",
       "difficulty": "easy",
       "language": "text",
@@ -776,9 +1169,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 1460,
+      "durationMs": 2450,
       "efficiency": {
-        "agentDurationMs": 3,
+        "agentDurationMs": 4,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -816,7 +1209,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-output-regression-summary/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-output-regression-summary/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-output-regression-summary/expected.txt\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 107,
+            "durationMs": 164,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-output-regression-summary\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-output-regression-summary\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -827,7 +1220,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-output-regression-summary/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-output-regression-summary/fixtures/models-output-diff.txt\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 97,
+            "durationMs": 140,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-output-regression-summary\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-output-regression-summary\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -840,7 +1233,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-output-regression-summary/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-output-regression-summary/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-output-regression-summary/expected.txt\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 90,
+            "durationMs": 146,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-output-regression-summary\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-output-regression-summary\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -851,7 +1244,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-output-regression-summary/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-output-regression-summary/fixtures/models-output-diff.txt\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 95,
+            "durationMs": 152,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-output-regression-summary\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-output-regression-summary\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -876,6 +1269,7 @@
       "taskId": "gemini-repo-triage-json",
       "title": "Return strict JSON triage for a Gemini CLI repo regression",
       "taskKind": "prompt-output",
+      "suite": "gemini-core",
       "category": "debugging",
       "difficulty": "medium",
       "language": "text",
@@ -889,9 +1283,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 2079,
+      "durationMs": 2639,
       "efficiency": {
-        "agentDurationMs": 6,
+        "agentDurationMs": 3,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -929,7 +1323,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-json/expected.json\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 108,
+            "durationMs": 169,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-json\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-json\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -937,10 +1331,10 @@
         ],
         "passToPass": [
           {
-            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-repo-triage-json-epK1qH/src/commands/extensions-login.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-repo-triage-json-epK1qH/src/session/token-store.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-repo-triage-json-epK1qH/test/extensions-login-refresh.test.js\"",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-repo-triage-json-26maLv/src/commands/extensions-login.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-repo-triage-json-26maLv/src/session/token-store.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-repo-triage-json-26maLv/test/extensions-login-refresh.test.js\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 84,
+            "durationMs": 122,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-json\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-json\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -953,7 +1347,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-json/expected.json\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 85,
+            "durationMs": 112,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -961,10 +1355,10 @@
         ],
         "passToPass": [
           {
-            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-repo-triage-json-epK1qH/src/commands/extensions-login.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-repo-triage-json-epK1qH/src/session/token-store.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-repo-triage-json-epK1qH/test/extensions-login-refresh.test.js\"",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-repo-triage-json-26maLv/src/commands/extensions-login.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-repo-triage-json-26maLv/src/session/token-store.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-repo-triage-json-26maLv/test/extensions-login-refresh.test.js\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 84,
+            "durationMs": 125,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-json\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-json\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -986,9 +1380,280 @@
       }
     },
     {
+      "taskId": "gemini-repo-triage-owner-selection-json",
+      "title": "Return strict JSON repo triage for a Gemini CLI issues-command regression",
+      "taskKind": "prompt-output",
+      "suite": "gemini-core",
+      "category": "debugging",
+      "difficulty": "medium",
+      "language": "text",
+      "taxonomy": {
+        "scope": "multi-file",
+        "tags": [
+          "repo-triage",
+          "strict-output",
+          "artifact-triage"
+        ]
+      },
+      "policy": "always",
+      "status": "failed",
+      "durationMs": 1814,
+      "efficiency": {
+        "agentDurationMs": 4,
+        "filesChanged": 0,
+        "insertions": 0,
+        "deletions": 0,
+        "changedLines": 0
+      },
+      "notes": [
+        "One or more verification commands failed after the agent run."
+      ],
+      "failureAnalysis": {
+        "reason": "verification-failed",
+        "failedVerificationCommands": [
+          {
+            "phase": "failToPass",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-owner-selection-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-owner-selection-json/expected.json\"",
+            "exitCode": 1,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "firstFailedVerification": {
+          "phase": "failToPass",
+          "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-owner-selection-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-owner-selection-json/expected.json\"",
+          "exitCode": 1,
+          "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+          "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+        },
+        "missingExpectedInspections": [],
+        "toolExpectationFailures": [],
+        "baselineStatus": "passed",
+        "baselineDelta": "regressed"
+      },
+      "preflight": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-owner-selection-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-owner-selection-json/expected.json\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 141,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-owner-selection-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-owner-selection-json/fixtures/file-tree.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-owner-selection-json/fixtures/src-commands-issues.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-owner-selection-json/fixtures/issues-json.test.js\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 149,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "verification": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-owner-selection-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-owner-selection-json/expected.json\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 124,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-owner-selection-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-owner-selection-json/fixtures/file-tree.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-owner-selection-json/fixtures/src-commands-issues.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-repo-triage-owner-selection-json/fixtures/issues-json.test.js\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 123,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "artifacts": {
+        "artifactDir": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json",
+        "promptPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json\\prompt.txt",
+        "diffPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json\\git-diff.patch",
+        "agentStdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json\\agent-stdout.txt",
+        "agentStderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json\\agent-stderr.txt",
+        "activityLogPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json\\activity.jsonl",
+        "activitySummaryPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-repo-triage-owner-selection-json\\activity-summary.json"
+      },
+      "agent": {
+        "exitCode": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "taskId": "gemini-tool-debug-trace-repro-workflow",
+      "title": "Use the trace repro command before recommending the next debug step",
+      "taskKind": "tool-use",
+      "suite": "contributor-workflows",
+      "category": "debugging",
+      "difficulty": "hard",
+      "language": "text",
+      "taxonomy": {
+        "scope": "multi-file",
+        "tags": [
+          "tool-use",
+          "artifact-triage",
+          "regression-reporting"
+        ]
+      },
+      "policy": "always",
+      "status": "failed",
+      "durationMs": 2287,
+      "efficiency": {
+        "agentDurationMs": 4,
+        "filesChanged": 0,
+        "insertions": 0,
+        "deletions": 0,
+        "changedLines": 0
+      },
+      "notes": [
+        "One or more verification commands failed after the agent run."
+      ],
+      "failureAnalysis": {
+        "reason": "tool-expectation-failed",
+        "failedVerificationCommands": [
+          {
+            "phase": "failToPass",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-trace-repro-workflow/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow/activity-summary.json\"",
+            "exitCode": 1,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "firstFailedVerification": {
+          "phase": "failToPass",
+          "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-trace-repro-workflow/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow/activity-summary.json\"",
+          "exitCode": 1,
+          "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+          "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+        },
+        "missingExpectedInspections": [
+          {
+            "name": "run_shell_command",
+            "targetIncludes": "print-trace.js"
+          },
+          {
+            "name": "read_file",
+            "targetIncludes": "fixtures/render-run.js"
+          }
+        ],
+        "toolExpectationFailures": [
+          {
+            "type": "first-call-mismatch",
+            "expected": {
+              "name": "run_shell_command",
+              "targetIncludes": "print-trace.js"
+            },
+            "message": "Expected the first tool call to match 'print-trace.js'."
+          },
+          {
+            "type": "missing-required-call",
+            "expected": {
+              "name": "run_shell_command",
+              "targetIncludes": "print-trace.js"
+            },
+            "message": "Missing required inspection for 'print-trace.js'."
+          },
+          {
+            "type": "missing-required-call",
+            "expected": {
+              "name": "read_file",
+              "targetIncludes": "fixtures/render-run.js"
+            },
+            "message": "Missing required inspection for 'fixtures/render-run.js'."
+          },
+          {
+            "type": "ordered-call-mismatch",
+            "expected": {
+              "name": "run_shell_command",
+              "targetIncludes": "print-trace.js"
+            },
+            "message": "Expected tool call 1 to match 'print-trace.js'."
+          }
+        ],
+        "baselineStatus": "passed",
+        "baselineDelta": "regressed"
+      },
+      "preflight": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-trace-repro-workflow/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow/activity-summary.json\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 198,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-trace-repro-workflow/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-trace-repro-workflow/print-trace.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-trace-repro-workflow/fixtures/trace.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-trace-repro-workflow/fixtures/render-run.js\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 132,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "verification": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-trace-repro-workflow/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow/activity-summary.json\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 123,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-trace-repro-workflow/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-trace-repro-workflow/print-trace.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-trace-repro-workflow/fixtures/trace.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-trace-repro-workflow/fixtures/render-run.js\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 117,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "artifacts": {
+        "artifactDir": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow",
+        "promptPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow\\prompt.txt",
+        "diffPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow\\git-diff.patch",
+        "agentStdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow\\agent-stdout.txt",
+        "agentStderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow\\agent-stderr.txt",
+        "activityLogPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow\\activity.jsonl",
+        "activitySummaryPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-trace-repro-workflow\\activity-summary.json"
+      },
+      "agent": {
+        "exitCode": 0,
+        "timedOut": false
+      }
+    },
+    {
       "taskId": "gemini-tool-debug-workflow-command-choice",
       "title": "Use the right debug command before reading Gemini CLI JSON routing code",
       "taskKind": "tool-use",
+      "suite": "gemini-core",
       "category": "debugging",
       "difficulty": "hard",
       "language": "text",
@@ -1002,9 +1667,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 1818,
+      "durationMs": 2225,
       "efficiency": {
-        "agentDurationMs": 4,
+        "agentDurationMs": 2,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -1096,7 +1761,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-workflow-command-choice/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-workflow-command-choice/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-workflow-command-choice/activity-summary.json\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 101,
+            "durationMs": 134,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-workflow-command-choice\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-workflow-command-choice\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -1104,10 +1769,10 @@
         ],
         "passToPass": [
           {
-            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-workflow-command-choice/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-debug-workflow-command-choice-xHcP1Q/test/repro-json.test.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-debug-workflow-command-choice-xHcP1Q/src/render-json.js\"",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-workflow-command-choice/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-debug-workflow-command-choice-AXF33B/test/repro-json.test.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-debug-workflow-command-choice-AXF33B/src/render-json.js\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 95,
+            "durationMs": 128,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-workflow-command-choice\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-workflow-command-choice\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -1120,7 +1785,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-workflow-command-choice/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-workflow-command-choice/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-workflow-command-choice/activity-summary.json\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 91,
+            "durationMs": 170,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-workflow-command-choice\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-workflow-command-choice\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -1128,10 +1793,10 @@
         ],
         "passToPass": [
           {
-            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-workflow-command-choice/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-debug-workflow-command-choice-xHcP1Q/test/repro-json.test.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-debug-workflow-command-choice-xHcP1Q/src/render-json.js\"",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-workflow-command-choice/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-debug-workflow-command-choice-AXF33B/test/repro-json.test.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-debug-workflow-command-choice-AXF33B/src/render-json.js\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 91,
+            "durationMs": 132,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-workflow-command-choice\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-debug-workflow-command-choice\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -1156,6 +1821,7 @@
       "taskId": "gemini-tool-first-inspection-root-cause",
       "title": "Inspect the failing test first before explaining a Gemini CLI JSON regression",
       "taskKind": "tool-use",
+      "suite": "gemini-core",
       "category": "debugging",
       "difficulty": "hard",
       "language": "text",
@@ -1169,9 +1835,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 2353,
+      "durationMs": 2427,
       "efficiency": {
-        "agentDurationMs": 3,
+        "agentDurationMs": 8,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -1251,7 +1917,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-first-inspection-root-cause/verify-investigation.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-first-inspection-root-cause/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-first-inspection-root-cause/activity-summary.json\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 97,
+            "durationMs": 158,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-first-inspection-root-cause\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-first-inspection-root-cause\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -1259,10 +1925,10 @@
         ],
         "passToPass": [
           {
-            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-first-inspection-root-cause/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-first-inspection-root-cause-YySJOB/test/run-json-output.test.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-first-inspection-root-cause-YySJOB/src/commands/run.js\"",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-first-inspection-root-cause/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-first-inspection-root-cause-1aU1kW/test/run-json-output.test.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-first-inspection-root-cause-1aU1kW/src/commands/run.js\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 96,
+            "durationMs": 155,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-first-inspection-root-cause\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-first-inspection-root-cause\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -1275,7 +1941,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-first-inspection-root-cause/verify-investigation.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-first-inspection-root-cause/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-first-inspection-root-cause/activity-summary.json\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 93,
+            "durationMs": 117,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-first-inspection-root-cause\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-first-inspection-root-cause\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -1283,10 +1949,10 @@
         ],
         "passToPass": [
           {
-            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-first-inspection-root-cause/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-first-inspection-root-cause-YySJOB/test/run-json-output.test.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-first-inspection-root-cause-YySJOB/src/commands/run.js\"",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-first-inspection-root-cause/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-first-inspection-root-cause-1aU1kW/test/run-json-output.test.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-first-inspection-root-cause-1aU1kW/src/commands/run.js\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 86,
+            "durationMs": 118,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-first-inspection-root-cause\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-first-inspection-root-cause\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -1308,9 +1974,10 @@
       }
     },
     {
-      "taskId": "gemini-tool-json-mode-root-cause",
-      "title": "Inspect the JSON-mode regression before explaining the root cause",
+      "taskId": "gemini-tool-json-mode-log-order-root-cause",
+      "title": "Inspect the JSON output log before explaining a Gemini run regression",
       "taskKind": "tool-use",
+      "suite": "gemini-core",
       "category": "debugging",
       "difficulty": "medium",
       "language": "text",
@@ -1324,9 +1991,165 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 1832,
+      "durationMs": 1691,
       "efficiency": {
-        "agentDurationMs": 3,
+        "agentDurationMs": 2,
+        "filesChanged": 0,
+        "insertions": 0,
+        "deletions": 0,
+        "changedLines": 0
+      },
+      "notes": [
+        "One or more verification commands failed after the agent run."
+      ],
+      "failureAnalysis": {
+        "reason": "tool-expectation-failed",
+        "failedVerificationCommands": [
+          {
+            "phase": "failToPass",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-json-mode-log-order-root-cause/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause/activity-summary.json\"",
+            "exitCode": 1,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "firstFailedVerification": {
+          "phase": "failToPass",
+          "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-json-mode-log-order-root-cause/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause/activity-summary.json\"",
+          "exitCode": 1,
+          "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+          "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+        },
+        "missingExpectedInspections": [
+          {
+            "name": "read_file",
+            "targetIncludes": "fixtures/run-json-output.txt"
+          },
+          {
+            "name": "read_file",
+            "targetIncludes": "fixtures/src-commands-run.js"
+          }
+        ],
+        "toolExpectationFailures": [
+          {
+            "type": "first-call-mismatch",
+            "expected": {
+              "name": "read_file",
+              "targetIncludes": "fixtures/run-json-output.txt"
+            },
+            "message": "Expected the first tool call to match 'fixtures/run-json-output.txt'."
+          },
+          {
+            "type": "missing-required-call",
+            "expected": {
+              "name": "read_file",
+              "targetIncludes": "fixtures/run-json-output.txt"
+            },
+            "message": "Missing required inspection for 'fixtures/run-json-output.txt'."
+          },
+          {
+            "type": "missing-required-call",
+            "expected": {
+              "name": "read_file",
+              "targetIncludes": "fixtures/src-commands-run.js"
+            },
+            "message": "Missing required inspection for 'fixtures/src-commands-run.js'."
+          },
+          {
+            "type": "ordered-call-mismatch",
+            "expected": {
+              "name": "read_file",
+              "targetIncludes": "fixtures/run-json-output.txt"
+            },
+            "message": "Expected tool call 1 to match 'fixtures/run-json-output.txt'."
+          }
+        ],
+        "baselineStatus": "passed",
+        "baselineDelta": "regressed"
+      },
+      "preflight": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-json-mode-log-order-root-cause/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause/activity-summary.json\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 125,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-json-mode-log-order-root-cause/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-json-mode-log-order-root-cause/fixtures/run-json-output.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-json-mode-log-order-root-cause/fixtures/src-commands-run.js\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 118,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "verification": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-json-mode-log-order-root-cause/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause/activity-summary.json\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 121,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-json-mode-log-order-root-cause/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-json-mode-log-order-root-cause/fixtures/run-json-output.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-json-mode-log-order-root-cause/fixtures/src-commands-run.js\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 125,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "artifacts": {
+        "artifactDir": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause",
+        "promptPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause\\prompt.txt",
+        "diffPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause\\git-diff.patch",
+        "agentStdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause\\agent-stdout.txt",
+        "agentStderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause\\agent-stderr.txt",
+        "activityLogPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause\\activity.jsonl",
+        "activitySummaryPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-log-order-root-cause\\activity-summary.json"
+      },
+      "agent": {
+        "exitCode": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "taskId": "gemini-tool-json-mode-root-cause",
+      "title": "Inspect the JSON-mode regression before explaining the root cause",
+      "taskKind": "tool-use",
+      "suite": "gemini-core",
+      "category": "debugging",
+      "difficulty": "medium",
+      "language": "text",
+      "taxonomy": {
+        "scope": "multi-file",
+        "tags": [
+          "tool-use",
+          "output-format",
+          "artifact-triage"
+        ]
+      },
+      "policy": "always",
+      "status": "failed",
+      "durationMs": 2266,
+      "efficiency": {
+        "agentDurationMs": 2,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -1372,10 +2195,10 @@
         ],
         "passToPass": [
           {
-            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-json-mode-root-cause/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-json-mode-root-cause-QFFDMp/src/commands/render.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-json-mode-root-cause-QFFDMp/test/json-mode.test.js\"",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-json-mode-root-cause/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-json-mode-root-cause-HssaJQ/src/commands/render.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-json-mode-root-cause-HssaJQ/test/json-mode.test.js\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 89,
+            "durationMs": 122,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-root-cause\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-root-cause\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -1388,7 +2211,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-json-mode-root-cause/verify-investigation.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-root-cause/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-root-cause/activity-summary.json\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 87,
+            "durationMs": 107,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-root-cause\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-root-cause\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -1396,10 +2219,10 @@
         ],
         "passToPass": [
           {
-            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-json-mode-root-cause/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-json-mode-root-cause-QFFDMp/src/commands/render.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-json-mode-root-cause-QFFDMp/test/json-mode.test.js\"",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-json-mode-root-cause/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-json-mode-root-cause-HssaJQ/src/commands/render.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-json-mode-root-cause-HssaJQ/test/json-mode.test.js\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 79,
+            "durationMs": 125,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-root-cause\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-json-mode-root-cause\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -1424,6 +2247,7 @@
       "taskId": "gemini-tool-maintainer-regression-handoff",
       "title": "Inspect local regression artifacts before writing a maintainer handoff",
       "taskKind": "tool-use",
+      "suite": "contributor-workflows",
       "category": "code-review",
       "difficulty": "medium",
       "language": "text",
@@ -1437,9 +2261,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 1318,
+      "durationMs": 1780,
       "efficiency": {
-        "agentDurationMs": 3,
+        "agentDurationMs": 6,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -1511,7 +2335,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-maintainer-regression-handoff/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-maintainer-regression-handoff/agent-stdout.txt\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 90,
+            "durationMs": 127,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-maintainer-regression-handoff\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-maintainer-regression-handoff\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -1522,7 +2346,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-maintainer-regression-handoff/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-maintainer-regression-handoff/fixtures/run-report.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-maintainer-regression-handoff/fixtures/failing-command.stderr.txt\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 78,
+            "durationMs": 124,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-maintainer-regression-handoff\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-maintainer-regression-handoff\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -1535,7 +2359,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-maintainer-regression-handoff/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-maintainer-regression-handoff/agent-stdout.txt\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 82,
+            "durationMs": 111,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-maintainer-regression-handoff\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-maintainer-regression-handoff\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -1546,7 +2370,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-maintainer-regression-handoff/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-maintainer-regression-handoff/fixtures/run-report.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-maintainer-regression-handoff/fixtures/failing-command.stderr.txt\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 85,
+            "durationMs": 107,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-maintainer-regression-handoff\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-maintainer-regression-handoff\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -1571,6 +2395,7 @@
       "taskId": "gemini-tool-output-routing-review",
       "title": "Inspect the expected routing path before reviewing a Gemini CLI output regression",
       "taskKind": "tool-use",
+      "suite": "gemini-core",
       "category": "code-review",
       "difficulty": "medium",
       "language": "text",
@@ -1584,9 +2409,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 1969,
+      "durationMs": 2516,
       "efficiency": {
-        "agentDurationMs": 3,
+        "agentDurationMs": 5,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -1670,7 +2495,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-output-routing-review/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-output-routing-review/agent-stdout.txt\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 88,
+            "durationMs": 130,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-output-routing-review\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-output-routing-review\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -1678,10 +2503,10 @@
         ],
         "passToPass": [
           {
-            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-output-routing-review/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-output-routing-review-CJrhzk/test/models-json.test.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-output-routing-review-CJrhzk/src/commands/models.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-output-routing-review-CJrhzk/src/renderers/output.js\"",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-output-routing-review/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-output-routing-review-DRg7nl/test/models-json.test.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-output-routing-review-DRg7nl/src/commands/models.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-output-routing-review-DRg7nl/src/renderers/output.js\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 86,
+            "durationMs": 139,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-output-routing-review\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-output-routing-review\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -1694,7 +2519,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-output-routing-review/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-output-routing-review/agent-stdout.txt\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 82,
+            "durationMs": 112,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-output-routing-review\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-output-routing-review\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -1702,10 +2527,10 @@
         ],
         "passToPass": [
           {
-            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-output-routing-review/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-output-routing-review-CJrhzk/test/models-json.test.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-output-routing-review-CJrhzk/src/commands/models.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-output-routing-review-CJrhzk/src/renderers/output.js\"",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-output-routing-review/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-output-routing-review-DRg7nl/test/models-json.test.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-output-routing-review-DRg7nl/src/commands/models.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\gemini-tool-output-routing-review-DRg7nl/src/renderers/output.js\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 79,
+            "durationMs": 175,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-output-routing-review\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\gemini-tool-output-routing-review\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -1730,6 +2555,7 @@
       "taskId": "node-cache-key-review",
       "title": "Address review feedback for stable cache keys",
       "taskKind": "workspace-edit",
+      "suite": "harness-calibration",
       "category": "code-review",
       "difficulty": "easy",
       "language": "javascript",
@@ -1743,9 +2569,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 1848,
+      "durationMs": 3027,
       "efficiency": {
-        "agentDurationMs": 3,
+        "agentDurationMs": 6,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -1783,7 +2609,7 @@
             "command": "node --test test/stable-param-order.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 170,
+            "durationMs": 284,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cache-key-review\\preflight-fail-to-pass-01-node---test-test-stable-param-order.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cache-key-review\\preflight-fail-to-pass-01-node---test-test-stable-param-order.test.js.stderr.txt"
@@ -1794,7 +2620,7 @@
             "command": "node --test test/existing-cache-key-shape.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 164,
+            "durationMs": 343,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cache-key-review\\preflight-pass-to-pass-01-node---test-test-existing-cache-key-shape.test.j.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cache-key-review\\preflight-pass-to-pass-01-node---test-test-existing-cache-key-shape.test.j.stderr.txt"
@@ -1807,7 +2633,7 @@
             "command": "node --test test/stable-param-order.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 173,
+            "durationMs": 263,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cache-key-review\\post-run-fail-to-pass-01-node---test-test-stable-param-order.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cache-key-review\\post-run-fail-to-pass-01-node---test-test-stable-param-order.test.js.stderr.txt"
@@ -1818,7 +2644,7 @@
             "command": "node --test test/existing-cache-key-shape.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 169,
+            "durationMs": 243,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cache-key-review\\post-run-pass-to-pass-01-node---test-test-existing-cache-key-shape.test.j.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cache-key-review\\post-run-pass-to-pass-01-node---test-test-existing-cache-key-shape.test.j.stderr.txt"
@@ -1843,6 +2669,7 @@
       "taskId": "node-cli-category-filter",
       "title": "Add category filtering to the tiny reporter CLI",
       "taskKind": "workspace-edit",
+      "suite": "harness-calibration",
       "category": "new-feature",
       "difficulty": "medium",
       "language": "javascript",
@@ -1856,9 +2683,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 2148,
+      "durationMs": 2991,
       "efficiency": {
-        "agentDurationMs": 3,
+        "agentDurationMs": 5,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -1896,7 +2723,7 @@
             "command": "node --test test/category-filter.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 187,
+            "durationMs": 291,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cli-category-filter\\preflight-fail-to-pass-01-node---test-test-category-filter.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cli-category-filter\\preflight-fail-to-pass-01-node---test-test-category-filter.test.js.stderr.txt"
@@ -1907,7 +2734,7 @@
             "command": "node --test test/default-output.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 167,
+            "durationMs": 282,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cli-category-filter\\preflight-pass-to-pass-01-node---test-test-default-output.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cli-category-filter\\preflight-pass-to-pass-01-node---test-test-default-output.test.js.stderr.txt"
@@ -1920,7 +2747,7 @@
             "command": "node --test test/category-filter.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 216,
+            "durationMs": 336,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cli-category-filter\\post-run-fail-to-pass-01-node---test-test-category-filter.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cli-category-filter\\post-run-fail-to-pass-01-node---test-test-category-filter.test.js.stderr.txt"
@@ -1931,7 +2758,7 @@
             "command": "node --test test/default-output.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 164,
+            "durationMs": 252,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cli-category-filter\\post-run-pass-to-pass-01-node---test-test-default-output.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cli-category-filter\\post-run-pass-to-pass-01-node---test-test-default-output.test.js.stderr.txt"
@@ -1956,6 +2783,7 @@
       "taskId": "node-cli-json-output",
       "title": "Add JSON output mode to the CLI formatter",
       "taskKind": "workspace-edit",
+      "suite": "harness-calibration",
       "category": "new-feature",
       "difficulty": "easy",
       "language": "javascript",
@@ -1968,9 +2796,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 1930,
+      "durationMs": 3229,
       "efficiency": {
-        "agentDurationMs": 6,
+        "agentDurationMs": 13,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -2008,7 +2836,7 @@
             "command": "node --test test/json-output.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 180,
+            "durationMs": 505,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cli-json-output\\preflight-fail-to-pass-01-node---test-test-json-output.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cli-json-output\\preflight-fail-to-pass-01-node---test-test-json-output.test.js.stderr.txt"
@@ -2019,7 +2847,7 @@
             "command": "node --test test/text-output.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 174,
+            "durationMs": 341,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cli-json-output\\preflight-pass-to-pass-01-node---test-test-text-output.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cli-json-output\\preflight-pass-to-pass-01-node---test-test-text-output.test.js.stderr.txt"
@@ -2032,7 +2860,7 @@
             "command": "node --test test/json-output.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 164,
+            "durationMs": 291,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cli-json-output\\post-run-fail-to-pass-01-node---test-test-json-output.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cli-json-output\\post-run-fail-to-pass-01-node---test-test-json-output.test.js.stderr.txt"
@@ -2043,7 +2871,7 @@
             "command": "node --test test/text-output.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 180,
+            "durationMs": 294,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cli-json-output\\post-run-pass-to-pass-01-node---test-test-text-output.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-cli-json-output\\post-run-pass-to-pass-01-node---test-test-text-output.test.js.stderr.txt"
@@ -2068,6 +2896,7 @@
       "taskId": "node-config-precedence",
       "title": "Fix config precedence for explicit CLI values",
       "taskKind": "workspace-edit",
+      "suite": "harness-calibration",
       "category": "debugging",
       "difficulty": "easy",
       "language": "javascript",
@@ -2080,9 +2909,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 2000,
+      "durationMs": 3256,
       "efficiency": {
-        "agentDurationMs": 2,
+        "agentDurationMs": 6,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -2120,7 +2949,7 @@
             "command": "node --test test/config-cli-precedence.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 182,
+            "durationMs": 340,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-config-precedence\\preflight-fail-to-pass-01-node---test-test-config-cli-precedence.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-config-precedence\\preflight-fail-to-pass-01-node---test-test-config-cli-precedence.test.js.stderr.txt"
@@ -2131,7 +2960,7 @@
             "command": "node --test test/config-fallbacks.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 171,
+            "durationMs": 327,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-config-precedence\\preflight-pass-to-pass-01-node---test-test-config-fallbacks.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-config-precedence\\preflight-pass-to-pass-01-node---test-test-config-fallbacks.test.js.stderr.txt"
@@ -2144,7 +2973,7 @@
             "command": "node --test test/config-cli-precedence.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 163,
+            "durationMs": 313,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-config-precedence\\post-run-fail-to-pass-01-node---test-test-config-cli-precedence.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-config-precedence\\post-run-fail-to-pass-01-node---test-test-config-cli-precedence.test.js.stderr.txt"
@@ -2155,7 +2984,7 @@
             "command": "node --test test/config-fallbacks.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 183,
+            "durationMs": 258,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-config-precedence\\post-run-pass-to-pass-01-node---test-test-config-fallbacks.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-config-precedence\\post-run-pass-to-pass-01-node---test-test-config-fallbacks.test.js.stderr.txt"
@@ -2180,6 +3009,7 @@
       "taskId": "node-config-short-flags",
       "title": "Honor short CLI flags in config loading",
       "taskKind": "workspace-edit",
+      "suite": "harness-calibration",
       "category": "debugging",
       "difficulty": "medium",
       "language": "javascript",
@@ -2193,9 +3023,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 2035,
+      "durationMs": 3045,
       "efficiency": {
-        "agentDurationMs": 2,
+        "agentDurationMs": 5,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -2233,7 +3063,7 @@
             "command": "node --test test/short-flags.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 176,
+            "durationMs": 335,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-config-short-flags\\preflight-fail-to-pass-01-node---test-test-short-flags.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-config-short-flags\\preflight-fail-to-pass-01-node---test-test-short-flags.test.js.stderr.txt"
@@ -2244,7 +3074,7 @@
             "command": "node --test test/long-flags.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 182,
+            "durationMs": 262,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-config-short-flags\\preflight-pass-to-pass-01-node---test-test-long-flags.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-config-short-flags\\preflight-pass-to-pass-01-node---test-test-long-flags.test.js.stderr.txt"
@@ -2257,7 +3087,7 @@
             "command": "node --test test/short-flags.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 167,
+            "durationMs": 269,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-config-short-flags\\post-run-fail-to-pass-01-node---test-test-short-flags.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-config-short-flags\\post-run-fail-to-pass-01-node---test-test-short-flags.test.js.stderr.txt"
@@ -2268,7 +3098,7 @@
             "command": "node --test test/long-flags.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 164,
+            "durationMs": 324,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-config-short-flags\\post-run-pass-to-pass-01-node---test-test-long-flags.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-config-short-flags\\post-run-pass-to-pass-01-node---test-test-long-flags.test.js.stderr.txt"
@@ -2293,6 +3123,7 @@
       "taskId": "node-header-merge-review",
       "title": "Address code review feedback for header merging",
       "taskKind": "workspace-edit",
+      "suite": "harness-calibration",
       "category": "code-review",
       "difficulty": "easy",
       "language": "javascript",
@@ -2306,9 +3137,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 1932,
+      "durationMs": 2901,
       "efficiency": {
-        "agentDurationMs": 3,
+        "agentDurationMs": 6,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -2346,7 +3177,7 @@
             "command": "node --test test/non-mutating-merge.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 186,
+            "durationMs": 265,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-header-merge-review\\preflight-fail-to-pass-01-node---test-test-non-mutating-merge.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-header-merge-review\\preflight-fail-to-pass-01-node---test-test-non-mutating-merge.test.js.stderr.txt"
@@ -2357,7 +3188,7 @@
             "command": "node --test test/stable-merge-behavior.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 164,
+            "durationMs": 264,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-header-merge-review\\preflight-pass-to-pass-01-node---test-test-stable-merge-behavior.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-header-merge-review\\preflight-pass-to-pass-01-node---test-test-stable-merge-behavior.test.js.stderr.txt"
@@ -2370,7 +3201,7 @@
             "command": "node --test test/non-mutating-merge.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 173,
+            "durationMs": 240,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-header-merge-review\\post-run-fail-to-pass-01-node---test-test-non-mutating-merge.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-header-merge-review\\post-run-fail-to-pass-01-node---test-test-non-mutating-merge.test.js.stderr.txt"
@@ -2381,7 +3212,7 @@
             "command": "node --test test/stable-merge-behavior.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 165,
+            "durationMs": 266,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-header-merge-review\\post-run-pass-to-pass-01-node---test-test-stable-merge-behavior.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-header-merge-review\\post-run-pass-to-pass-01-node---test-test-stable-merge-behavior.test.js.stderr.txt"
@@ -2406,6 +3237,7 @@
       "taskId": "node-keyword-normalizer-refactor",
       "title": "Refactor keyword parsing to share normalization logic",
       "taskKind": "workspace-edit",
+      "suite": "harness-calibration",
       "category": "refactoring",
       "difficulty": "easy",
       "language": "javascript",
@@ -2418,9 +3250,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 1844,
+      "durationMs": 3070,
       "efficiency": {
-        "agentDurationMs": 3,
+        "agentDurationMs": 7,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -2458,7 +3290,7 @@
             "command": "node --test test/parse-keywords.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 179,
+            "durationMs": 246,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-keyword-normalizer-refactor\\preflight-fail-to-pass-01-node---test-test-parse-keywords.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-keyword-normalizer-refactor\\preflight-fail-to-pass-01-node---test-test-parse-keywords.test.js.stderr.txt"
@@ -2469,7 +3301,7 @@
             "command": "node --test test/has-keyword.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 169,
+            "durationMs": 392,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-keyword-normalizer-refactor\\preflight-pass-to-pass-01-node---test-test-has-keyword.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-keyword-normalizer-refactor\\preflight-pass-to-pass-01-node---test-test-has-keyword.test.js.stderr.txt"
@@ -2482,7 +3314,7 @@
             "command": "node --test test/parse-keywords.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 171,
+            "durationMs": 293,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-keyword-normalizer-refactor\\post-run-fail-to-pass-01-node---test-test-parse-keywords.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-keyword-normalizer-refactor\\post-run-fail-to-pass-01-node---test-test-parse-keywords.test.js.stderr.txt"
@@ -2493,7 +3325,7 @@
             "command": "node --test test/has-keyword.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 171,
+            "durationMs": 256,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-keyword-normalizer-refactor\\post-run-pass-to-pass-01-node---test-test-has-keyword.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-keyword-normalizer-refactor\\post-run-pass-to-pass-01-node---test-test-has-keyword.test.js.stderr.txt"
@@ -2518,6 +3350,7 @@
       "taskId": "node-router-path-normalization",
       "title": "Normalize trailing slashes in router matches",
       "taskKind": "workspace-edit",
+      "suite": "harness-calibration",
       "category": "debugging",
       "difficulty": "easy",
       "language": "javascript",
@@ -2530,7 +3363,7 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 1910,
+      "durationMs": 3571,
       "efficiency": {
         "agentDurationMs": 3,
         "filesChanged": 0,
@@ -2570,7 +3403,7 @@
             "command": "node --test test/trailing-slash.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 173,
+            "durationMs": 448,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-router-path-normalization\\preflight-fail-to-pass-01-node---test-test-trailing-slash.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-router-path-normalization\\preflight-fail-to-pass-01-node---test-test-trailing-slash.test.js.stderr.txt"
@@ -2581,7 +3414,7 @@
             "command": "node --test test/static-routes.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 170,
+            "durationMs": 327,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-router-path-normalization\\preflight-pass-to-pass-01-node---test-test-static-routes.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-router-path-normalization\\preflight-pass-to-pass-01-node---test-test-static-routes.test.js.stderr.txt"
@@ -2594,7 +3427,7 @@
             "command": "node --test test/trailing-slash.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 163,
+            "durationMs": 271,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-router-path-normalization\\post-run-fail-to-pass-01-node---test-test-trailing-slash.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-router-path-normalization\\post-run-fail-to-pass-01-node---test-test-trailing-slash.test.js.stderr.txt"
@@ -2605,7 +3438,7 @@
             "command": "node --test test/static-routes.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 171,
+            "durationMs": 261,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-router-path-normalization\\post-run-pass-to-pass-01-node---test-test-static-routes.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-router-path-normalization\\post-run-pass-to-pass-01-node---test-test-static-routes.test.js.stderr.txt"
@@ -2630,6 +3463,7 @@
       "taskId": "node-slug-shared-normalizer",
       "title": "Refactor slug generation to use a shared normalizer",
       "taskKind": "workspace-edit",
+      "suite": "harness-calibration",
       "category": "refactoring",
       "difficulty": "easy",
       "language": "javascript",
@@ -2642,9 +3476,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 1941,
+      "durationMs": 3279,
       "efficiency": {
-        "agentDurationMs": 3,
+        "agentDurationMs": 8,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -2682,7 +3516,7 @@
             "command": "node --test test/article-path-trimming.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 199,
+            "durationMs": 292,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-slug-shared-normalizer\\preflight-fail-to-pass-01-node---test-test-article-path-trimming.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-slug-shared-normalizer\\preflight-fail-to-pass-01-node---test-test-article-path-trimming.test.js.stderr.txt"
@@ -2693,7 +3527,7 @@
             "command": "node --test test/preview-path.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 181,
+            "durationMs": 339,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-slug-shared-normalizer\\preflight-pass-to-pass-01-node---test-test-preview-path.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-slug-shared-normalizer\\preflight-pass-to-pass-01-node---test-test-preview-path.test.js.stderr.txt"
@@ -2706,7 +3540,7 @@
             "command": "node --test test/article-path-trimming.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 163,
+            "durationMs": 314,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-slug-shared-normalizer\\post-run-fail-to-pass-01-node---test-test-article-path-trimming.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-slug-shared-normalizer\\post-run-fail-to-pass-01-node---test-test-article-path-trimming.test.js.stderr.txt"
@@ -2717,7 +3551,7 @@
             "command": "node --test test/preview-path.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 171,
+            "durationMs": 309,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-slug-shared-normalizer\\post-run-pass-to-pass-01-node---test-test-preview-path.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-slug-shared-normalizer\\post-run-pass-to-pass-01-node---test-test-preview-path.test.js.stderr.txt"
@@ -2742,6 +3576,7 @@
       "taskId": "node-summary-tag-normalizer",
       "title": "Refactor summary tags to use a shared normalizer",
       "taskKind": "workspace-edit",
+      "suite": "harness-calibration",
       "category": "refactoring",
       "difficulty": "medium",
       "language": "javascript",
@@ -2755,9 +3590,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 2012,
+      "durationMs": 3274,
       "efficiency": {
-        "agentDurationMs": 3,
+        "agentDurationMs": 6,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -2795,7 +3630,7 @@
             "command": "node --test test/list-tags.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 173,
+            "durationMs": 314,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-summary-tag-normalizer\\preflight-fail-to-pass-01-node---test-test-list-tags.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-summary-tag-normalizer\\preflight-fail-to-pass-01-node---test-test-list-tags.test.js.stderr.txt"
@@ -2806,7 +3641,7 @@
             "command": "node --test test/has-tag.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 174,
+            "durationMs": 257,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-summary-tag-normalizer\\preflight-pass-to-pass-01-node---test-test-has-tag.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-summary-tag-normalizer\\preflight-pass-to-pass-01-node---test-test-has-tag.test.js.stderr.txt"
@@ -2819,7 +3654,7 @@
             "command": "node --test test/list-tags.test.js",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 164,
+            "durationMs": 283,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-summary-tag-normalizer\\post-run-fail-to-pass-01-node---test-test-list-tags.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-summary-tag-normalizer\\post-run-fail-to-pass-01-node---test-test-list-tags.test.js.stderr.txt"
@@ -2830,7 +3665,7 @@
             "command": "node --test test/has-tag.test.js",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 163,
+            "durationMs": 405,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-summary-tag-normalizer\\post-run-pass-to-pass-01-node---test-test-has-tag.test.js.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\node-summary-tag-normalizer\\post-run-pass-to-pass-01-node---test-test-has-tag.test.js.stderr.txt"
@@ -2855,6 +3690,7 @@
       "taskId": "prompt-regression-triage-json",
       "title": "Return strict JSON regression triage from benchmark artifacts",
       "taskKind": "prompt-output",
+      "suite": "contributor-workflows",
       "category": "debugging",
       "difficulty": "medium",
       "language": "text",
@@ -2868,9 +3704,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 1226,
+      "durationMs": 2097,
       "efficiency": {
-        "agentDurationMs": 3,
+        "agentDurationMs": 6,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -2908,7 +3744,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-regression-triage-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/expected.json\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 94,
+            "durationMs": 168,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-regression-triage-json\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-regression-triage-json\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -2919,7 +3755,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/fixtures/latest-results.json\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/fixtures/latest-report.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/fixtures/baseline.json\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 81,
+            "durationMs": 121,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-regression-triage-json\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-regression-triage-json\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -2932,7 +3768,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-regression-triage-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/expected.json\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 80,
+            "durationMs": 130,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-regression-triage-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-regression-triage-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -2943,7 +3779,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/fixtures/latest-results.json\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/fixtures/latest-report.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/fixtures/baseline.json\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 80,
+            "durationMs": 155,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-regression-triage-json\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-regression-triage-json\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -2968,6 +3804,7 @@
       "taskId": "prompt-review-findings-markdown",
       "title": "Produce constrained maintainer review findings from local artifacts",
       "taskKind": "prompt-output",
+      "suite": "contributor-workflows",
       "category": "code-review",
       "difficulty": "medium",
       "language": "text",
@@ -2981,9 +3818,9 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 1261,
+      "durationMs": 2329,
       "efficiency": {
-        "agentDurationMs": 3,
+        "agentDurationMs": 5,
         "filesChanged": 0,
         "insertions": 0,
         "deletions": 0,
@@ -3021,7 +3858,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-review-findings-markdown/verify-review-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-review-findings-markdown/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-review-findings-markdown/expected-review.md\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 89,
+            "durationMs": 169,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-review-findings-markdown\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-review-findings-markdown\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -3032,7 +3869,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-review-findings-markdown/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-review-findings-markdown/fixtures/git-diff.patch\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-review-findings-markdown/fixtures/failing-test.txt\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 78,
+            "durationMs": 127,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-review-findings-markdown\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-review-findings-markdown\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -3045,7 +3882,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-review-findings-markdown/verify-review-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-review-findings-markdown/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-review-findings-markdown/expected-review.md\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 82,
+            "durationMs": 127,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-review-findings-markdown\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-review-findings-markdown\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -3056,7 +3893,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-review-findings-markdown/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-review-findings-markdown/fixtures/git-diff.patch\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-review-findings-markdown/fixtures/failing-test.txt\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 77,
+            "durationMs": 126,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-review-findings-markdown\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\prompt-review-findings-markdown\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -3081,6 +3918,7 @@
       "taskId": "tool-regression-review",
       "title": "Inspect diff and failing artifacts before giving a regression finding",
       "taskKind": "tool-use",
+      "suite": "contributor-workflows",
       "category": "code-review",
       "difficulty": "medium",
       "language": "text",
@@ -3094,7 +3932,7 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 1223,
+      "durationMs": 2856,
       "efficiency": {
         "agentDurationMs": 3,
         "filesChanged": 0,
@@ -3134,7 +3972,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-regression-review/verify-review-investigation.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-regression-review/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-regression-review/activity-summary.json\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 93,
+            "durationMs": 443,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-regression-review\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-regression-review\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -3145,7 +3983,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-regression-review/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-regression-review/fixtures/git-diff.patch\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-regression-review/fixtures/failing-command.stderr.txt\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 93,
+            "durationMs": 217,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-regression-review\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-regression-review\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -3158,7 +3996,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-regression-review/verify-review-investigation.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-regression-review/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-regression-review/activity-summary.json\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 80,
+            "durationMs": 226,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-regression-review\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-regression-review\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -3169,7 +4007,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-regression-review/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-regression-review/fixtures/git-diff.patch\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-regression-review/fixtures/failing-command.stderr.txt\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 79,
+            "durationMs": 151,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-regression-review\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-regression-review\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -3194,6 +4032,7 @@
       "taskId": "tool-router-root-cause",
       "title": "Inspect the right files before explaining a router regression",
       "taskKind": "tool-use",
+      "suite": "harness-calibration",
       "category": "debugging",
       "difficulty": "medium",
       "language": "text",
@@ -3207,7 +4046,7 @@
       },
       "policy": "always",
       "status": "failed",
-      "durationMs": 1594,
+      "durationMs": 2838,
       "efficiency": {
         "agentDurationMs": 3,
         "filesChanged": 0,
@@ -3247,7 +4086,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-router-root-cause/verify-investigation.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-router-root-cause/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-router-root-cause/activity-summary.json\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 160,
+            "durationMs": 193,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-router-root-cause\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-router-root-cause\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -3255,10 +4094,10 @@
         ],
         "passToPass": [
           {
-            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-router-root-cause/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\tool-router-root-cause-0yfIzv/src/router.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\tool-router-root-cause-0yfIzv/test/trailing-slash.test.js\"",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-router-root-cause/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\tool-router-root-cause-8Pm2PJ/src/router.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\tool-router-root-cause-8Pm2PJ/test/trailing-slash.test.js\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 101,
+            "durationMs": 165,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-router-root-cause\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-router-root-cause\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -3271,7 +4110,7 @@
             "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-router-root-cause/verify-investigation.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-router-root-cause/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-router-root-cause/activity-summary.json\"",
             "passed": false,
             "exitCode": 1,
-            "durationMs": 87,
+            "durationMs": 186,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-router-root-cause\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-router-root-cause\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -3279,10 +4118,10 @@
         ],
         "passToPass": [
           {
-            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-router-root-cause/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\tool-router-root-cause-0yfIzv/src/router.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\tool-router-root-cause-0yfIzv/test/trailing-slash.test.js\"",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-router-root-cause/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\tool-router-root-cause-8Pm2PJ/src/router.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\workspaces\\20260321-091000\\tool-router-root-cause-8Pm2PJ/test/trailing-slash.test.js\"",
             "passed": true,
             "exitCode": 0,
-            "durationMs": 85,
+            "durationMs": 215,
             "timedOut": false,
             "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-router-root-cause\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
             "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\docs\\.tmp-examples\\regression\\artifacts\\20260321-091000\\tool-router-root-cause\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
@@ -3340,10 +4179,34 @@
     {
       "scope": "task-status",
       "severity": "medium",
+      "message": "Task 'gemini-flaky-eval-stabilization-json' regressed from passed to failed.",
+      "baselineValue": "passed",
+      "currentValue": "failed",
+      "taskId": "gemini-flaky-eval-stabilization-json"
+    },
+    {
+      "scope": "task-status",
+      "severity": "medium",
+      "message": "Task 'gemini-json-mode-regression-triage-json' regressed from passed to failed.",
+      "baselineValue": "passed",
+      "currentValue": "failed",
+      "taskId": "gemini-json-mode-regression-triage-json"
+    },
+    {
+      "scope": "task-status",
+      "severity": "medium",
       "message": "Task 'gemini-maintainer-handoff-md' regressed from passed to failed.",
       "baselineValue": "passed",
       "currentValue": "failed",
       "taskId": "gemini-maintainer-handoff-md"
+    },
+    {
+      "scope": "task-status",
+      "severity": "medium",
+      "message": "Task 'gemini-maintainer-repro-reply-md' regressed from passed to failed.",
+      "baselineValue": "passed",
+      "currentValue": "failed",
+      "taskId": "gemini-maintainer-repro-reply-md"
     },
     {
       "scope": "task-status",
@@ -3372,6 +4235,22 @@
     {
       "scope": "task-status",
       "severity": "medium",
+      "message": "Task 'gemini-repo-triage-owner-selection-json' regressed from passed to failed.",
+      "baselineValue": "passed",
+      "currentValue": "failed",
+      "taskId": "gemini-repo-triage-owner-selection-json"
+    },
+    {
+      "scope": "task-status",
+      "severity": "medium",
+      "message": "Task 'gemini-tool-debug-trace-repro-workflow' regressed from passed to failed.",
+      "baselineValue": "passed",
+      "currentValue": "failed",
+      "taskId": "gemini-tool-debug-trace-repro-workflow"
+    },
+    {
+      "scope": "task-status",
+      "severity": "medium",
       "message": "Task 'gemini-tool-debug-workflow-command-choice' regressed from passed to failed.",
       "baselineValue": "passed",
       "currentValue": "failed",
@@ -3384,6 +4263,14 @@
       "baselineValue": "passed",
       "currentValue": "failed",
       "taskId": "gemini-tool-first-inspection-root-cause"
+    },
+    {
+      "scope": "task-status",
+      "severity": "medium",
+      "message": "Task 'gemini-tool-json-mode-log-order-root-cause' regressed from passed to failed.",
+      "baselineValue": "passed",
+      "currentValue": "failed",
+      "taskId": "gemini-tool-json-mode-log-order-root-cause"
     },
     {
       "scope": "task-status",

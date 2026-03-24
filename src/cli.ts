@@ -1,8 +1,14 @@
+#!/usr/bin/env node
+import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { GeminiCliAgent } from "./gemini-adapter";
 import { GoldPatchAgent, NoopAgent } from "./mock-agents";
-import { buildTaskKindCoverageSummary, buildTaxonomyCoverageSummary } from "./task-metrics";
+import {
+  buildSuiteCoverageSummary,
+  buildTaskKindCoverageSummary,
+  buildTaxonomyCoverageSummary,
+} from "./task-metrics";
 import { loadTasks } from "./task-loader";
 import {
   attachBaselineContext,
@@ -12,7 +18,15 @@ import {
   saveBaseline,
 } from "./regression";
 import { saveReports } from "./report";
-import { AgentMode, EvaluationRun, RunConfig, TaskAgent, WorkspaceTask } from "./types";
+import {
+  AgentMode,
+  EvaluationRun,
+  RunConfig,
+  RunMetadata,
+  TaskAgent,
+  TaskSuite,
+  WorkspaceTask,
+} from "./types";
 import { ensureDir, readJsonFile, readTextFile, timestampForFile, writeJsonFile, writeTextFile } from "./utils";
 import { runTasks } from "./workspace-runner";
 
@@ -34,6 +48,7 @@ interface CliOptions {
   maxTasks?: number;
   liveOutput: boolean;
   json: boolean;
+  selectedSuites: TaskSuite[];
   selectedTaskIds: string[];
   workspaceRoot: string;
   keepWorkspaces: boolean;
@@ -54,7 +69,10 @@ interface CliOptions {
 
 interface CliDependencies {
   createAgent?: (
-    options: Pick<CliOptions, "agentMode" | "geminiBin" | "geminiArgs" | "model" | "liveOutput">,
+    options: Pick<
+      CliOptions,
+      "agentMode" | "geminiBin" | "geminiArgs" | "model" | "approvalMode" | "liveOutput"
+    >,
   ) => TaskAgent;
   now?: () => Date;
 }
@@ -72,6 +90,7 @@ const defaults: CliOptions = {
   defaultTimeoutMs: 120000,
   liveOutput: false,
   json: false,
+  selectedSuites: [],
   selectedTaskIds: [],
   workspaceRoot: join(tmpdir(), "gcli-benchmark-workspaces"),
   keepWorkspaces: false,
@@ -98,6 +117,7 @@ function usage(): string {
     "  --baseline <path>           Baseline file path (default: ./baseline/baseline.json)",
     "  --results <path>            Results file path for compare (default: ./reports/latest-results.json)",
     "  --update-baseline           Overwrite baseline using current run",
+    "  --suite <id>                Filter tasks by suite (repeatable)",
     "  --task <id>                 Run a specific task id (repeatable)",
     "  --gemini-bin <command>      Gemini CLI binary name/path (default: gemini)",
     "  --model <name>              Gemini model to use (ex: gemini-2.5-pro)",
@@ -140,6 +160,17 @@ function parseTaskKindValue(value: string): WorkspaceTask["taskKind"] {
     return value;
   }
   throw new Error(`Invalid value for --task-kind: '${value}'`);
+}
+
+function parseSuiteValue(value: string): TaskSuite {
+  if (
+    value === "gemini-core" ||
+    value === "contributor-workflows" ||
+    value === "harness-calibration"
+  ) {
+    return value;
+  }
+  throw new Error(`Invalid value for --suite: '${value}'`);
 }
 
 function parseCategoryValue(value: string): WorkspaceTask["category"] {
@@ -197,6 +228,7 @@ function parseArgs(argv: string[]): CliOptions {
   const options: CliOptions = {
     ...defaults,
     geminiArgs: [...defaults.geminiArgs],
+    selectedSuites: [...defaults.selectedSuites],
     selectedTaskIds: [...defaults.selectedTaskIds],
   };
 
@@ -269,6 +301,7 @@ function parseArgs(argv: string[]): CliOptions {
         "--reports",
         "--baseline",
         "--results",
+        "--suite",
         "--task",
         "--gemini-bin",
         "--model",
@@ -307,6 +340,9 @@ function parseArgs(argv: string[]): CliOptions {
         break;
       case "--results":
         options.resultsPath = requiredValue;
+        break;
+      case "--suite":
+        options.selectedSuites.push(parseSuiteValue(requiredValue));
         break;
       case "--task":
         options.selectedTaskIds.push(requiredValue);
@@ -375,6 +411,10 @@ function parseArgs(argv: string[]): CliOptions {
 
 function filterTasks(tasks: WorkspaceTask[], options: CliOptions): WorkspaceTask[] {
   let filtered = [...tasks];
+  if (options.selectedSuites.length > 0) {
+    const wantedSuites = new Set(options.selectedSuites);
+    filtered = filtered.filter((task) => wantedSuites.has(task.suite));
+  }
   if (options.selectedTaskIds.length > 0) {
     const wanted = new Set(options.selectedTaskIds);
     filtered = filtered.filter((task) => wanted.has(task.id));
@@ -401,6 +441,8 @@ function resolveRunConfig(options: CliOptions): RunConfig {
     workspaceRoot: resolve(options.workspaceRoot),
     keepWorkspaces: options.keepWorkspaces,
     maxTasks: options.maxTasks,
+    selectedSuites:
+      options.selectedSuites.length > 0 ? [...options.selectedSuites] : undefined,
     selectedTaskIds:
       options.selectedTaskIds.length > 0 ? [...options.selectedTaskIds] : undefined,
   };
@@ -435,6 +477,49 @@ function defaultCreateAgent(
   });
 }
 
+function captureCommandText(command: string, args: string[]): string | undefined {
+  const result = spawnSync(command, args, {
+    cwd: process.cwd(),
+    encoding: "utf8",
+    windowsHide: true,
+    shell: process.platform === "win32",
+  });
+  if (result.error || result.status !== 0) {
+    return undefined;
+  }
+  const output = `${result.stdout ?? ""}\n${result.stderr ?? ""}`.trim();
+  return output === "" ? undefined : output.split(/\r?\n/)[0].trim();
+}
+
+function buildRunMetadata(
+  config: RunConfig,
+  tasks: WorkspaceTask[],
+  generatedAt: string,
+  runId: string,
+): RunMetadata {
+  const isGeminiRun = config.mode === "gemini-cli";
+  return {
+    runId,
+    generatedAt,
+    mode: config.mode,
+    gitCommitSha: captureCommandText("git", ["rev-parse", "--short", "HEAD"]),
+    geminiCliVersion:
+      isGeminiRun && config.geminiBin
+        ? captureCommandText(config.geminiBin, ["--version"])
+        : undefined,
+    model: isGeminiRun ? config.model ?? "Gemini CLI default" : undefined,
+    approvalMode: isGeminiRun ? config.approvalMode ?? "yolo" : undefined,
+    suites: buildSuiteCoverageSummary(tasks).map((entry) => entry.suite),
+    selectedTaskIds: config.selectedTaskIds,
+    environment: {
+      platform: process.platform,
+      arch: process.arch,
+      nodeVersion: process.version,
+      workingDirectory: process.cwd(),
+    },
+  };
+}
+
 function printSummary(summary: EvaluationRun["summary"], config: RunConfig, regressionsCount: number): void {
   console.log(`Run completed at ${summary.generatedAt}`);
   console.log(`Execution mode: ${config.mode}`);
@@ -448,6 +533,9 @@ function printSummary(summary: EvaluationRun["summary"], config: RunConfig, regr
   console.log(`Infra failed: ${summary.infraFailed}`);
   console.log(`Invalid tasks: ${summary.invalidTasks}`);
   console.log(`Average duration: ${summary.averageDurationMs.toFixed(2)} ms`);
+  if (summary.suites.length > 0) {
+    console.log(`Suites: ${summary.suites.map((entry) => `${entry.suite}=${entry.count}`).join(", ")}`);
+  }
   for (const category of summary.categories) {
     console.log(
       `- ${category.category}: ${category.passed}/${category.total} (${(category.passRate * 100).toFixed(2)}%), failed ${category.failed}, infra ${category.infraFailed}, invalid ${category.invalidTasks}`,
@@ -491,12 +579,14 @@ function buildSuiteSummary(tasks: WorkspaceTask[]) {
     categories: sortEntries(categories),
     languages: sortEntries(languages),
     difficulties: sortEntries(difficulties),
+    suites: buildSuiteCoverageSummary(tasks).map((entry) => [entry.suite, entry.count] as [string, number]),
     taskKinds: buildTaskKindCoverageSummary(tasks).map((entry) => [entry.taskKind, entry.count] as [string, number]),
     taxonomyCoverage: buildTaxonomyCoverageSummary(tasks),
     tasks: tasks.map((task) => ({
       id: task.id,
       title: task.title,
       taskKind: task.taskKind,
+      suite: task.suite,
       category: task.category,
       difficulty: task.difficulty,
       language: task.language,
@@ -531,6 +621,7 @@ function buildGapsReport(tasks: WorkspaceTask[]) {
   return {
     total: summary.total,
     underCovered: {
+      suites: [...summary.suites].sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0])),
       taskKinds: [...summary.taskKinds].sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0])).slice(0, 3),
       categories: [...summary.categories].sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0])).slice(0, 3),
       difficulties: [...summary.difficulties].sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0])).slice(0, 3),
@@ -551,7 +642,7 @@ function readJsonOrThrow<T>(path: string): Promise<T> {
 }
 
 async function listTasks(options: CliOptions): Promise<void> {
-  const tasks = await loadTasks(resolve(options.tasksDir));
+  const tasks = filterTasks(await loadTasks(resolve(options.tasksDir)), options);
   const summary = buildSuiteSummary(tasks);
   if (options.json) {
     console.log(JSON.stringify(summary, null, 2));
@@ -559,6 +650,7 @@ async function listTasks(options: CliOptions): Promise<void> {
   }
 
   console.log(`Loaded ${summary.total} tasks from ${resolve(options.tasksDir)}`);
+  printCounts("Suites", summary.suites);
   printCounts("Categories", summary.categories);
   printCounts("Languages", summary.languages);
   printCounts("Difficulties", summary.difficulties);
@@ -578,7 +670,7 @@ async function listTasks(options: CliOptions): Promise<void> {
 }
 
 async function printCoverageGaps(options: CliOptions): Promise<void> {
-  const tasks = await loadTasks(resolve(options.tasksDir));
+  const tasks = filterTasks(await loadTasks(resolve(options.tasksDir)), options);
   const report = buildGapsReport(tasks);
   if (options.json) {
     console.log(JSON.stringify(report, null, 2));
@@ -586,6 +678,7 @@ async function printCoverageGaps(options: CliOptions): Promise<void> {
   }
 
   console.log(`Loaded ${report.total} tasks from ${resolve(options.tasksDir)}`);
+  printCounts("Suites", report.underCovered.suites);
   printCounts("Under-covered task kinds", report.underCovered.taskKinds);
   printCounts("Under-covered categories", report.underCovered.categories);
   printCounts("Under-covered difficulties", report.underCovered.difficulties);
@@ -608,9 +701,12 @@ async function compareResults(options: CliOptions): Promise<void> {
   const regressedTasks = annotatedTasks.filter(
     (task) => task.failureAnalysis.baselineDelta === "regressed",
   );
+  const bySuite = new Map<string, number>();
   const byTaskKind = new Map<string, number>();
   const byCategory = new Map<string, number>();
   for (const task of regressedTasks) {
+    const suite = task.suite ?? "unknown";
+    bySuite.set(suite, (bySuite.get(suite) ?? 0) + 1);
     byTaskKind.set(task.taskKind, (byTaskKind.get(task.taskKind) ?? 0) + 1);
     byCategory.set(task.category, (byCategory.get(task.category) ?? 0) + 1);
   }
@@ -621,6 +717,7 @@ async function compareResults(options: CliOptions): Promise<void> {
     regressions: results.regressions,
     regressedTasks: regressedTasks.map((task) => ({
       taskId: task.taskId,
+      suite: task.suite ?? "unknown",
       taskKind: task.taskKind,
       category: task.category,
       status: task.status,
@@ -631,6 +728,7 @@ async function compareResults(options: CliOptions): Promise<void> {
         null,
       artifactDir: task.artifacts.artifactDir,
     })),
+    regressedSuites: sortEntries(bySuite),
     regressedTaskKinds: sortEntries(byTaskKind),
     regressedCategories: sortEntries(byCategory),
   };
@@ -643,6 +741,7 @@ async function compareResults(options: CliOptions): Promise<void> {
   console.log(`Results: ${report.resultsPath}`);
   console.log(`Baseline: ${report.baselinePath}`);
   console.log(`Regression findings: ${report.regressions.length}`);
+  printCounts("Most regressed suites", report.regressedSuites);
   printCounts("Most regressed task kinds", report.regressedTaskKinds);
   printCounts("Most regressed categories", report.regressedCategories);
   if (report.regressedTasks.length === 0) {
@@ -652,7 +751,7 @@ async function compareResults(options: CliOptions): Promise<void> {
   console.log("Regressed tasks:");
   for (const task of report.regressedTasks) {
     console.log(
-      `- ${task.taskId}: ${task.status}, ${task.failureReason}, first failure=${task.firstFailure ?? "none"}, artifacts=${task.artifactDir}`,
+      `- ${task.taskId}: suite=${task.suite}, ${task.status}, ${task.failureReason}, first failure=${task.firstFailure ?? "none"}, artifacts=${task.artifactDir}`,
     );
   }
 }
@@ -726,6 +825,7 @@ async function draftTaskFromChatLog(options: CliOptions): Promise<void> {
     id: options.draftTaskId,
     title: chatLog.title ?? `Draft ${options.draftTaskId}`,
     taskKind: options.draftTaskKind,
+    suite: "contributor-workflows",
     category: options.draftCategory,
     difficulty: options.draftDifficulty ?? "medium",
     language: options.draftLanguage,
@@ -754,6 +854,7 @@ async function runEvaluation(options: CliOptions, deps: CliDependencies): Promis
   const runConfig = resolveRunConfig(options);
   const generatedAt = (deps.now ?? (() => new Date()))().toISOString();
   const runId = timestampForFile(generatedAt);
+  const metadata = buildRunMetadata(runConfig, tasks, generatedAt, runId);
   const reportsDir = resolve(options.reportsDir);
   const evaluation = await runTasks(tasks, agent, {
     generatedAt,
@@ -769,6 +870,7 @@ async function runEvaluation(options: CliOptions, deps: CliDependencies): Promis
   const regressions = detectRegressions(evaluation.summary, tasksWithBaseline, baseline);
 
   const run: EvaluationRun = {
+    metadata,
     summary: evaluation.summary,
     tasks: tasksWithBaseline,
     regressions,
@@ -781,7 +883,7 @@ async function runEvaluation(options: CliOptions, deps: CliDependencies): Promis
   console.log(`Saved report Markdown: ${reportPaths.markdownPath}`);
 
   if (options.updateBaseline) {
-    const newBaseline = makeBaseline(evaluation.summary, tasksWithBaseline);
+    const newBaseline = makeBaseline(evaluation.summary, tasksWithBaseline, metadata);
     await saveBaseline(baselinePath, newBaseline);
     console.log(`Updated baseline: ${baselinePath}`);
   } else if (!baseline) {

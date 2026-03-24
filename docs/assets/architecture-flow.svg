@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f7efe3" />
+      <stop offset="100%" stop-color="#e5f2f0" />
+    </linearGradient>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 z" fill="#264653" />
+    </marker>
+  </defs>
+  <rect width="1200" height="360" rx="28" fill="url(#bg)" />
+  <text x="60" y="52" fill="#1f2937" font-family="'Segoe UI', Arial, sans-serif" font-size="28" font-weight="700">
+    Benchmark Flow
+  </text>
+  <text x="60" y="82" fill="#475569" font-family="'Segoe UI', Arial, sans-serif" font-size="16">
+    Task manifest -> runner -> agent/workspace -> verification -> artifacts -> baseline compare/report
+  </text>
+
+  <g font-family="'Segoe UI', Arial, sans-serif">
+    <rect x="40" y="120" width="170" height="150" rx="20" fill="#ffffff" stroke="#d97706" stroke-width="3" />
+    <text x="62" y="155" fill="#111827" font-size="20" font-weight="700">Task Manifest</text>
+    <text x="62" y="186" fill="#334155" font-size="15">task.json</text>
+    <text x="62" y="210" fill="#334155" font-size="15">issue.md</text>
+    <text x="62" y="234" fill="#334155" font-size="15">gold artifacts</text>
+
+    <rect x="235" y="120" width="170" height="150" rx="20" fill="#ffffff" stroke="#0f766e" stroke-width="3" />
+    <text x="260" y="155" fill="#111827" font-size="20" font-weight="700">Runner</text>
+    <text x="260" y="186" fill="#334155" font-size="15">load + validate</text>
+    <text x="260" y="210" fill="#334155" font-size="15">prompt + workspace</text>
+    <text x="260" y="234" fill="#334155" font-size="15">suite-aware selection</text>
+
+    <rect x="430" y="120" width="170" height="150" rx="20" fill="#ffffff" stroke="#2563eb" stroke-width="3" />
+    <text x="455" y="155" fill="#111827" font-size="20" font-weight="700">Agent / Workspace</text>
+    <text x="455" y="186" fill="#334155" font-size="15">Gemini CLI</text>
+    <text x="455" y="210" fill="#334155" font-size="15">gold-patch / noop</text>
+    <text x="455" y="234" fill="#334155" font-size="15">local repo state</text>
+
+    <rect x="625" y="120" width="170" height="150" rx="20" fill="#ffffff" stroke="#7c3aed" stroke-width="3" />
+    <text x="655" y="155" fill="#111827" font-size="20" font-weight="700">Verification</text>
+    <text x="655" y="186" fill="#334155" font-size="15">fail-to-pass</text>
+    <text x="655" y="210" fill="#334155" font-size="15">pass-to-pass</text>
+    <text x="655" y="234" fill="#334155" font-size="15">tool expectations</text>
+
+    <rect x="820" y="120" width="170" height="150" rx="20" fill="#ffffff" stroke="#dc2626" stroke-width="3" />
+    <text x="860" y="155" fill="#111827" font-size="20" font-weight="700">Artifacts</text>
+    <text x="860" y="186" fill="#334155" font-size="15">stdout / stderr</text>
+    <text x="860" y="210" fill="#334155" font-size="15">diff / activity</text>
+    <text x="860" y="234" fill="#334155" font-size="15">summary JSON</text>
+
+    <rect x="1015" y="120" width="145" height="150" rx="20" fill="#ffffff" stroke="#059669" stroke-width="3" />
+    <text x="1040" y="155" fill="#111827" font-size="20" font-weight="700">Reports</text>
+    <text x="1040" y="186" fill="#334155" font-size="15">baseline compare</text>
+    <text x="1040" y="210" fill="#334155" font-size="15">latest JSON/MD</text>
+    <text x="1040" y="234" fill="#334155" font-size="15">archived runs</text>
+  </g>
+
+  <line x1="210" y1="195" x2="235" y2="195" stroke="#264653" stroke-width="4" marker-end="url(#arrow)" />
+  <line x1="405" y1="195" x2="430" y2="195" stroke="#264653" stroke-width="4" marker-end="url(#arrow)" />
+  <line x1="600" y1="195" x2="625" y2="195" stroke="#264653" stroke-width="4" marker-end="url(#arrow)" />
+  <line x1="795" y1="195" x2="820" y2="195" stroke="#264653" stroke-width="4" marker-end="url(#arrow)" />
+  <line x1="990" y1="195" x2="1015" y2="195" stroke="#264653" stroke-width="4" marker-end="url(#arrow)" />
+</svg>

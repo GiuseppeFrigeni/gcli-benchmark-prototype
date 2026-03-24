@@ -1,0 +1,1335 @@
+{
+  "metadata": {
+    "runId": "20260324-131841",
+    "generatedAt": "2026-03-24T13:18:41.173Z",
+    "mode": "gemini-cli",
+    "gitCommitSha": "21f54ff",
+    "geminiCliVersion": "0.32.1",
+    "model": "Gemini CLI default",
+    "approvalMode": "yolo",
+    "suites": [
+      "contributor-workflows"
+    ],
+    "environment": {
+      "platform": "win32",
+      "arch": "x64",
+      "nodeVersion": "v20.19.0",
+      "workingDirectory": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype"
+    }
+  },
+  "summary": {
+    "generatedAt": "2026-03-24T13:18:41.173Z",
+    "total": 10,
+    "passed": 0,
+    "failed": 6,
+    "infraFailed": 4,
+    "invalidTasks": 0,
+    "passRate": 0,
+    "averageDurationMs": 84955.3,
+    "categories": [
+      {
+        "category": "code-review",
+        "total": 6,
+        "passed": 0,
+        "failed": 3,
+        "infraFailed": 3,
+        "invalidTasks": 0,
+        "passRate": 0
+      },
+      {
+        "category": "debugging",
+        "total": 4,
+        "passed": 0,
+        "failed": 3,
+        "infraFailed": 1,
+        "invalidTasks": 0,
+        "passRate": 0
+      }
+    ],
+    "suites": [
+      {
+        "suite": "contributor-workflows",
+        "count": 10
+      }
+    ],
+    "taskKinds": [
+      {
+        "taskKind": "prompt-output",
+        "count": 7
+      },
+      {
+        "taskKind": "tool-use",
+        "count": 3
+      }
+    ],
+    "taxonomyCoverage": {
+      "tasksWithTaxonomy": 10,
+      "tasksWithoutTaxonomy": 0,
+      "scopes": [
+        {
+          "scope": "multi-file",
+          "count": 9
+        },
+        {
+          "scope": "single-file",
+          "count": 1
+        }
+      ],
+      "tags": [
+        {
+          "tag": "artifact-triage",
+          "count": 6
+        },
+        {
+          "tag": "regression-reporting",
+          "count": 8
+        },
+        {
+          "tag": "review-feedback",
+          "count": 6
+        },
+        {
+          "tag": "strict-output",
+          "count": 7
+        },
+        {
+          "tag": "tool-use",
+          "count": 3
+        }
+      ]
+    },
+    "efficiency": {
+      "measuredTasks": 10,
+      "averageAgentDurationMs": 81335,
+      "averageFilesChanged": 0,
+      "averageChangedLines": 0,
+      "totalInsertions": 0,
+      "totalDeletions": 0
+    },
+    "failureBreakdown": {
+      "byReason": [
+        {
+          "label": "verification-failed",
+          "count": 5
+        },
+        {
+          "label": "agent-error",
+          "count": 4
+        },
+        {
+          "label": "tool-expectation-failed",
+          "count": 1
+        }
+      ],
+      "bySuite": [
+        {
+          "label": "contributor-workflows",
+          "count": 10
+        }
+      ],
+      "byTaskKind": [
+        {
+          "label": "prompt-output",
+          "count": 7
+        },
+        {
+          "label": "tool-use",
+          "count": 3
+        }
+      ],
+      "byCategory": [
+        {
+          "label": "code-review",
+          "count": 6
+        },
+        {
+          "label": "debugging",
+          "count": 4
+        }
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "taskId": "eval-flaky-verifier-tighten-md",
+      "title": "Turn flaky eval verifier evidence into deterministic maintainer guidance",
+      "taskKind": "prompt-output",
+      "suite": "contributor-workflows",
+      "category": "code-review",
+      "difficulty": "hard",
+      "language": "text",
+      "taxonomy": {
+        "scope": "multi-file",
+        "tags": [
+          "review-feedback",
+          "strict-output",
+          "regression-reporting"
+        ]
+      },
+      "policy": "always",
+      "status": "infra_failed",
+      "durationMs": 126646,
+      "efficiency": {
+        "agentDurationMs": 120296,
+        "filesChanged": 0,
+        "insertions": 0,
+        "deletions": 0,
+        "changedLines": 0
+      },
+      "notes": [
+        "Gemini CLI timed out after 120000ms"
+      ],
+      "failureAnalysis": {
+        "reason": "agent-error",
+        "failedVerificationCommands": [],
+        "firstObservedToolCall": {
+          "index": 1,
+          "name": "list_directory",
+          "target": "."
+        },
+        "missingExpectedInspections": [],
+        "toolExpectationFailures": [],
+        "baselineStatus": "passed",
+        "baselineDelta": "regressed"
+      },
+      "preflight": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-flaky-verifier-tighten-md/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-flaky-verifier-tighten-md/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-flaky-verifier-tighten-md/expected.md\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 168,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-flaky-verifier-tighten-md\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-flaky-verifier-tighten-md\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-flaky-verifier-tighten-md/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-flaky-verifier-tighten-md/fixtures/flaky-run-log.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-flaky-verifier-tighten-md/fixtures/current-verifier.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-flaky-verifier-tighten-md/fixtures/chat-log.md\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 344,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-flaky-verifier-tighten-md\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-flaky-verifier-tighten-md\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "artifacts": {
+        "artifactDir": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-flaky-verifier-tighten-md",
+        "promptPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-flaky-verifier-tighten-md\\prompt.txt",
+        "diffPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-flaky-verifier-tighten-md\\git-diff.patch",
+        "agentStdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-flaky-verifier-tighten-md\\agent-stdout.txt",
+        "agentStderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-flaky-verifier-tighten-md\\agent-stderr.txt",
+        "activityLogPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-flaky-verifier-tighten-md\\activity.jsonl",
+        "activitySummaryPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-flaky-verifier-tighten-md\\activity-summary.json"
+      },
+      "agent": {
+        "exitCode": 1,
+        "timedOut": true,
+        "error": "Gemini CLI timed out after 120000ms"
+      }
+    },
+    {
+      "taskId": "eval-gap-inventory-json",
+      "title": "Return strict JSON for contributor-facing eval coverage gaps",
+      "taskKind": "prompt-output",
+      "suite": "contributor-workflows",
+      "category": "debugging",
+      "difficulty": "medium",
+      "language": "text",
+      "taxonomy": {
+        "scope": "multi-file",
+        "tags": [
+          "artifact-triage",
+          "strict-output",
+          "regression-reporting"
+        ]
+      },
+      "policy": "always",
+      "status": "failed",
+      "durationMs": 49183,
+      "efficiency": {
+        "agentDurationMs": 46122,
+        "filesChanged": 0,
+        "insertions": 0,
+        "deletions": 0,
+        "changedLines": 0
+      },
+      "notes": [
+        "One or more verification commands failed after the agent run."
+      ],
+      "failureAnalysis": {
+        "reason": "verification-failed",
+        "failedVerificationCommands": [
+          {
+            "phase": "failToPass",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/expected.json\"",
+            "exitCode": 1,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "firstFailedVerification": {
+          "phase": "failToPass",
+          "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/expected.json\"",
+          "exitCode": 1,
+          "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+          "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+        },
+        "firstObservedToolCall": {
+          "index": 1,
+          "name": "list_directory",
+          "target": "."
+        },
+        "missingExpectedInspections": [],
+        "toolExpectationFailures": [],
+        "baselineStatus": "passed",
+        "baselineDelta": "regressed"
+      },
+      "preflight": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/expected.json\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 197,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/fixtures/coverage-summary.json\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/fixtures/roadmap.md\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 536,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "verification": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/expected.json\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 145,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/fixtures/coverage-summary.json\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\eval-gap-inventory-json/fixtures/roadmap.md\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 167,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "artifacts": {
+        "artifactDir": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json",
+        "promptPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json\\prompt.txt",
+        "diffPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json\\git-diff.patch",
+        "agentStdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json\\agent-stdout.txt",
+        "agentStderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json\\agent-stderr.txt",
+        "activityLogPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json\\activity.jsonl",
+        "activitySummaryPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\eval-gap-inventory-json\\activity-summary.json"
+      },
+      "agent": {
+        "exitCode": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "taskId": "gemini-flaky-eval-stabilization-json",
+      "title": "Return strict JSON for a flaky eval stabilization plan",
+      "taskKind": "prompt-output",
+      "suite": "contributor-workflows",
+      "category": "debugging",
+      "difficulty": "medium",
+      "language": "text",
+      "taxonomy": {
+        "scope": "multi-file",
+        "tags": [
+          "artifact-triage",
+          "strict-output",
+          "regression-reporting"
+        ]
+      },
+      "policy": "always",
+      "status": "failed",
+      "durationMs": 45083,
+      "efficiency": {
+        "agentDurationMs": 42286,
+        "filesChanged": 0,
+        "insertions": 0,
+        "deletions": 0,
+        "changedLines": 0
+      },
+      "notes": [
+        "One or more verification commands failed after the agent run."
+      ],
+      "failureAnalysis": {
+        "reason": "verification-failed",
+        "failedVerificationCommands": [
+          {
+            "phase": "failToPass",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/expected.json\"",
+            "exitCode": 1,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "firstFailedVerification": {
+          "phase": "failToPass",
+          "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/expected.json\"",
+          "exitCode": 1,
+          "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+          "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+        },
+        "firstObservedToolCall": {
+          "index": 1,
+          "name": "list_directory",
+          "target": "."
+        },
+        "missingExpectedInspections": [],
+        "toolExpectationFailures": [],
+        "baselineStatus": "passed",
+        "baselineDelta": "regressed"
+      },
+      "preflight": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/expected.json\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 153,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/fixtures/flaky-run-a.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/fixtures/flaky-run-b.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/fixtures/current-verifier.js\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 181,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "verification": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/expected.json\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 172,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/fixtures/flaky-run-a.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/fixtures/flaky-run-b.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-flaky-eval-stabilization-json/fixtures/current-verifier.js\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 116,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "artifacts": {
+        "artifactDir": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json",
+        "promptPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json\\prompt.txt",
+        "diffPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json\\git-diff.patch",
+        "agentStdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json\\agent-stdout.txt",
+        "agentStderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json\\agent-stderr.txt",
+        "activityLogPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json\\activity.jsonl",
+        "activitySummaryPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-flaky-eval-stabilization-json\\activity-summary.json"
+      },
+      "agent": {
+        "exitCode": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "taskId": "gemini-maintainer-handoff-md",
+      "title": "Produce a strict maintainer handoff for a Gemini CLI quality issue",
+      "taskKind": "prompt-output",
+      "suite": "contributor-workflows",
+      "category": "code-review",
+      "difficulty": "medium",
+      "language": "text",
+      "taxonomy": {
+        "scope": "single-file",
+        "tags": [
+          "strict-output",
+          "review-feedback",
+          "regression-reporting"
+        ]
+      },
+      "policy": "always",
+      "status": "infra_failed",
+      "durationMs": 125057,
+      "efficiency": {
+        "agentDurationMs": 120203,
+        "filesChanged": 0,
+        "insertions": 0,
+        "deletions": 0,
+        "changedLines": 0
+      },
+      "notes": [
+        "Gemini CLI timed out after 120000ms"
+      ],
+      "failureAnalysis": {
+        "reason": "agent-error",
+        "failedVerificationCommands": [],
+        "firstObservedToolCall": {
+          "index": 1,
+          "name": "list_directory",
+          "target": "."
+        },
+        "missingExpectedInspections": [],
+        "toolExpectationFailures": [],
+        "baselineStatus": "passed",
+        "baselineDelta": "regressed"
+      },
+      "preflight": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-handoff-md/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-handoff-md/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-handoff-md/expected.md\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 129,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-handoff-md\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-handoff-md\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-handoff-md/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-handoff-md/fixtures/run-summary.txt\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 121,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-handoff-md\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-handoff-md\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "artifacts": {
+        "artifactDir": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-handoff-md",
+        "promptPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-handoff-md\\prompt.txt",
+        "diffPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-handoff-md\\git-diff.patch",
+        "agentStdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-handoff-md\\agent-stdout.txt",
+        "agentStderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-handoff-md\\agent-stderr.txt",
+        "activityLogPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-handoff-md\\activity.jsonl",
+        "activitySummaryPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-handoff-md\\activity-summary.json"
+      },
+      "agent": {
+        "exitCode": 1,
+        "timedOut": true,
+        "error": "Gemini CLI timed out after 120000ms"
+      }
+    },
+    {
+      "taskId": "gemini-maintainer-repro-reply-md",
+      "title": "Write a concise maintainer reply for a Gemini CLI JSON regression",
+      "taskKind": "prompt-output",
+      "suite": "contributor-workflows",
+      "category": "code-review",
+      "difficulty": "medium",
+      "language": "text",
+      "taxonomy": {
+        "scope": "multi-file",
+        "tags": [
+          "review-feedback",
+          "strict-output",
+          "regression-reporting"
+        ]
+      },
+      "policy": "always",
+      "status": "failed",
+      "durationMs": 50111,
+      "efficiency": {
+        "agentDurationMs": 47767,
+        "filesChanged": 0,
+        "insertions": 0,
+        "deletions": 0,
+        "changedLines": 0
+      },
+      "notes": [
+        "One or more verification commands failed after the agent run."
+      ],
+      "failureAnalysis": {
+        "reason": "verification-failed",
+        "failedVerificationCommands": [
+          {
+            "phase": "failToPass",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/expected.md\"",
+            "exitCode": 1,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "firstFailedVerification": {
+          "phase": "failToPass",
+          "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/expected.md\"",
+          "exitCode": 1,
+          "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+          "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+        },
+        "firstObservedToolCall": {
+          "index": 1,
+          "name": "list_directory",
+          "target": "."
+        },
+        "missingExpectedInspections": [],
+        "toolExpectationFailures": [],
+        "baselineStatus": "passed",
+        "baselineDelta": "regressed"
+      },
+      "preflight": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/expected.md\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 161,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/fixtures/models-json-run.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/fixtures/models-json.stderr.txt\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 141,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "verification": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/expected.md\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 237,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/fixtures/models-json-run.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-maintainer-repro-reply-md/fixtures/models-json.stderr.txt\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 122,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "artifacts": {
+        "artifactDir": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md",
+        "promptPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md\\prompt.txt",
+        "diffPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md\\git-diff.patch",
+        "agentStdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md\\agent-stdout.txt",
+        "agentStderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md\\agent-stderr.txt",
+        "activityLogPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md\\activity.jsonl",
+        "activitySummaryPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-maintainer-repro-reply-md\\activity-summary.json"
+      },
+      "agent": {
+        "exitCode": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "taskId": "gemini-tool-debug-trace-repro-workflow",
+      "title": "Use the trace repro command before recommending the next debug step",
+      "taskKind": "tool-use",
+      "suite": "contributor-workflows",
+      "category": "debugging",
+      "difficulty": "hard",
+      "language": "text",
+      "taxonomy": {
+        "scope": "multi-file",
+        "tags": [
+          "tool-use",
+          "artifact-triage",
+          "regression-reporting"
+        ]
+      },
+      "policy": "always",
+      "status": "infra_failed",
+      "durationMs": 126445,
+      "efficiency": {
+        "agentDurationMs": 120263,
+        "filesChanged": 0,
+        "insertions": 0,
+        "deletions": 0,
+        "changedLines": 0
+      },
+      "notes": [
+        "Gemini CLI timed out after 120000ms"
+      ],
+      "failureAnalysis": {
+        "reason": "agent-error",
+        "failedVerificationCommands": [],
+        "firstObservedToolCall": {
+          "index": 1,
+          "name": "list_directory",
+          "target": "."
+        },
+        "missingExpectedInspections": [],
+        "toolExpectationFailures": [],
+        "baselineStatus": "passed",
+        "baselineDelta": "regressed"
+      },
+      "preflight": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-trace-repro-workflow/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-debug-trace-repro-workflow/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-debug-trace-repro-workflow/activity-summary.json\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 138,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-debug-trace-repro-workflow\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-debug-trace-repro-workflow\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-trace-repro-workflow/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-trace-repro-workflow/print-trace.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-trace-repro-workflow/fixtures/trace.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-debug-trace-repro-workflow/fixtures/render-run.js\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 147,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-debug-trace-repro-workflow\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-debug-trace-repro-workflow\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "artifacts": {
+        "artifactDir": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-debug-trace-repro-workflow",
+        "promptPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-debug-trace-repro-workflow\\prompt.txt",
+        "diffPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-debug-trace-repro-workflow\\git-diff.patch",
+        "agentStdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-debug-trace-repro-workflow\\agent-stdout.txt",
+        "agentStderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-debug-trace-repro-workflow\\agent-stderr.txt",
+        "activityLogPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-debug-trace-repro-workflow\\activity.jsonl",
+        "activitySummaryPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-debug-trace-repro-workflow\\activity-summary.json"
+      },
+      "agent": {
+        "exitCode": 1,
+        "timedOut": true,
+        "error": "Gemini CLI timed out after 120000ms"
+      }
+    },
+    {
+      "taskId": "gemini-tool-maintainer-regression-handoff",
+      "title": "Inspect local regression artifacts before writing a maintainer handoff",
+      "taskKind": "tool-use",
+      "suite": "contributor-workflows",
+      "category": "code-review",
+      "difficulty": "medium",
+      "language": "text",
+      "taxonomy": {
+        "scope": "multi-file",
+        "tags": [
+          "tool-use",
+          "review-feedback",
+          "regression-reporting"
+        ]
+      },
+      "policy": "always",
+      "status": "failed",
+      "durationMs": 77467,
+      "efficiency": {
+        "agentDurationMs": 75343,
+        "filesChanged": 0,
+        "insertions": 0,
+        "deletions": 0,
+        "changedLines": 0
+      },
+      "notes": [
+        "One or more verification commands failed after the agent run."
+      ],
+      "failureAnalysis": {
+        "reason": "tool-expectation-failed",
+        "failedVerificationCommands": [
+          {
+            "phase": "failToPass",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-maintainer-regression-handoff/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff/agent-stdout.txt\"",
+            "exitCode": 1,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "firstFailedVerification": {
+          "phase": "failToPass",
+          "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-maintainer-regression-handoff/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff/agent-stdout.txt\"",
+          "exitCode": 1,
+          "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+          "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+        },
+        "firstObservedToolCall": {
+          "index": 1,
+          "name": "list_directory",
+          "target": "."
+        },
+        "missingExpectedInspections": [
+          {
+            "name": "read_file",
+            "targetIncludes": "fixtures/run-report.md"
+          },
+          {
+            "name": "read_file",
+            "targetIncludes": "fixtures/failing-command.stderr.txt"
+          }
+        ],
+        "toolExpectationFailures": [
+          {
+            "type": "missing-required-call",
+            "expected": {
+              "name": "read_file",
+              "targetIncludes": "fixtures/run-report.md"
+            },
+            "message": "Missing required inspection for 'fixtures/run-report.md'."
+          },
+          {
+            "type": "missing-required-call",
+            "expected": {
+              "name": "read_file",
+              "targetIncludes": "fixtures/failing-command.stderr.txt"
+            },
+            "message": "Missing required inspection for 'fixtures/failing-command.stderr.txt'."
+          },
+          {
+            "type": "ordered-call-mismatch",
+            "expected": {
+              "name": "read_file",
+              "targetIncludes": "fixtures/run-report.md"
+            },
+            "actual": {
+              "index": 1,
+              "name": "list_directory",
+              "target": "."
+            },
+            "message": "Expected tool call 1 to match 'fixtures/run-report.md'."
+          }
+        ],
+        "firstUnexpectedInspection": {
+          "index": 1,
+          "name": "list_directory",
+          "target": "."
+        },
+        "baselineStatus": "passed",
+        "baselineDelta": "regressed"
+      },
+      "preflight": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-maintainer-regression-handoff/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff/agent-stdout.txt\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 127,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-maintainer-regression-handoff/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-maintainer-regression-handoff/fixtures/run-report.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-maintainer-regression-handoff/fixtures/failing-command.stderr.txt\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 119,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "verification": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-maintainer-regression-handoff/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff/agent-stdout.txt\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 147,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-maintainer-regression-handoff/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-maintainer-regression-handoff/fixtures/run-report.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-maintainer-regression-handoff/fixtures/failing-command.stderr.txt\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 127,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "artifacts": {
+        "artifactDir": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff",
+        "promptPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff\\prompt.txt",
+        "diffPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff\\git-diff.patch",
+        "agentStdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff\\agent-stdout.txt",
+        "agentStderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff\\agent-stderr.txt",
+        "activityLogPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff\\activity.jsonl",
+        "activitySummaryPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\gemini-tool-maintainer-regression-handoff\\activity-summary.json"
+      },
+      "agent": {
+        "exitCode": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "taskId": "prompt-regression-triage-json",
+      "title": "Return strict JSON regression triage from benchmark artifacts",
+      "taskKind": "prompt-output",
+      "suite": "contributor-workflows",
+      "category": "debugging",
+      "difficulty": "medium",
+      "language": "text",
+      "taxonomy": {
+        "scope": "multi-file",
+        "tags": [
+          "artifact-triage",
+          "strict-output",
+          "regression-reporting"
+        ]
+      },
+      "policy": "always",
+      "status": "failed",
+      "durationMs": 97738,
+      "efficiency": {
+        "agentDurationMs": 94910,
+        "filesChanged": 0,
+        "insertions": 0,
+        "deletions": 0,
+        "changedLines": 0
+      },
+      "notes": [
+        "One or more verification commands failed after the agent run."
+      ],
+      "failureAnalysis": {
+        "reason": "verification-failed",
+        "failedVerificationCommands": [
+          {
+            "phase": "failToPass",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/expected.json\"",
+            "exitCode": 1,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "firstFailedVerification": {
+          "phase": "failToPass",
+          "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/expected.json\"",
+          "exitCode": 1,
+          "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+          "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+        },
+        "firstObservedToolCall": {
+          "index": 1,
+          "name": "list_directory",
+          "target": "."
+        },
+        "missingExpectedInspections": [],
+        "toolExpectationFailures": [],
+        "baselineStatus": "passed",
+        "baselineDelta": "regressed"
+      },
+      "preflight": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/expected.json\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 142,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/fixtures/latest-results.json\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/fixtures/latest-report.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/fixtures/baseline.json\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 136,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "verification": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/verify-json-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/expected.json\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 363,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/fixtures/latest-results.json\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/fixtures/latest-report.md\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-regression-triage-json/fixtures/baseline.json\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 218,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "artifacts": {
+        "artifactDir": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json",
+        "promptPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json\\prompt.txt",
+        "diffPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json\\git-diff.patch",
+        "agentStdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json\\agent-stdout.txt",
+        "agentStderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json\\agent-stderr.txt",
+        "activityLogPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json\\activity.jsonl",
+        "activitySummaryPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-regression-triage-json\\activity-summary.json"
+      },
+      "agent": {
+        "exitCode": 0,
+        "timedOut": false
+      }
+    },
+    {
+      "taskId": "prompt-review-findings-markdown",
+      "title": "Produce constrained maintainer review findings from local artifacts",
+      "taskKind": "prompt-output",
+      "suite": "contributor-workflows",
+      "category": "code-review",
+      "difficulty": "medium",
+      "language": "text",
+      "taxonomy": {
+        "scope": "multi-file",
+        "tags": [
+          "review-feedback",
+          "strict-output",
+          "artifact-triage"
+        ]
+      },
+      "policy": "always",
+      "status": "infra_failed",
+      "durationMs": 124196,
+      "efficiency": {
+        "agentDurationMs": 120168,
+        "filesChanged": 0,
+        "insertions": 0,
+        "deletions": 0,
+        "changedLines": 0
+      },
+      "notes": [
+        "Gemini CLI timed out after 120000ms"
+      ],
+      "failureAnalysis": {
+        "reason": "agent-error",
+        "failedVerificationCommands": [],
+        "firstObservedToolCall": {
+          "index": 1,
+          "name": "list_directory",
+          "target": "."
+        },
+        "missingExpectedInspections": [],
+        "toolExpectationFailures": [],
+        "baselineStatus": "passed",
+        "baselineDelta": "regressed"
+      },
+      "preflight": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-review-findings-markdown/verify-review-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-review-findings-markdown/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-review-findings-markdown/expected-review.md\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 146,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-review-findings-markdown\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-review-findings-markdown\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-review-findings-markdown/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-review-findings-markdown/fixtures/git-diff.patch\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\prompt-review-findings-markdown/fixtures/failing-test.txt\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 161,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-review-findings-markdown\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-review-findings-markdown\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "artifacts": {
+        "artifactDir": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-review-findings-markdown",
+        "promptPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-review-findings-markdown\\prompt.txt",
+        "diffPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-review-findings-markdown\\git-diff.patch",
+        "agentStdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-review-findings-markdown\\agent-stdout.txt",
+        "agentStderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-review-findings-markdown\\agent-stderr.txt",
+        "activityLogPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-review-findings-markdown\\activity.jsonl",
+        "activitySummaryPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\prompt-review-findings-markdown\\activity-summary.json"
+      },
+      "agent": {
+        "exitCode": 1,
+        "timedOut": true,
+        "error": "Gemini CLI timed out after 120000ms"
+      }
+    },
+    {
+      "taskId": "tool-regression-review",
+      "title": "Inspect diff and failing artifacts before giving a regression finding",
+      "taskKind": "tool-use",
+      "suite": "contributor-workflows",
+      "category": "code-review",
+      "difficulty": "medium",
+      "language": "text",
+      "taxonomy": {
+        "scope": "multi-file",
+        "tags": [
+          "tool-use",
+          "review-feedback",
+          "artifact-triage"
+        ]
+      },
+      "policy": "always",
+      "status": "failed",
+      "durationMs": 27627,
+      "efficiency": {
+        "agentDurationMs": 25992,
+        "filesChanged": 0,
+        "insertions": 0,
+        "deletions": 0,
+        "changedLines": 0
+      },
+      "notes": [
+        "One or more verification commands failed after the agent run."
+      ],
+      "failureAnalysis": {
+        "reason": "verification-failed",
+        "failedVerificationCommands": [
+          {
+            "phase": "failToPass",
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-regression-review/verify-review-investigation.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review/activity-summary.json\"",
+            "exitCode": 1,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "firstFailedVerification": {
+          "phase": "failToPass",
+          "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-regression-review/verify-review-investigation.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review/activity-summary.json\"",
+          "exitCode": 1,
+          "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+          "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+        },
+        "missingExpectedInspections": [],
+        "toolExpectationFailures": [],
+        "baselineStatus": "passed",
+        "baselineDelta": "regressed"
+      },
+      "preflight": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-regression-review/verify-review-investigation.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review/activity-summary.json\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 150,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-regression-review/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-regression-review/fixtures/git-diff.patch\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-regression-review/fixtures/failing-command.stderr.txt\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 142,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "verification": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-regression-review/verify-review-investigation.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review/agent-stdout.txt\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review/activity-summary.json\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 118,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review\\post-run-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-regression-review/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-regression-review/fixtures/git-diff.patch\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\tool-regression-review/fixtures/failing-command.stderr.txt\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 143,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review\\post-run-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "artifacts": {
+        "artifactDir": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review",
+        "promptPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review\\prompt.txt",
+        "diffPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review\\git-diff.patch",
+        "agentStdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review\\agent-stdout.txt",
+        "agentStderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review\\agent-stderr.txt",
+        "activityLogPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review\\activity.jsonl",
+        "activitySummaryPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\live-contributor-workflows\\artifacts\\20260324-131841\\tool-regression-review\\activity-summary.json"
+      },
+      "agent": {
+        "exitCode": 0,
+        "timedOut": false
+      }
+    }
+  ],
+  "regressions": [
+    {
+      "scope": "overall-pass-rate",
+      "severity": "high",
+      "message": "Overall pass rate regressed.",
+      "baselineValue": 1,
+      "currentValue": 0,
+      "delta": -1
+    },
+    {
+      "scope": "task-status",
+      "severity": "medium",
+      "message": "Task 'eval-flaky-verifier-tighten-md' regressed from passed to infra_failed.",
+      "baselineValue": "passed",
+      "currentValue": "infra_failed",
+      "taskId": "eval-flaky-verifier-tighten-md"
+    },
+    {
+      "scope": "task-status",
+      "severity": "medium",
+      "message": "Task 'eval-gap-inventory-json' regressed from passed to failed.",
+      "baselineValue": "passed",
+      "currentValue": "failed",
+      "taskId": "eval-gap-inventory-json"
+    },
+    {
+      "scope": "task-status",
+      "severity": "medium",
+      "message": "Task 'gemini-flaky-eval-stabilization-json' regressed from passed to failed.",
+      "baselineValue": "passed",
+      "currentValue": "failed",
+      "taskId": "gemini-flaky-eval-stabilization-json"
+    },
+    {
+      "scope": "task-status",
+      "severity": "medium",
+      "message": "Task 'gemini-maintainer-handoff-md' regressed from passed to infra_failed.",
+      "baselineValue": "passed",
+      "currentValue": "infra_failed",
+      "taskId": "gemini-maintainer-handoff-md"
+    },
+    {
+      "scope": "task-status",
+      "severity": "medium",
+      "message": "Task 'gemini-maintainer-repro-reply-md' regressed from passed to failed.",
+      "baselineValue": "passed",
+      "currentValue": "failed",
+      "taskId": "gemini-maintainer-repro-reply-md"
+    },
+    {
+      "scope": "task-status",
+      "severity": "medium",
+      "message": "Task 'gemini-tool-debug-trace-repro-workflow' regressed from passed to infra_failed.",
+      "baselineValue": "passed",
+      "currentValue": "infra_failed",
+      "taskId": "gemini-tool-debug-trace-repro-workflow"
+    },
+    {
+      "scope": "task-status",
+      "severity": "medium",
+      "message": "Task 'gemini-tool-maintainer-regression-handoff' regressed from passed to failed.",
+      "baselineValue": "passed",
+      "currentValue": "failed",
+      "taskId": "gemini-tool-maintainer-regression-handoff"
+    },
+    {
+      "scope": "task-status",
+      "severity": "medium",
+      "message": "Task 'prompt-regression-triage-json' regressed from passed to failed.",
+      "baselineValue": "passed",
+      "currentValue": "failed",
+      "taskId": "prompt-regression-triage-json"
+    },
+    {
+      "scope": "task-status",
+      "severity": "medium",
+      "message": "Task 'prompt-review-findings-markdown' regressed from passed to infra_failed.",
+      "baselineValue": "passed",
+      "currentValue": "infra_failed",
+      "taskId": "prompt-review-findings-markdown"
+    },
+    {
+      "scope": "task-status",
+      "severity": "medium",
+      "message": "Task 'tool-regression-review' regressed from passed to failed.",
+      "baselineValue": "passed",
+      "currentValue": "failed",
+      "taskId": "tool-regression-review"
+    }
+  ],
+  "baselinePath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\baseline\\baseline.json",
+  "config": {
+    "mode": "gemini-cli",
+    "tasksDir": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks",
+    "workspaceRoot": "C:\\Users\\Giuseppe\\AppData\\Local\\Temp\\gcli-benchmark-workspaces",
+    "keepWorkspaces": false,
+    "selectedSuites": [
+      "contributor-workflows"
+    ],
+    "geminiBin": "C:\\nvm4w\\nodejs\\gemini.cmd",
+    "geminiArgs": [],
+    "approvalMode": "yolo",
+    "liveOutput": false
+  }
+}

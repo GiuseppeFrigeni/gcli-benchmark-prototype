@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/GiuseppeFrigeni/gcli-benchmark-prototype/main/docs/task.schema.json",
+  "title": "Gemini CLI Benchmark Task Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "taskKind",
+    "suite",
+    "category",
+    "difficulty",
+    "language",
+    "problemStatementFile",
+    "verification",
+    "policy"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "taskKind": {
+      "type": "string",
+      "enum": [
+        "workspace-edit",
+        "prompt-output",
+        "tool-use"
+      ]
+    },
+    "suite": {
+      "type": "string",
+      "enum": [
+        "gemini-core",
+        "contributor-workflows",
+        "harness-calibration"
+      ]
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "debugging",
+        "refactoring",
+        "new-feature",
+        "code-review"
+      ]
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "easy",
+        "medium",
+        "hard"
+      ]
+    },
+    "language": {
+      "type": "string",
+      "minLength": 1
+    },
+    "taxonomy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope",
+        "tags"
+      ],
+      "properties": {
+        "scope": {
+          "type": "string",
+          "enum": [
+            "single-file",
+            "multi-file"
+          ]
+        },
+        "tags": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "timeoutMs": {
+      "type": "number",
+      "minimum": 1
+    },
+    "problemStatementFile": {
+      "type": "string",
+      "minLength": 1
+    },
+    "promptAddendum": {
+      "type": "string",
+      "minLength": 1
+    },
+    "setupCommands": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "toolExpectations": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "firstCall": {
+          "$ref": "#/$defs/toolExpectationCall"
+        },
+        "requiredCalls": {
+          "$ref": "#/$defs/toolExpectationCallList"
+        },
+        "orderedCalls": {
+          "$ref": "#/$defs/toolExpectationCallList"
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "failToPass",
+        "passToPass"
+      ],
+      "properties": {
+        "failToPass": {
+          "$ref": "#/$defs/commandList"
+        },
+        "passToPass": {
+          "$ref": "#/$defs/commandList"
+        }
+      }
+    },
+    "policy": {
+      "type": "string",
+      "enum": [
+        "always",
+        "usually"
+      ]
+    }
+  },
+  "$defs": {
+    "commandList": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "toolExpectationCall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "targetIncludes": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "toolExpectationCallList": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/toolExpectationCall"
+      }
+    }
+  }
+}

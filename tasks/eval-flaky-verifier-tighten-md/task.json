@@ -1,7 +1,9 @@
 {
+  "$schema": "../../docs/task.schema.json",
   "id": "eval-flaky-verifier-tighten-md",
   "title": "Turn flaky eval verifier evidence into deterministic maintainer guidance",
   "taskKind": "prompt-output",
+  "suite": "contributor-workflows",
   "category": "code-review",
   "difficulty": "hard",
   "language": "text",

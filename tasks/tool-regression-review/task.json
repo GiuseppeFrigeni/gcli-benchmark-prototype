@@ -1,7 +1,9 @@
 {
+  "$schema": "../../docs/task.schema.json",
   "id": "tool-regression-review",
   "title": "Inspect diff and failing artifacts before giving a regression finding",
   "taskKind": "tool-use",
+  "suite": "contributor-workflows",
   "category": "code-review",
   "difficulty": "medium",
   "language": "text",

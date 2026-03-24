@@ -1,0 +1,4 @@
+src/commands/issues.js
+src/renderers/issues-table.js
+src/reporting/activity-log.js
+test/issues-json.test.js

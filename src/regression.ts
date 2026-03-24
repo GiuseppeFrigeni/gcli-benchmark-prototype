@@ -5,6 +5,7 @@ import {
   BaselineMetrics,
   EvaluationSummary,
   RegressionFinding,
+  RunMetadata,
   TaskRunResult,
   TaskStatus,
 } from "./types";
@@ -13,6 +14,7 @@ import { ensureDir, readJsonFile, writeJsonFile } from "./utils";
 export function makeBaseline(
   summary: EvaluationSummary,
   tasks: TaskRunResult[],
+  metadata?: RunMetadata,
 ): BaselineMetrics {
   const taskStatuses: Record<string, TaskStatus> = {};
   for (const task of tasks) {
@@ -24,6 +26,7 @@ export function makeBaseline(
     total: summary.total,
     overallPassRate: summary.passRate,
     taskStatuses,
+    metadata,
   };
 }
 

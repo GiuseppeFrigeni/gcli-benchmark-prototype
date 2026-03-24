@@ -1,7 +1,9 @@
 {
+  "$schema": "../../docs/task.schema.json",
   "id": "gemini-auth-refresh-review",
   "title": "Preserve refresh-token behavior while restoring Gemini auth fallback",
   "taskKind": "workspace-edit",
+  "suite": "gemini-core",
   "category": "debugging",
   "difficulty": "hard",
   "language": "javascript",

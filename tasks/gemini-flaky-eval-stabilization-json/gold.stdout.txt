@@ -1,0 +1,5 @@
+{
+  "symptom": "The verifier passes and fails on the same Markdown structure because it compares a timestamped header literally.",
+  "unstableSignal": "The generated-at timestamp in the run summary heading",
+  "recommendedFix": "Normalize or strip the generated-at line before comparing the Markdown snapshot."
+}

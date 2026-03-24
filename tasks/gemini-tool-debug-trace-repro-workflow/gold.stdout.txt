@@ -1,0 +1,1 @@
+Next step: keep the trace repro command, then patch `fixtures/render-run.js` to skip the spinner log when JSON mode is enabled.

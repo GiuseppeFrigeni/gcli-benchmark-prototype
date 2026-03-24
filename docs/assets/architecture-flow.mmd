@@ -1,0 +1,7 @@
+flowchart LR
+  A["Task manifest<br/>task.json + issue + gold assets"] --> B["Task loader<br/>schema + repo validation"]
+  B --> C["Runner<br/>prompt + workspace setup"]
+  C --> D["Agent / workspace<br/>Gemini CLI or mock agent"]
+  D --> E["Verification<br/>fail-to-pass + pass-to-pass + tool expectations"]
+  E --> F["Artifacts<br/>stdout, stderr, diff, activity, summaries"]
+  F --> G["Baseline compare + reports<br/>JSON + Markdown + archived runs"]

@@ -1,7 +1,9 @@
 {
+  "$schema": "../../docs/task.schema.json",
   "id": "node-header-merge-review",
   "title": "Address code review feedback for header merging",
   "taskKind": "workspace-edit",
+  "suite": "harness-calibration",
   "category": "code-review",
   "difficulty": "easy",
   "language": "javascript",

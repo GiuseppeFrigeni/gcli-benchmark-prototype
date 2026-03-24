@@ -1,0 +1,6 @@
+{
+  "owner": "commands",
+  "primaryFile": "src/commands/issues.js",
+  "firstTest": "test/issues-json.test.js",
+  "reason": "The command entrypoint is adding progress text before the JSON response, and the failing test already points at that surface."
+}
