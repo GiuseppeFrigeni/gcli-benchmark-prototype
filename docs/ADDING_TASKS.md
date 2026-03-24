@@ -31,6 +31,7 @@ The schema lives at [`docs/task.schema.json`](./task.schema.json).
 Fast validation loops:
 
 ```bash
+npm run dev:validate-task -- --task-dir ./tasks/<task-id>
 npm run dev:list -- --tasks ./tasks
 npm run dev:gaps -- --tasks ./tasks
 ```
@@ -206,7 +207,7 @@ Starter shared vocabulary:
 The harness supports a narrow draft flow:
 
 ```bash
-npm run dev:draft-task -- --chat-log ./chat-log.json --task-id draft-task --task-kind tool-use --category debugging --language text --out ./drafts/draft-task
+npm run dev:draft-task -- --chat-log ./docs/examples/chat-log.json --task-id draft-task --task-kind tool-use --category debugging --language text --out ./drafts/draft-task
 ```
 
-Drafts default to `suite: contributor-workflows` and include placeholder gold artifacts. Tighten the fixtures, suite assignment, verification commands, and taxonomy before promoting them into `tasks/`.
+Drafts default to `suite: contributor-workflows` and include placeholder gold artifacts. Treat the output as a scaffold, not a finished eval: tighten the fixtures, suite assignment, verification commands, and taxonomy before promoting a draft into `tasks/`.

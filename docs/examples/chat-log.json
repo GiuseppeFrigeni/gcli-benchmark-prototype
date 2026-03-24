@@ -1,0 +1,32 @@
+{
+  "title": "Draft contributor eval for output-routing investigation",
+  "summary": "Turn this contributor debugging exchange into a task scaffold that checks both the answer and the inspection path.",
+  "acceptanceCriteria": [
+    "Preserve the maintainer-facing wording about the output-routing bug",
+    "Keep the task focused on local artifacts rather than network access",
+    "Require a concrete investigation path before the final answer"
+  ],
+  "relevantFiles": [
+    "src/commands/models.js",
+    "src/renderers/output.js",
+    "test/models-json.test.js"
+  ],
+  "conversation": [
+    {
+      "role": "user",
+      "content": "Contributors keep diagnosing the models --json regression from the wrong file first."
+    },
+    {
+      "role": "assistant",
+      "content": "Start from the failing test, then inspect the command implementation, then the renderer."
+    },
+    {
+      "role": "user",
+      "content": "The task should produce a one-sentence maintainer-facing root cause, not a patch."
+    },
+    {
+      "role": "assistant",
+      "content": "Use a tool-use scaffold and tighten the generated verification before promoting it into tasks/."
+    }
+  ]
+}

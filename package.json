@@ -20,6 +20,10 @@
     "tasks",
     "baseline",
     "docs/ADDING_TASKS.md",
+    "docs/IMPLEMENTATION_LOG.md",
+    "docs/ROADMAP.md",
+    "docs/ROADMAP_ISSUES.md",
+    "docs/examples",
     "docs/task.schema.json",
     "docs/minimal-task-examples",
     "README.md",
@@ -31,17 +35,19 @@
     "node": ">=20"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.json",
     "run": "npm run build && node dist/cli.js run",
     "list": "npm run build && node dist/cli.js list",
     "gaps": "npm run build && node dist/cli.js gaps",
     "compare": "npm run build && node dist/cli.js compare",
     "draft-task": "npm run build && node dist/cli.js draft-task",
+    "validate-task": "npm run build && node dist/cli.js validate-task",
     "dev:run": "tsx src/cli.ts run",
     "dev:list": "tsx src/cli.ts list",
     "dev:gaps": "tsx src/cli.ts gaps",
     "dev:compare": "tsx src/cli.ts compare",
     "dev:draft-task": "tsx src/cli.ts draft-task",
+    "dev:validate-task": "tsx src/cli.ts validate-task",
     "docs:examples": "tsx src/generate-doc-examples.ts",
     "test": "npm run test:unit && npm run test:integration && npm run test:e2e",
     "test:unit": "npm run build && node --test tests/unit/task-loader.test.js tests/unit/scoring-reporting.test.js",
@@ -55,5 +61,8 @@
     "@types/node": "^22.13.11",
     "tsx": "^4.19.2",
     "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "ajv": "^8.18.0"
   }
 }

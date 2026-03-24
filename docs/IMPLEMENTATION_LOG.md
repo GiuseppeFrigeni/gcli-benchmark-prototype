@@ -14,10 +14,10 @@ This file tracks what was implemented from the README-first repositioning and ex
 | 4 | Clear suite split | Implemented | Added required `suite` to every task, classified the corpus into `gemini-core`, `contributor-workflows`, and `harness-calibration`, and added suite-aware list/gaps/run/report behavior. | Nothing repo-local remains for this point. |
 | 5 | Stronger testing story | Implemented | Replaced the monolithic benchmark test with split unit, integration, e2e, and docs-asset coverage. Added a Node 20/22 matrix workflow and kept mock calibration in its own workflow. | Nothing repo-local remains for this point. |
 | 6 | OSS basics | Implemented | Added [`LICENSE`](../LICENSE), [`CONTRIBUTING.md`](../CONTRIBUTING.md), and [`CODE_OF_CONDUCT.md`](../CODE_OF_CONDUCT.md). | Nothing repo-local remains for this point. |
-| 7 | Packaging and publishability | Implemented | Removed `private: true`, added package metadata, `bin`, `files`, `engines`, and CI package-content validation with `npm pack --dry-run`. | Package is publishable in shape, but not actually published to npm yet. |
+| 7 | Packaging and publishability | Implemented | Removed `private: true`, added package metadata, `bin`, `files`, `engines`, shipped the referenced docs/examples in the package, cleaned `dist/` before build so stale compiled files do not leak into the tarball, and kept CI package-content validation with `npm pack --dry-run`. | Package is publishable in shape, but not actually published to npm yet. |
 | 8 | Reproducible benchmark snapshot | Implemented | Added run metadata to JSON/Markdown reports and surfaced run ID, date, Git SHA, Gemini CLI version, model/default-model marker, approval mode, suites, Node version, and platform in the README summary table. Refreshed the deterministic gold baseline and archived fresh live suite runs. | If future runs should pin a non-default Gemini model explicitly, that is follow-up benchmark policy work. |
-| 9 | Better task authoring ergonomics | Implemented | Added [`docs/task.schema.json`](./task.schema.json), refreshed [`docs/ADDING_TASKS.md`](./ADDING_TASKS.md), and added minimal example tasks under [`docs/minimal-task-examples/`](./minimal-task-examples/). | Nothing repo-local remains for this point. |
-| 10 | More trust / visible roadmap | Partially implemented | Added actionable roadmap docs in [`docs/ROADMAP.md`](./ROADMAP.md) and issue-ready seeds in [`docs/ROADMAP_ISSUES.md`](./ROADMAP_ISSUES.md). | Actual GitHub issues and `good first task` labels were not opened from this local-only implementation pass. |
+| 9 | Better task authoring ergonomics | Implemented | Added [`docs/task.schema.json`](./task.schema.json), refreshed [`docs/ADDING_TASKS.md`](./ADDING_TASKS.md), added minimal example tasks under [`docs/minimal-task-examples/`](./minimal-task-examples/), introduced the single-task `validate-task` CLI flow, and checked in a real structured chat-log example at [`docs/examples/chat-log.json`](./examples/chat-log.json). | Nothing repo-local remains for this point. |
+| 10 | More trust / visible roadmap | Partially implemented | Updated the roadmap docs to treat GitHub issues as the canonical public backlog, mirrored the intended issue set in [`docs/ROADMAP_ISSUES.md`](./ROADMAP_ISSUES.md), and added the deferred contributor-helper skill/subagent follow-up as a tracked item. | Actual GitHub issues and labels could not be created from this environment because GitHub CLI/auth credentials were unavailable locally. |
 | 11 | Architecture diagram | Implemented | Added [`docs/assets/architecture-flow.mmd`](./assets/architecture-flow.mmd) and [`docs/assets/architecture-flow.svg`](./assets/architecture-flow.svg), and embedded the diagram in the README. | Nothing repo-local remains for this point. |
 | 12 | Tighter claim language | Implemented | README now consistently distinguishes live Gemini CLI evidence from "gold-patch harness calibration" and avoids implying that Gemini CLI scored 32/32. | Nothing repo-local remains for this point. |
 
@@ -40,6 +40,7 @@ This file tracks what was implemented from the README-first repositioning and ex
 
 ### Refreshed docs examples
 
+- [`docs/examples/chat-log.json`](../docs/examples/chat-log.json)
 - [`docs/examples/mock-report.md`](../docs/examples/mock-report.md)
 - [`docs/examples/mock-results.json`](../docs/examples/mock-results.json)
 - [`docs/examples/mock-regression.md`](../docs/examples/mock-regression.md)
@@ -49,3 +50,5 @@ This file tracks what was implemented from the README-first repositioning and ex
 - The deterministic gold-patch path now calibrates 32 tasks and passes 32/32.
 - The fresh live Gemini runs are intentionally kept even though they failed; the useful signal is that the harness classified strict-output mismatches, tool-path misses, and 120000ms timeouts cleanly.
 - A small runner issue showed up during artifact refresh: `npm run baseline:update` orphaned child processes in this environment, while the direct `tsx` entry worked correctly. The checked-in artifacts were refreshed from the successful direct runs.
+- The new `validate-task` command is intentionally static in v1: it validates schema, required assets, and semantic task-shape checks without executing task commands.
+- GitHub-side backlog sync is the remaining incomplete part of this pass; the repo now contains the final issue titles/labels, but the hosted creation step still needs an authenticated environment.

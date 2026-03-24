@@ -5,7 +5,11 @@ const { join, resolve } = require("node:path");
 const { runCli } = require("../../dist/cli.js");
 const { NoopAgent } = require("../../dist/mock-agents.js");
 const { readJsonFile, writeJsonFile } = require("../../dist/utils.js");
-const { withTempDir } = require("../helpers/task-fixtures.js");
+const {
+  createTaskFixture,
+  makeWorkspaceManifest,
+  withTempDir,
+} = require("../helpers/task-fixtures.js");
 
 async function captureCliLogs(argv, deps) {
   const logs = [];
@@ -66,6 +70,88 @@ test("list and gaps support suite-aware summaries", async () => {
   const gapsSummary = JSON.parse(gapsContributor.output);
   assert.equal(gapsSummary.total, 10);
   assert.equal(typeof gapsSummary.recommendedTemplateFamily, "string");
+});
+
+test("validate-task supports human output, JSON output, and invalid paths", async () => {
+  const repoFiles = {
+    "src/value.js": "module.exports = { value: 1 };\n",
+    "test/fail.test.js": [
+      "const test = require('node:test');",
+      "const assert = require('node:assert/strict');",
+      "const { value } = require('../src/value');",
+      "test('fails until fixed', () => {",
+      "  assert.equal(value, 2);",
+      "});",
+      "",
+    ].join("\n"),
+    "test/pass.test.js": [
+      "const test = require('node:test');",
+      "const assert = require('node:assert/strict');",
+      "const { value } = require('../src/value');",
+      "test('already passing', () => {",
+      "  assert.equal(value, 1);",
+      "});",
+      "",
+    ].join("\n"),
+  };
+
+  await withTempDir("gcli-validate-task", async (tempRoot) => {
+    const validTaskDir = join(tempRoot, "valid-task");
+    await createTaskFixture(tempRoot, "valid-task", {
+      manifest: makeWorkspaceManifest({ id: "valid-cli-task" }),
+      repoFiles,
+      goldPatch: "",
+    });
+
+    const validResult = await captureCliLogs([
+      "validate-task",
+      "--task-dir",
+      validTaskDir,
+    ]);
+    assert.equal(validResult.exitCode, 0);
+    assert.match(validResult.output, /Task is valid:/);
+    assert.match(validResult.output, /valid-cli-task/);
+
+    const invalidTaskDir = join(tempRoot, "invalid-task");
+    await createTaskFixture(tempRoot, "invalid-task", {
+      manifest: {
+        $schema: "../../docs/task.schema.json",
+        id: "invalid-cli-task",
+        title: "Prompt task",
+        taskKind: "prompt-output",
+        suite: "contributor-workflows",
+        category: "debugging",
+        difficulty: "easy",
+        language: "text",
+        problemStatementFile: "issue.md",
+        verification: {
+          failToPass: ["node -e \"process.exit(1)\""],
+          passToPass: ["node -e \"process.exit(0)\""],
+        },
+        policy: "always",
+      },
+    });
+
+    const invalidJsonResult = await captureCliLogs([
+      "validate-task",
+      "--task-dir",
+      invalidTaskDir,
+      "--json",
+    ]);
+    assert.equal(invalidJsonResult.exitCode, 1);
+    const invalidReport = JSON.parse(invalidJsonResult.output);
+    assert.equal(invalidReport.valid, false);
+    assert.equal(invalidReport.taskId, "invalid-cli-task");
+    assert.match(invalidReport.issues[0], /missing gold stdout/);
+
+    const missingPathResult = await captureCliLogs([
+      "validate-task",
+      "--task-dir",
+      join(tempRoot, "does-not-exist"),
+    ]);
+    assert.equal(missingPathResult.exitCode, 1);
+    assert.match(missingPathResult.output, /missing task manifest/);
+  });
 });
 
 test("cli commands emit suite-aware reports and draft tasks", async () => {
@@ -198,6 +284,10 @@ test("cli agent mode validation still rejects incompatible flags", async () => {
   ]);
   assert.equal(invalidLiveOutput.exitCode, 1);
   assert.match(invalidLiveOutput.output, /--live-output can only be used with --agent-mode=gemini-cli/);
+
+  const missingTaskDir = await captureCliErrors(["validate-task"]);
+  assert.equal(missingTaskDir.exitCode, 1);
+  assert.match(missingTaskDir.output, /validate-task requires --task-dir/);
 });
 
 test("approval mode still reaches injected Gemini agents", async () => {

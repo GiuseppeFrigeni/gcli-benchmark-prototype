@@ -1,6 +1,6 @@
-# Roadmap Issue Seeds
+# Roadmap Issue Mirror
 
-These are issue-ready seeds for turning the roadmap into tracked work. Two are intentionally sized as `good first task` candidates.
+The canonical public backlog belongs in GitHub issues. This file mirrors the intended issue titles, labels, and acceptance criteria so the repo can still be reviewed or synced from an offline/local-only environment. Two items are intentionally sized as `good first task` candidates.
 
 ## 1. Archive Fresh Live Gemini Suite Runs
 
@@ -31,3 +31,9 @@ These are issue-ready seeds for turning the roadmap into tracked work. Two are i
 - Labels: `reporting`, `documentation`
 - Goal: generate a compact machine-readable summary for archived live Gemini runs so README evidence tables stay easy to refresh
 - Done when: archived runs can be summarized without hand-editing README tables
+
+## 6. Contributor Helper Skill Or Subagent For Eval Work
+
+- Labels: `authoring`, `evaluation`
+- Goal: add one concrete contributor helper focused on eval authoring, prompt changes, or investigation workflows so the repo covers the deferred skills/subagents angle directly
+- Done when: contributors have one tracked helper workflow that materially reduces setup or diagnosis friction for agent-intelligence quality work

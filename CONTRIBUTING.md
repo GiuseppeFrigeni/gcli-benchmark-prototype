@@ -26,6 +26,7 @@ npm run build
 npm run test:unit
 npm run test:integration
 npm run test:e2e
+npm run dev:validate-task -- --task-dir ./tasks/<task-id>
 npm run dev:list -- --json
 npm run dev:gaps -- --json
 npm run dev:run -- --agent-mode=gold-patch
@@ -46,7 +47,9 @@ npm run dev:run -- --agent-mode=gemini-cli --suite=contributor-workflows
 - Prefer exact stdout assertions for `prompt-output`.
 - Prefer both exact-answer checks and `toolExpectations` for `tool-use`.
 - Keep gold artifacts readable enough that a reviewer can understand the expected path at a glance.
-- Use `npm run dev:list -- --tasks <dir>` as a fast validation pass while authoring.
+- Use `npm run dev:validate-task -- --task-dir ./tasks/<task-id>` as the fastest single-task validation pass while authoring.
+- Use `npm run dev:list -- --tasks <dir>` when you want to validate the whole corpus shape.
+- Treat `npm run dev:draft-task` as a scaffold generator; the tracked sample input lives at [`docs/examples/chat-log.json`](./docs/examples/chat-log.json).
 
 ## Review Checklist
 

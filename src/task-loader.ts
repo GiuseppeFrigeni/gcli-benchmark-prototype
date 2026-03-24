@@ -1,6 +1,8 @@
 import { access, readdir } from "node:fs/promises";
 import { constants } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
+import { type ErrorObject, type ValidateFunction } from "ajv";
+import Ajv2020 from "ajv/dist/2020";
 import {
   TaskCategory,
   TaskDifficulty,
@@ -33,6 +35,13 @@ interface TaskManifest {
   policy: unknown;
 }
 
+export interface TaskValidationResult {
+  taskDir: string;
+  valid: boolean;
+  taskId?: string;
+  issues: string[];
+}
+
 const VALID_CATEGORIES: TaskCategory[] = [
   "debugging",
   "refactoring",
@@ -48,6 +57,45 @@ const VALID_SUITES: TaskSuite[] = [
 const VALID_SCOPES: TaskScope[] = ["single-file", "multi-file"];
 const VALID_DIFFICULTIES: TaskDifficulty[] = ["easy", "medium", "hard"];
 const VALID_POLICIES: TaskPolicy[] = ["always", "usually"];
+const TASK_SCHEMA_PATH = resolve(__dirname, "..", "docs", "task.schema.json");
+
+let taskSchemaValidatorPromise: Promise<ValidateFunction<TaskManifest>> | undefined;
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+function getTaskId(value: unknown): string | undefined {
+  return typeof value === "string" && value.trim() !== "" ? value : undefined;
+}
+
+async function getTaskSchemaValidator(): Promise<ValidateFunction<TaskManifest>> {
+  if (!taskSchemaValidatorPromise) {
+    taskSchemaValidatorPromise = (async () => {
+      const schema = await readJsonFile<object>(TASK_SCHEMA_PATH);
+      const ajv = new Ajv2020({
+        allErrors: true,
+        strict: false,
+      });
+      return ajv.compile<TaskManifest>(schema);
+    })();
+  }
+
+  return await taskSchemaValidatorPromise;
+}
+
+function formatSchemaIssues(errors: ErrorObject[] | null | undefined, location: string): string[] {
+  return (errors ?? []).map((error) => {
+    const missingProperty =
+      error.keyword === "required" &&
+      typeof (error.params as { missingProperty?: unknown }).missingProperty === "string"
+        ? `/${(error.params as { missingProperty: string }).missingProperty}`
+        : "";
+    const instancePath = `${error.instancePath}${missingProperty}`;
+    const pathLabel = instancePath === "" ? "" : ` at '${instancePath}'`;
+    return `${location}: schema validation failed${pathLabel}: ${error.message ?? "invalid value"}`;
+  });
+}
 
 function requireString(value: unknown, fieldName: string, location: string): string {
   if (typeof value !== "string" || value.trim() === "") {
@@ -287,8 +335,18 @@ async function pathExists(path: string): Promise<boolean> {
   }
 }
 
-async function parseTask(taskDir: string, manifestPath: string): Promise<WorkspaceTask> {
+async function readTaskManifest(taskDir: string): Promise<{ manifestPath: string; raw: TaskManifest }> {
+  const manifestPath = join(taskDir, "task.json");
+  await assertExists(manifestPath, "task manifest", taskDir);
   const raw = await readJsonFile<TaskManifest>(manifestPath);
+  return { manifestPath, raw };
+}
+
+async function parseTaskFromManifest(
+  taskDir: string,
+  manifestPath: string,
+  raw: TaskManifest,
+): Promise<WorkspaceTask> {
   const location = manifestPath;
   const id = requireString(raw.id, "id", location);
   const title = requireString(raw.title, "title", location);
@@ -348,6 +406,60 @@ async function parseTask(taskDir: string, manifestPath: string): Promise<Workspa
   };
 }
 
+async function loadTaskFromDirectory(taskDir: string): Promise<WorkspaceTask> {
+  const { manifestPath, raw } = await readTaskManifest(taskDir);
+  return await parseTaskFromManifest(taskDir, manifestPath, raw);
+}
+
+export async function validateTaskDirectory(taskDir: string): Promise<TaskValidationResult> {
+  const resolvedTaskDir = resolve(taskDir);
+
+  let manifestPath = join(resolvedTaskDir, "task.json");
+  let raw: TaskManifest | undefined;
+  try {
+    ({ manifestPath, raw } = await readTaskManifest(resolvedTaskDir));
+  } catch (error) {
+    return {
+      taskDir: resolvedTaskDir,
+      valid: false,
+      issues: [errorMessage(error)],
+    };
+  }
+
+  const issues: string[] = [];
+  const taskId = getTaskId(raw.id);
+
+  try {
+    const validate = await getTaskSchemaValidator();
+    if (!validate(raw)) {
+      issues.push(...formatSchemaIssues(validate.errors, manifestPath));
+    }
+  } catch (error) {
+    issues.push(`${TASK_SCHEMA_PATH}: failed to load schema validator: ${errorMessage(error)}`);
+  }
+
+  if (issues.length === 0) {
+    try {
+      const task = await parseTaskFromManifest(resolvedTaskDir, manifestPath, raw);
+      return {
+        taskDir: resolvedTaskDir,
+        valid: true,
+        taskId: task.id,
+        issues: [],
+      };
+    } catch (error) {
+      issues.push(errorMessage(error));
+    }
+  }
+
+  return {
+    taskDir: resolvedTaskDir,
+    valid: false,
+    taskId,
+    issues,
+  };
+}
+
 export async function loadTasks(directory: string): Promise<WorkspaceTask[]> {
   const entries = await readdir(directory, { withFileTypes: true });
   const taskDirs = entries.filter((entry) => entry.isDirectory()).map((entry) => join(directory, entry.name));
@@ -360,9 +472,7 @@ export async function loadTasks(directory: string): Promise<WorkspaceTask[]> {
   const seenIds = new Set<string>();
 
   for (const taskDir of taskDirs.sort((a, b) => a.localeCompare(b))) {
-    const manifestPath = join(taskDir, "task.json");
-    await assertExists(manifestPath, "task manifest", taskDir);
-    const task = await parseTask(taskDir, manifestPath);
+    const task = await loadTaskFromDirectory(taskDir);
     if (seenIds.has(task.id)) {
       throw new Error(`Duplicate task id '${task.id}'`);
     }

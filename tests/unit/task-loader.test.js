@@ -1,6 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { loadTasks } = require("../../dist/task-loader.js");
+const { join } = require("node:path");
+const { loadTasks, validateTaskDirectory } = require("../../dist/task-loader.js");
 const {
   createTaskFixture,
   makeWorkspaceManifest,
@@ -128,5 +129,97 @@ test("tool-use tasks require a gold activity log", async () => {
       },
     });
     await assert.rejects(() => loadTasks(root), /missing gold activity log/);
+  });
+});
+
+test("validateTaskDirectory accepts a valid workspace task", async () => {
+  await withTempDir("gcli-validate-ok", async (root) => {
+    await createTaskFixture(root, "task-a", {
+      manifest: makeWorkspaceManifest({ id: "valid-task" }),
+      repoFiles,
+      goldPatch: "",
+    });
+
+    const result = await validateTaskDirectory(join(root, "task-a"));
+    assert.equal(result.valid, true);
+    assert.equal(result.taskId, "valid-task");
+    assert.deepEqual(result.issues, []);
+  });
+});
+
+test("validateTaskDirectory reports schema failures", async () => {
+  await withTempDir("gcli-validate-schema", async (root) => {
+    const manifest = makeWorkspaceManifest({ id: "schema-invalid" });
+    delete manifest.title;
+    await createTaskFixture(root, "task-a", {
+      manifest,
+      repoFiles,
+      goldPatch: "",
+    });
+
+    const result = await validateTaskDirectory(join(root, "task-a"));
+    assert.equal(result.valid, false);
+    assert.equal(result.taskId, "schema-invalid");
+    assert.match(result.issues[0], /schema validation failed/);
+  });
+});
+
+test("validateTaskDirectory reports missing required assets", async () => {
+  await withTempDir("gcli-validate-assets", async (root) => {
+    await createTaskFixture(root, "task-a", {
+      manifest: {
+        $schema: "../../docs/task.schema.json",
+        id: "missing-gold-stdout",
+        title: "Prompt task",
+        taskKind: "prompt-output",
+        suite: "contributor-workflows",
+        category: "debugging",
+        difficulty: "easy",
+        language: "text",
+        problemStatementFile: "issue.md",
+        verification: {
+          failToPass: ["node -e \"process.exit(1)\""],
+          passToPass: ["node -e \"process.exit(0)\""],
+        },
+        policy: "always",
+      },
+    });
+
+    const result = await validateTaskDirectory(join(root, "task-a"));
+    assert.equal(result.valid, false);
+    assert.equal(result.taskId, "missing-gold-stdout");
+    assert.match(result.issues[0], /missing gold stdout/);
+  });
+});
+
+test("validateTaskDirectory reports semantic task-kind issues", async () => {
+  await withTempDir("gcli-validate-semantic", async (root) => {
+    await createTaskFixture(root, "task-a", {
+      manifest: {
+        $schema: "../../docs/task.schema.json",
+        id: "semantic-invalid",
+        title: "Prompt task with tool expectations",
+        taskKind: "prompt-output",
+        suite: "contributor-workflows",
+        category: "debugging",
+        difficulty: "easy",
+        language: "text",
+        problemStatementFile: "issue.md",
+        toolExpectations: {
+          requiredCalls: [{ name: "read_file" }],
+        },
+        verification: {
+          failToPass: ["node -e \"process.exit(1)\""],
+          passToPass: ["node -e \"process.exit(0)\""],
+        },
+        policy: "always",
+      },
+      goldStdout: "{\"ok\":true}\n",
+    });
+
+    const result = await validateTaskDirectory(join(root, "task-a"));
+    assert.equal(result.valid, false);
+    assert.equal(result.taskId, "semantic-invalid");
+    assert.match(result.issues[0], /only valid for tool-use tasks/);
   });
 });

@@ -9,7 +9,7 @@ import {
   buildTaskKindCoverageSummary,
   buildTaxonomyCoverageSummary,
 } from "./task-metrics";
-import { loadTasks } from "./task-loader";
+import { loadTasks, validateTaskDirectory } from "./task-loader";
 import {
   attachBaselineContext,
   detectRegressions,
@@ -30,7 +30,7 @@ import {
 import { ensureDir, readJsonFile, readTextFile, timestampForFile, writeJsonFile, writeTextFile } from "./utils";
 import { runTasks } from "./workspace-runner";
 
-type Command = "run" | "list" | "gaps" | "compare" | "draft-task";
+type Command = "run" | "list" | "gaps" | "compare" | "draft-task" | "validate-task";
 
 interface CliOptions {
   command: Command;
@@ -52,6 +52,7 @@ interface CliOptions {
   selectedTaskIds: string[];
   workspaceRoot: string;
   keepWorkspaces: boolean;
+  taskDir?: string;
   draftTaskId?: string;
   draftTaskKind?: WorkspaceTask["taskKind"];
   draftCategory?: WorkspaceTask["category"];
@@ -108,6 +109,7 @@ function usage(): string {
     "  npm run dev:gaps -- [--tasks ./tasks] [--json]",
     "  npm run dev:compare -- [--results ./reports/latest-results.json] [--baseline ./baseline/baseline.json] [--json]",
     "  npm run dev:draft-task -- --chat-log ./chat.json --task-id my-task --task-kind tool-use --category debugging --language text --out ./drafts/my-task [--difficulty medium] [--policy always]",
+    "  npm run dev:validate-task -- --task-dir ./tasks/my-task [--json]",
     "  npm run dev:run -- [options]",
     "",
     "Options:",
@@ -128,7 +130,8 @@ function usage(): string {
     "  --workspace-root <path>     Root directory for temp workspaces",
     "  --keep-workspaces           Keep generated task workspaces after the run",
     "  --live-output               Stream Gemini output to terminal during evaluation",
-    "  --json                      Emit JSON output for list/gaps/compare",
+    "  --json                      Emit JSON output for list/gaps/compare/validate-task",
+    "  --task-dir <path>           Task directory for validate-task",
     "  --chat-log <path>           Structured chat log JSON for draft-task",
     "  --task-id <id>              Draft task id for draft-task",
     "  --task-kind <kind>          Draft task kind for draft-task",
@@ -239,7 +242,8 @@ function parseArgs(argv: string[]): CliOptions {
       command !== "list" &&
       command !== "gaps" &&
       command !== "compare" &&
-      command !== "draft-task"
+      command !== "draft-task" &&
+      command !== "validate-task"
     ) {
       throw new Error(`Unknown command '${command}'`);
     }
@@ -310,6 +314,7 @@ function parseArgs(argv: string[]): CliOptions {
         "--timeout-ms",
         "--max-tasks",
         "--workspace-root",
+        "--task-dir",
         "--chat-log",
         "--task-id",
         "--task-kind",
@@ -371,6 +376,9 @@ function parseArgs(argv: string[]): CliOptions {
         break;
       case "--workspace-root":
         options.workspaceRoot = requiredValue;
+        break;
+      case "--task-dir":
+        options.taskDir = requiredValue;
         break;
       case "--chat-log":
         options.draftChatLogPath = requiredValue;
@@ -756,6 +764,41 @@ async function compareResults(options: CliOptions): Promise<void> {
   }
 }
 
+async function validateTask(options: CliOptions): Promise<number> {
+  if (!options.taskDir) {
+    throw new Error("validate-task requires --task-dir");
+  }
+
+  const result = await validateTaskDirectory(resolve(options.taskDir));
+  const report = {
+    taskDir: result.taskDir,
+    valid: result.valid,
+    taskId: result.taskId,
+    issues: result.issues,
+  };
+
+  if (options.json) {
+    console.log(JSON.stringify(report, null, 2));
+    return result.valid ? 0 : 1;
+  }
+
+  if (result.valid) {
+    console.log(
+      `Task is valid: ${result.taskId ?? "unknown-id"} (${result.taskDir})`,
+    );
+    return 0;
+  }
+
+  console.log(`Task is invalid: ${result.taskDir}`);
+  if (result.taskId) {
+    console.log(`Task ID: ${result.taskId}`);
+  }
+  for (const issue of result.issues) {
+    console.log(`- ${issue}`);
+  }
+  return 1;
+}
+
 interface DraftChatLog {
   title?: string;
   summary?: string;
@@ -911,6 +954,9 @@ export async function runCli(argv: string[], deps: CliDependencies = {}): Promis
     if (options.command === "compare") {
       await compareResults(options);
       return 0;
+    }
+    if (options.command === "validate-task") {
+      return await validateTask(options);
     }
     if (options.command === "draft-task") {
       await draftTaskFromChatLog(options);

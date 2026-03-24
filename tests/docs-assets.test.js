@@ -13,6 +13,7 @@ test("checked-in docs assets, schema, and minimal examples exist", () => {
     resolve("docs/examples/mock-report.md"),
     resolve("docs/examples/mock-results.json"),
     resolve("docs/examples/mock-regression.md"),
+    resolve("docs/examples/chat-log.json"),
     resolve("docs/task.schema.json"),
     resolve("docs/minimal-task-examples/README.md"),
     resolve("docs/minimal-task-examples/workspace-edit/task.json"),

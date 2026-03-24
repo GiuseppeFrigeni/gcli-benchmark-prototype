@@ -1,6 +1,6 @@
 # gcli-benchmark-prototype
 
-Deterministic contributor eval harness for Gemini CLI quality work. The live Gemini CLI runs below are the primary evidence; the gold-patch path exists to prove the harness itself is behaving deterministically.
+Deterministic contributor eval harness for Gemini CLI quality work. The main claim of this prototype is that contributor-facing failures can be measured, classified, and inspected with stable artifacts; the live Gemini CLI runs below are benchmark evidence, not a claim that Gemini CLI already scores well on the suite.
 
 ## Live Gemini CLI Evidence
 
@@ -12,6 +12,12 @@ These March 24, 2026 runs are the front-page signal for the project. They are no
 | `contributor-workflows` | 2026-03-24 13:18 | 10 | 0 | 6 | 4 | maintainer-output mismatches, missing inspection evidence, 120000ms timeouts on review-style prompts | [`report-20260324-131841.md`](./reports/live-contributor-workflows/report-20260324-131841.md), [`results-20260324-131841.json`](./reports/live-contributor-workflows/results-20260324-131841.json) |
 
 If a live task fails because of a Gemini CLI limitation, that is still a useful benchmark outcome. The point is that the harness can classify the failure and preserve the artifacts needed to inspect it.
+
+### What The Current Live Failures Prove
+
+- The harness separates strict-output failures, wrong investigation paths, and infra timeouts instead of collapsing them into one generic miss.
+- Each failed task keeps enough local evidence for a contributor or maintainer to inspect what the agent answered, what it read first, and where verification broke.
+- The zero-pass snapshots are intentionally checked in because a quality harness should make weak behavior obvious before it makes it pretty.
 
 ### `gemini-core` Per-Task Outcomes
 
@@ -173,11 +179,19 @@ Compare a run against the deterministic baseline:
 npm run dev:compare -- --results reports/live-gemini-core/latest-results.json --baseline baseline/baseline.json
 ```
 
-Draft a new task from a structured chat log:
+Validate one task directory before loading the whole corpus:
 
 ```bash
-npm run dev:draft-task -- --chat-log examples/chat-log.json --task-id draft-task --task-kind tool-use --category debugging --language text --out drafts/draft-task
+npm run dev:validate-task -- --task-dir ./tasks/gemini-tool-output-routing-review
 ```
+
+Scaffold a new task from a structured chat log:
+
+```bash
+npm run dev:draft-task -- --chat-log docs/examples/chat-log.json --task-id draft-task --task-kind tool-use --category debugging --language text --out drafts/draft-task
+```
+
+The draft command is intentionally a scaffold generator: it creates a starting task skeleton and placeholder gold artifacts, not a finished eval.
 
 ## Task Authoring
 
@@ -186,6 +200,7 @@ Task authoring is schema-backed and suite-aware.
 - Authoring guide: [`docs/ADDING_TASKS.md`](./docs/ADDING_TASKS.md)
 - Manifest schema: [`docs/task.schema.json`](./docs/task.schema.json)
 - Minimal examples: [`docs/minimal-task-examples/README.md`](./docs/minimal-task-examples/README.md)
+- Single-task validation: `npm run dev:validate-task -- --task-dir ./tasks/<task-id>`
 - Draft-task scaffold command: `npm run dev:draft-task`
 
 Every task now declares one primary `suite`:
@@ -195,6 +210,8 @@ Every task now declares one primary `suite`:
 - `harness-calibration`
 
 Cross-cutting behavior belongs in taxonomy tags, not in multi-suite membership.
+
+`draft-task` is positioned as an authoring accelerator, not as automatic eval generation. Contributors should still tighten fixtures, verification, and suite placement before promoting a draft into `tasks/`.
 
 ## Testing, Packaging, And OSS Basics
 
@@ -208,8 +225,7 @@ The repo is shaped to look like outside contributors can actually use it.
 
 ## Roadmap And Tracking
 
-- High-level roadmap: [`docs/ROADMAP.md`](./docs/ROADMAP.md)
-- Issue-ready work items: [`docs/ROADMAP_ISSUES.md`](./docs/ROADMAP_ISSUES.md)
+- Canonical public backlog: [GitHub issues](https://github.com/GiuseppeFrigeni/gcli-benchmark-prototype/issues)
+- Mirrored roadmap summary: [`docs/ROADMAP.md`](./docs/ROADMAP.md)
+- Mirrored issue index: [`docs/ROADMAP_ISSUES.md`](./docs/ROADMAP_ISSUES.md)
 - This implementation pass log: [`docs/IMPLEMENTATION_LOG.md`](./docs/IMPLEMENTATION_LOG.md)
-
-The remaining external-facing gap here is GitHub-side social proof: issue seeds are checked in, but actual GitHub issues/labels still need to be opened on the hosted repo.
