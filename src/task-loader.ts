@@ -4,6 +4,14 @@ import { join, resolve } from "node:path";
 import { type ErrorObject, type ValidateFunction } from "ajv";
 import Ajv2020 from "ajv/dist/2020";
 import {
+  DRAFT_PROMPT_OUTPUT_PLACEHOLDER,
+  DRAFT_TASK_PROMPT_ADDENDUM,
+  DRAFT_TASK_TAXONOMY,
+  DRAFT_TASK_VERIFICATION,
+  DRAFT_TOOL_USE_PLACEHOLDER,
+  DRAFT_WORKSPACE_README,
+} from "./draft-scaffold";
+import {
   TaskCategory,
   TaskDifficulty,
   TaskKind,
@@ -15,11 +23,12 @@ import {
   ToolExpectations,
   WorkspaceTask,
 } from "./types";
-import { readJsonFile } from "./utils";
+import { readJsonFile, readTextFile } from "./utils";
 
 interface TaskManifest {
   id: unknown;
   title: unknown;
+  draft?: unknown;
   taskKind: unknown;
   suite: unknown;
   category: unknown;
@@ -187,6 +196,16 @@ function parsePolicy(value: unknown, location: string): TaskPolicy {
     throw new Error(`${location}: field 'policy' must be one of ${VALID_POLICIES.join(", ")}`);
   }
   return policy as TaskPolicy;
+}
+
+function parseDraft(value: unknown, location: string): true | undefined {
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+  if (value !== true) {
+    throw new Error(`${location}: field 'draft' must be true when present`);
+  }
+  return true;
 }
 
 function parseVerification(
@@ -383,6 +402,7 @@ async function parseTaskFromManifest(
   return {
     id,
     title,
+    draft: parseDraft(raw.draft, location),
     taskKind,
     suite: parseSuite(raw.suite, location),
     category: parseCategory(raw.category, location),
@@ -404,6 +424,96 @@ async function parseTaskFromManifest(
     goldStderrPath: hasGoldStderr ? goldStderrPath : undefined,
     goldActivityLogPath: hasGoldActivityLog ? goldActivityLogPath : undefined,
   };
+}
+
+function stringArraysEqual(left: string[], right: readonly string[]): boolean {
+  return left.length === right.length && left.every((value, index) => value === right[index]);
+}
+
+async function collectDraftReadinessIssues(
+  task: WorkspaceTask,
+  manifestPath: string,
+): Promise<string[]> {
+  const issues: string[] = [];
+
+  if (task.draft) {
+    issues.push(
+      `${manifestPath}: draft scaffold marker 'draft: true' is still present; remove it only after replacing the scaffold defaults.`,
+    );
+  }
+
+  if (task.taxonomy && stringArraysEqual(task.taxonomy.tags, DRAFT_TASK_TAXONOMY.tags)) {
+    issues.push(
+      `${manifestPath}: scaffold taxonomy tags are still present; replace '${DRAFT_TASK_TAXONOMY.tags.join(", ")}' with task-specific tags.`,
+    );
+  }
+
+  if (task.promptAddendum === DRAFT_TASK_PROMPT_ADDENDUM) {
+    issues.push(
+      `${manifestPath}: scaffold promptAddendum is still present; replace or remove the generated draft instructions before promotion.`,
+    );
+  }
+
+  if (
+    stringArraysEqual(task.verification.failToPass, DRAFT_TASK_VERIFICATION.failToPass) &&
+    stringArraysEqual(task.verification.passToPass, DRAFT_TASK_VERIFICATION.passToPass)
+  ) {
+    issues.push(
+      `${manifestPath}: scaffold verification commands are still present; replace the default failToPass/passToPass commands before promotion.`,
+    );
+  }
+
+  if (task.taskKind === "workspace-edit") {
+    const repoReadmePath = task.repoDir ? join(task.repoDir, "README.md") : undefined;
+    if (repoReadmePath && (await pathExists(repoReadmePath))) {
+      const repoReadme = await readTextFile(repoReadmePath);
+      if (repoReadme === DRAFT_WORKSPACE_README) {
+        issues.push(
+          `${repoReadmePath}: workspace draft scaffold README is still present; replace the generated repo fixture with the real workspace files.`,
+        );
+      }
+    }
+
+    if (task.goldPatchPath) {
+      const patch = await readTextFile(task.goldPatchPath);
+      if (patch === "") {
+        issues.push(
+          `${task.goldPatchPath}: draft gold.patch is empty; replace it with the expected patch before promotion.`,
+        );
+      }
+    }
+  }
+
+  if (task.taskKind === "prompt-output" && task.goldStdoutPath) {
+    const goldStdout = await readTextFile(task.goldStdoutPath);
+    if (goldStdout === DRAFT_PROMPT_OUTPUT_PLACEHOLDER) {
+      issues.push(
+        `${task.goldStdoutPath}: prompt-output draft placeholder is still present; replace gold.stdout.txt with the expected output before promotion.`,
+      );
+    }
+  }
+
+  if (task.taskKind === "tool-use") {
+    if (task.goldStdoutPath) {
+      const goldStdout = await readTextFile(task.goldStdoutPath);
+      if (goldStdout === DRAFT_TOOL_USE_PLACEHOLDER) {
+        issues.push(
+          `${task.goldStdoutPath}: tool-use draft placeholder is still present; replace gold.stdout.txt with the expected answer or remove it deliberately before promotion.`,
+        );
+      }
+    }
+
+    if (task.goldActivityLogPath) {
+      const goldActivityLog = await readTextFile(task.goldActivityLogPath);
+      if (goldActivityLog === "") {
+        issues.push(
+          `${task.goldActivityLogPath}: tool-use draft activity log is empty; replace it with the expected activity trace before promotion.`,
+        );
+      }
+    }
+  }
+
+  return issues;
 }
 
 export async function loadTaskFromDirectory(taskDir: string): Promise<WorkspaceTask> {
@@ -441,6 +551,15 @@ export async function validateTaskDirectory(taskDir: string): Promise<TaskValida
   if (issues.length === 0) {
     try {
       const task = await parseTaskFromManifest(resolvedTaskDir, manifestPath, raw);
+      issues.push(...(await collectDraftReadinessIssues(task, manifestPath)));
+      if (issues.length > 0) {
+        return {
+          taskDir: resolvedTaskDir,
+          valid: false,
+          taskId: task.id,
+          issues,
+        };
+      }
       return {
         taskDir: resolvedTaskDir,
         valid: true,

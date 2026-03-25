@@ -28,6 +28,9 @@
       "type": "string",
       "minLength": 1
     },
+    "draft": {
+      "const": true
+    },
     "taskKind": {
       "type": "string",
       "enum": [

@@ -8,7 +8,7 @@ Guide contributors through the repo's fixed task-authoring loop:
 
 1. classify the task kind
 2. scaffold with `draft-task`
-3. replace placeholder gold artifacts
+3. replace placeholder gold artifacts and generated draft markers
 4. validate with `validate-task`
 5. inspect coverage gaps with `gaps`
 6. promote the finished task into `tasks/`
@@ -38,6 +38,8 @@ Tighten the generated draft before promotion:
 - rewrite `issue.md` so the success condition is explicit
 - replace placeholder gold artifacts with real expected output, patch, or activity
 - add or tighten fixture files so the task is deterministic
+- remove `draft: true`
+- replace the generated verification commands
 - set `suite`, `taxonomy`, and `promptAddendum` deliberately
 
 ### 3. Validate the task shape
@@ -48,7 +50,7 @@ Run the fast static validation loop:
 npm run dev:validate-task -- --task-dir ./drafts/<task-id>
 ```
 
-This catches schema issues, missing assets, and task-kind mismatches. It does not execute verification commands.
+This catches schema issues, missing assets, task-kind mismatches, and untouched draft scaffolds. Fresh `draft-task` output is expected to fail here until you replace the generated scaffold defaults. It does not execute verification commands.
 
 ### 4. Check coverage gaps
 
@@ -65,6 +67,7 @@ If you are promoting a single draft, compare the draft intent with the existing 
 Move the finished task into `tasks/<task-id>/` only after:
 
 - placeholders are gone
+- `draft: true` is gone
 - `task.json` includes `suite` and `taxonomy`
 - the gold artifacts are readable in code review
 - the verification contract is stable
@@ -90,7 +93,9 @@ For that example, the likely promotion path is:
 
 - keep it in `contributor-workflows`
 - preserve `tool-use` as the task kind
+- remove `draft: true`
 - replace the placeholder `gold.stdout.txt` and `gold.activity.jsonl`
+- replace the generated verification commands
 - replace the generated taxonomy tags with task-specific ones
 
 ## When Not To Use This Helper

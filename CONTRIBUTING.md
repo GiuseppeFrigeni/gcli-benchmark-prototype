@@ -47,7 +47,7 @@ npm run dev:run -- --agent-mode=gemini-cli --suite=contributor-workflows
 ### 1. I have a chat log or maintainer report
 
 - Start with [`.gemini/skills/eval-authoring-helper/SKILL.md`](./.gemini/skills/eval-authoring-helper/SKILL.md).
-- The helper packages the current repo flow: classify task kind, run `draft-task`, replace placeholders, run `validate-task --dynamic`, inspect `gaps`, then promote into `tasks/`.
+- The helper packages the current repo flow: classify task kind, run `draft-task`, replace the generated draft markers and placeholders, run `validate-task --dynamic`, inspect `gaps`, then promote into `tasks/`.
 - The worked example input lives at [`docs/examples/chat-log.json`](./docs/examples/chat-log.json).
 
 ### 2. I have a failed run or report artifact
@@ -59,8 +59,9 @@ npm run dev:run -- --agent-mode=gemini-cli --suite=contributor-workflows
 ## Review Checklist
 
 - The task has one clear success condition and one primary suite.
+- Draft scaffolds no longer include `draft: true`, placeholder gold artifacts, or the generated scaffold verification commands before promotion.
 - `verification.failToPass` fails before the agent runs and passes after the expected behavior.
 - `verification.passToPass` stays green on the pristine fixture.
 - `tool-use` tasks assert both the answer and the inspection path.
-- `validate-task --dynamic` passes before a new task is promoted.
+- `validate-task --dynamic` passes before a new task is promoted; fresh `draft-task` output is expected to fail until it is tightened.
 - The README, roadmap docs, and case-study links still match the current repo state.

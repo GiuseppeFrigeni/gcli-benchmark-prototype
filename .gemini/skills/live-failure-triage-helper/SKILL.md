@@ -57,6 +57,8 @@ npm run dev:validate-task -- --task-dir ./drafts/<task-id> --dynamic
 npm run dev:gaps -- --tasks ./drafts --json
 ```
 
+Fresh `draft-task` output is expected to fail validation until `draft: true`, placeholder gold artifacts, and the generated scaffold verification commands have been replaced.
+
 ### 4. If the output is an issue packet
 
 - choose the matching packet under `docs/issue-packets/`

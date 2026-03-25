@@ -2,6 +2,15 @@
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import {
+  DRAFT_PROMPT_OUTPUT_PLACEHOLDER,
+  DRAFT_TASK_PROMPT_ADDENDUM,
+  DRAFT_TASK_SUITE,
+  DRAFT_TASK_TAXONOMY,
+  DRAFT_TASK_VERIFICATION,
+  DRAFT_TOOL_USE_PLACEHOLDER,
+  DRAFT_WORKSPACE_README,
+} from "./draft-scaffold";
 import { GeminiCliAgent } from "./gemini-adapter";
 import { GoldPatchAgent, NoopAgent } from "./mock-agents";
 import {
@@ -964,33 +973,28 @@ async function draftTaskFromChatLog(options: CliOptions): Promise<void> {
 
   if (options.draftTaskKind === "workspace-edit") {
     await ensureDir(join(outDir, "repo"));
-    await writeTextFile(join(outDir, "repo", "README.md"), "# Draft workspace fixture\n");
+    await writeTextFile(join(outDir, "repo", "README.md"), DRAFT_WORKSPACE_README);
     await writeTextFile(join(outDir, "gold.patch"), "");
   } else if (options.draftTaskKind === "prompt-output") {
-    await writeTextFile(join(outDir, "gold.stdout.txt"), "TODO: replace with expected output\n");
+    await writeTextFile(join(outDir, "gold.stdout.txt"), DRAFT_PROMPT_OUTPUT_PLACEHOLDER);
   } else {
     await writeTextFile(join(outDir, "gold.activity.jsonl"), "");
-    await writeTextFile(join(outDir, "gold.stdout.txt"), "TODO: replace with expected tool-use answer\n");
+    await writeTextFile(join(outDir, "gold.stdout.txt"), DRAFT_TOOL_USE_PLACEHOLDER);
   }
 
   const manifest = {
     id: options.draftTaskId,
     title: chatLog.title ?? `Draft ${options.draftTaskId}`,
+    draft: true,
     taskKind: options.draftTaskKind,
-    suite: "contributor-workflows",
+    suite: DRAFT_TASK_SUITE,
     category: options.draftCategory,
     difficulty: options.draftDifficulty ?? "medium",
     language: options.draftLanguage,
-    taxonomy: {
-      scope: "multi-file",
-      tags: ["draft-task", "chat-log-derived"],
-    },
+    taxonomy: DRAFT_TASK_TAXONOMY,
     problemStatementFile: "issue.md",
-    promptAddendum: "Generated from chat-log.json. Tighten instructions, fixtures, and verification before adding to the suite.",
-    verification: {
-      failToPass: ['node -e "process.exit(1)"'],
-      passToPass: ['node -e "process.exit(0)"'],
-    },
+    promptAddendum: DRAFT_TASK_PROMPT_ADDENDUM,
+    verification: DRAFT_TASK_VERIFICATION,
     policy: options.draftPolicy ?? "always",
   };
 

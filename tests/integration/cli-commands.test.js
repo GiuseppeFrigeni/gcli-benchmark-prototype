@@ -1,6 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { existsSync, readFileSync } = require("node:fs");
+const { existsSync, readFileSync, writeFileSync } = require("node:fs");
 const { join, resolve } = require("node:path");
 const { runCli } = require("../../dist/cli.js");
 const { NoopAgent } = require("../../dist/mock-agents.js");
@@ -10,6 +10,8 @@ const {
   makeWorkspaceManifest,
   withTempDir,
 } = require("../helpers/task-fixtures.js");
+
+const nonEmptyGoldPatch = "diff --git a/src/value.js b/src/value.js\n";
 
 async function captureCliLogs(argv, deps) {
   const logs = [];
@@ -100,7 +102,7 @@ test("validate-task supports human output, JSON output, and invalid paths", asyn
     await createTaskFixture(tempRoot, "valid-task", {
       manifest: makeWorkspaceManifest({ id: "valid-cli-task" }),
       repoFiles,
-      goldPatch: "",
+      goldPatch: nonEmptyGoldPatch,
     });
 
     const validResult = await captureCliLogs([
@@ -181,7 +183,7 @@ test("validate-task --dynamic checks preflight contracts across task kinds", asy
           "",
         ].join("\n"),
       },
-      goldPatch: "",
+      goldPatch: nonEmptyGoldPatch,
     });
 
     const humanResult = await captureCliLogs([
@@ -221,7 +223,7 @@ test("validate-task --dynamic checks preflight contracts across task kinds", asy
           "",
         ].join("\n"),
       },
-      goldPatch: "",
+      goldPatch: nonEmptyGoldPatch,
     });
 
     const failToPassResult = await captureCliLogs([
@@ -264,7 +266,7 @@ test("validate-task --dynamic checks preflight contracts across task kinds", asy
           "",
         ].join("\n"),
       },
-      goldPatch: "",
+      goldPatch: nonEmptyGoldPatch,
     });
 
     const passToPassResult = await captureCliLogs([
@@ -291,7 +293,7 @@ test("validate-task --dynamic checks preflight contracts across task kinds", asy
         "test/fail.test.js": "require('node:test').test('fails', () => { throw new Error('expected'); });\n",
         "test/pass.test.js": "require('node:test').test('passes', () => {});\n",
       },
-      goldPatch: "",
+      goldPatch: nonEmptyGoldPatch,
     });
 
     const setupFailureResult = await captureCliLogs([
@@ -432,16 +434,27 @@ test("cli commands emit suite-aware reports and draft tasks", async () => {
     const workspaceRoot = join(tempRoot, "workspaces");
     const chatLogPath = join(tempRoot, "chat-log.json");
 
-    await writeJsonFile(chatLogPath, {
-      title: "Draft task from chat log",
-      summary: "Turn this conversation into a task skeleton.",
-      acceptanceCriteria: ["Capture the issue summary", "Keep strict output requirements obvious"],
-      relevantFiles: ["src/cli.ts", "docs/ADDING_TASKS.md"],
-      conversation: [
-        { role: "user", content: "Please turn this bug report into a draft eval." },
-        { role: "assistant", content: "Use a tool-use template and preserve the maintainer wording." },
-      ],
-    });
+    writeFileSync(
+      chatLogPath,
+      `\uFEFF${JSON.stringify(
+        {
+          title: "Draft task from chat log",
+          summary: "Turn this conversation into a task skeleton.",
+          acceptanceCriteria: ["Capture the issue summary", "Keep strict output requirements obvious"],
+          relevantFiles: ["src/cli.ts", "docs/ADDING_TASKS.md"],
+          conversation: [
+            { role: "user", content: "Please turn this bug report into a draft eval." },
+            {
+              role: "assistant",
+              content: "Use a tool-use template and preserve the maintainer wording.",
+            },
+          ],
+        },
+        null,
+        2,
+      )}\n`,
+      "utf8",
+    );
 
     const draftResult = await captureCliLogs([
       "draft-task",
@@ -459,8 +472,116 @@ test("cli commands emit suite-aware reports and draft tasks", async () => {
       join(tempRoot, "draft-chat-task"),
     ]);
     assert.equal(draftResult.exitCode, 0);
-    const draftManifest = await readJsonFile(join(tempRoot, "draft-chat-task", "task.json"));
+    const draftTaskDir = join(tempRoot, "draft-chat-task");
+    const draftManifest = await readJsonFile(join(draftTaskDir, "task.json"));
+    assert.equal(draftManifest.draft, true);
     assert.equal(draftManifest.suite, "contributor-workflows");
+
+    const draftValidation = await captureCliLogs([
+      "validate-task",
+      "--task-dir",
+      draftTaskDir,
+      "--json",
+    ]);
+    assert.equal(draftValidation.exitCode, 1);
+    const draftValidationReport = JSON.parse(draftValidation.output);
+    assert.equal(draftValidationReport.valid, false);
+    assert.equal(
+      draftValidationReport.issues.some((issue) => issue.includes("draft scaffold marker")),
+      true,
+    );
+
+    const dynamicDraftValidation = await captureCliLogs([
+      "validate-task",
+      "--task-dir",
+      draftTaskDir,
+      "--dynamic",
+      "--workspace-root",
+      workspaceRoot,
+      "--json",
+    ]);
+    assert.equal(dynamicDraftValidation.exitCode, 1);
+    const dynamicDraftReport = JSON.parse(dynamicDraftValidation.output);
+    assert.equal(dynamicDraftReport.valid, false);
+    assert.equal(dynamicDraftReport.dynamic.status, "skipped");
+
+    delete draftManifest.draft;
+    await writeJsonFile(join(draftTaskDir, "task.json"), draftManifest);
+
+    const markerOnlyRemovalValidation = await captureCliLogs([
+      "validate-task",
+      "--task-dir",
+      draftTaskDir,
+      "--json",
+    ]);
+    assert.equal(markerOnlyRemovalValidation.exitCode, 1);
+    const markerOnlyRemovalReport = JSON.parse(markerOnlyRemovalValidation.output);
+    assert.equal(markerOnlyRemovalReport.valid, false);
+    assert.equal(
+      markerOnlyRemovalReport.issues.some((issue) => issue.includes("tool-use draft placeholder")),
+      true,
+    );
+
+    draftManifest.taxonomy = {
+      scope: "multi-file",
+      tags: ["tool-use", "artifact-triage"],
+    };
+    draftManifest.promptAddendum = "Inspect the local fixtures before answering.";
+    draftManifest.verification = {
+      failToPass: [
+        "node \"${taskDir}/verify-output.js\" \"${artifactDir}/agent-stdout.txt\" \"${taskDir}/expected.txt\"",
+      ],
+      passToPass: [
+        "node \"${taskDir}/verify-fixture.js\" \"${taskDir}/expected.txt\"",
+      ],
+    };
+    await writeJsonFile(join(draftTaskDir, "task.json"), draftManifest);
+    writeFileSync(join(draftTaskDir, "gold.stdout.txt"), "Use models-json.test.js first.\n", "utf8");
+    writeFileSync(
+      join(draftTaskDir, "gold.activity.jsonl"),
+      [
+        "{\"functionCall\":{\"name\":\"read_file\",\"args\":{\"file_path\":\"models-json.test.js\"}}}",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    writeFileSync(join(draftTaskDir, "expected.txt"), "Use models-json.test.js first.\n", "utf8");
+    writeFileSync(
+      join(draftTaskDir, "verify-output.js"),
+      [
+        "const assert = require('node:assert/strict');",
+        "const { readFileSync } = require('node:fs');",
+        "const actual = readFileSync(process.argv[2], 'utf8');",
+        "const expected = readFileSync(process.argv[3], 'utf8');",
+        "assert.equal(actual, expected);",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    writeFileSync(
+      join(draftTaskDir, "verify-fixture.js"),
+      [
+        "const assert = require('node:assert/strict');",
+        "const { existsSync } = require('node:fs');",
+        "assert.equal(existsSync(process.argv[2]), true);",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+
+    const tightenedDraftValidation = await captureCliLogs([
+      "validate-task",
+      "--task-dir",
+      draftTaskDir,
+      "--dynamic",
+      "--workspace-root",
+      workspaceRoot,
+      "--json",
+    ]);
+    assert.equal(tightenedDraftValidation.exitCode, 0);
+    const tightenedDraftReport = JSON.parse(tightenedDraftValidation.output);
+    assert.equal(tightenedDraftReport.valid, true);
+    assert.equal(tightenedDraftReport.dynamic.valid, true);
 
     const baselineCode = await runCli(
       [

@@ -59,6 +59,7 @@ export interface TaskEfficiency {
 export interface WorkspaceTask {
   id: string;
   title: string;
+  draft?: true;
   taskKind: TaskKind;
   suite: TaskSuite;
   category: TaskCategory;

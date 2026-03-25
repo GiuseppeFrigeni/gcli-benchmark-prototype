@@ -26,9 +26,13 @@ export async function readTextFile(path: string): Promise<string> {
   return await readFile(path, "utf8");
 }
 
+function stripLeadingBom(content: string): string {
+  return content.startsWith("\uFEFF") ? content.slice(1) : content;
+}
+
 export async function readJsonFile<T>(path: string): Promise<T> {
   const content = await readTextFile(path);
-  return JSON.parse(content) as T;
+  return JSON.parse(stripLeadingBom(content)) as T;
 }
 
 export async function writeTextFile(path: string, content: string): Promise<void> {

@@ -228,7 +228,7 @@ Scaffold a new task from a structured chat log:
 npm run dev:draft-task -- --chat-log docs/examples/chat-log.json --task-id draft-task --task-kind tool-use --category debugging --language text --out drafts/draft-task
 ```
 
-The draft command is intentionally a scaffold generator: it creates a starting task skeleton and placeholder gold artifacts, not a finished eval.
+The draft command is intentionally a scaffold generator: it creates a starting task skeleton with `draft: true` and placeholder gold artifacts, not a finished eval. Fresh scaffolds are expected to fail `validate-task` until those generated defaults are replaced.
 
 ## Task Authoring
 
@@ -249,7 +249,7 @@ Every task now declares one primary `suite`:
 
 Cross-cutting behavior belongs in taxonomy tags, not in multi-suite membership.
 
-`draft-task` is positioned as an authoring accelerator, not as automatic eval generation. Contributors should still tighten fixtures, verification, and suite placement before promoting a draft into `tasks/`.
+`draft-task` is positioned as an authoring accelerator, not as automatic eval generation. Contributors should still tighten fixtures, verification, and suite placement before promoting a draft into `tasks/`, and production-ready tasks should no longer include `draft: true`.
 
 ## Contributor Helper Workflows
 
@@ -257,7 +257,7 @@ The repo now includes two concrete repo-local contributor helpers:
 
 - eval authoring helper: [`.gemini/skills/eval-authoring-helper/SKILL.md`](./.gemini/skills/eval-authoring-helper/SKILL.md)
 - worked example input: [`docs/examples/chat-log.json`](./docs/examples/chat-log.json)
-- the helper packages the current repo flow instead of adding new CLI behavior: classify task kind, run `draft-task`, replace placeholders, run `validate-task --dynamic`, inspect `gaps`, then promote into `tasks/`
+- the helper packages the current repo flow instead of adding new CLI behavior: classify task kind, run `draft-task`, replace the generated draft markers and placeholders, run `validate-task --dynamic`, inspect `gaps`, then promote into `tasks/`
 - live failure triage helper: [`.gemini/skills/live-failure-triage-helper/SKILL.md`](./.gemini/skills/live-failure-triage-helper/SKILL.md)
 - worked example output path: [`docs/case-studies/live-failure-report-to-issue-packet.md`](./docs/case-studies/live-failure-report-to-issue-packet.md)
 

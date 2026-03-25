@@ -1,12 +1,16 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const { writeFile } = require("node:fs/promises");
 const { join } = require("node:path");
 const { loadTasks, validateTaskDirectory } = require("../../dist/task-loader.js");
+const { readJsonFile } = require("../../dist/utils.js");
 const {
   createTaskFixture,
   makeWorkspaceManifest,
   withTempDir,
 } = require("../helpers/task-fixtures.js");
+
+const nonEmptyGoldPatch = "diff --git a/src/value.js b/src/value.js\n";
 
 const repoFiles = {
   "src/value.js": "module.exports = { value: 1 };\n",
@@ -36,6 +40,16 @@ test("task loader rejects duplicate ids", async () => {
     await createTaskFixture(root, "task-a", { manifest, repoFiles, goldPatch: "" });
     await createTaskFixture(root, "task-b", { manifest, repoFiles, goldPatch: "" });
     await assert.rejects(() => loadTasks(root), /Duplicate task id/);
+  });
+});
+
+test("readJsonFile accepts a UTF-8 BOM", async () => {
+  await withTempDir("gcli-json-bom", async (root) => {
+    const filePath = join(root, "chat-log.json");
+    await writeFile(filePath, "\uFEFF{\"title\":\"Draft from Windows\"}\n", "utf8");
+
+    const parsed = await readJsonFile(filePath);
+    assert.deepEqual(parsed, { title: "Draft from Windows" });
   });
 });
 
@@ -132,12 +146,52 @@ test("tool-use tasks require a gold activity log", async () => {
   });
 });
 
+test("validateTaskDirectory reports untouched draft scaffolds", async () => {
+  await withTempDir("gcli-validate-draft", async (root) => {
+    await createTaskFixture(root, "task-a", {
+      manifest: {
+        $schema: "../../docs/task.schema.json",
+        id: "draft-task",
+        title: "Draft task",
+        draft: true,
+        taskKind: "tool-use",
+        suite: "contributor-workflows",
+        category: "debugging",
+        difficulty: "medium",
+        language: "text",
+        taxonomy: {
+          scope: "multi-file",
+          tags: ["draft-task", "chat-log-derived"],
+        },
+        problemStatementFile: "issue.md",
+        promptAddendum:
+          "Generated from chat-log.json. Tighten instructions, fixtures, and verification before adding to the suite.",
+        verification: {
+          failToPass: ['node -e "process.exit(1)"'],
+          passToPass: ['node -e "process.exit(0)"'],
+        },
+        policy: "always",
+      },
+      goldStdout: "TODO: replace with expected tool-use answer\n",
+      goldActivity: "",
+    });
+
+    const result = await validateTaskDirectory(join(root, "task-a"));
+    assert.equal(result.valid, false);
+    assert.equal(result.taskId, "draft-task");
+    assert.equal(result.issues.some((issue) => issue.includes("draft scaffold marker")), true);
+    assert.equal(result.issues.some((issue) => issue.includes("scaffold verification commands")), true);
+    assert.equal(result.issues.some((issue) => issue.includes("tool-use draft placeholder")), true);
+    assert.equal(result.issues.some((issue) => issue.includes("activity log is empty")), true);
+  });
+});
+
 test("validateTaskDirectory accepts a valid workspace task", async () => {
   await withTempDir("gcli-validate-ok", async (root) => {
     await createTaskFixture(root, "task-a", {
       manifest: makeWorkspaceManifest({ id: "valid-task" }),
       repoFiles,
-      goldPatch: "",
+      goldPatch: nonEmptyGoldPatch,
     });
 
     const result = await validateTaskDirectory(join(root, "task-a"));
