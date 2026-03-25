@@ -20,4 +20,15 @@ reports/live-contributor-workflows/*
 !reports/live-contributor-workflows/report-20260324-131841.md
 !reports/live-contributor-workflows/results-20260324-131841.json
 reports/live-contributor-workflows/artifacts/
+!reports/case-study-tool-output-routing-review/
+reports/case-study-tool-output-routing-review/*
+!reports/case-study-tool-output-routing-review/latest-report.md
+!reports/case-study-tool-output-routing-review/latest-results.json
+!reports/case-study-tool-output-routing-review/latest-compare.md
+!reports/case-study-tool-output-routing-review/latest-trace-summary.md
+!reports/case-study-tool-output-routing-review/report-20260324-182325.md
+!reports/case-study-tool-output-routing-review/results-20260324-182325.json
+!reports/case-study-tool-output-routing-review/compare-20260324-182325.md
+!reports/case-study-tool-output-routing-review/trace-summary-20260324-182325.md
+reports/case-study-tool-output-routing-review/artifacts/
 /external

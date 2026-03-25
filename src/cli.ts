@@ -9,7 +9,7 @@ import {
   buildTaskKindCoverageSummary,
   buildTaxonomyCoverageSummary,
 } from "./task-metrics";
-import { loadTasks, validateTaskDirectory } from "./task-loader";
+import { loadTaskFromDirectory, loadTasks, validateTaskDirectory } from "./task-loader";
 import {
   attachBaselineContext,
   detectRegressions,
@@ -28,7 +28,7 @@ import {
   WorkspaceTask,
 } from "./types";
 import { ensureDir, readJsonFile, readTextFile, timestampForFile, writeJsonFile, writeTextFile } from "./utils";
-import { runTasks } from "./workspace-runner";
+import { runTasks, validateTaskPreflight } from "./workspace-runner";
 
 type Command = "run" | "list" | "gaps" | "compare" | "draft-task" | "validate-task";
 
@@ -52,6 +52,7 @@ interface CliOptions {
   selectedTaskIds: string[];
   workspaceRoot: string;
   keepWorkspaces: boolean;
+  dynamicValidation: boolean;
   taskDir?: string;
   draftTaskId?: string;
   draftTaskKind?: WorkspaceTask["taskKind"];
@@ -95,6 +96,7 @@ const defaults: CliOptions = {
   selectedTaskIds: [],
   workspaceRoot: join(tmpdir(), "gcli-benchmark-workspaces"),
   keepWorkspaces: false,
+  dynamicValidation: false,
   explicitGeminiBin: false,
   explicitGeminiArgs: false,
   explicitModel: false,
@@ -109,7 +111,7 @@ function usage(): string {
     "  npm run dev:gaps -- [--tasks ./tasks] [--json]",
     "  npm run dev:compare -- [--results ./reports/latest-results.json] [--baseline ./baseline/baseline.json] [--json]",
     "  npm run dev:draft-task -- --chat-log ./chat.json --task-id my-task --task-kind tool-use --category debugging --language text --out ./drafts/my-task [--difficulty medium] [--policy always]",
-    "  npm run dev:validate-task -- --task-dir ./tasks/my-task [--json]",
+    "  npm run dev:validate-task -- --task-dir ./tasks/my-task [--dynamic] [--json]",
     "  npm run dev:run -- [options]",
     "",
     "Options:",
@@ -131,6 +133,7 @@ function usage(): string {
     "  --keep-workspaces           Keep generated task workspaces after the run",
     "  --live-output               Stream Gemini output to terminal during evaluation",
     "  --json                      Emit JSON output for list/gaps/compare/validate-task",
+    "  --dynamic                   Execute setup and preflight checks in a temp workspace during validate-task",
     "  --task-dir <path>           Task directory for validate-task",
     "  --chat-log <path>           Structured chat log JSON for draft-task",
     "  --task-id <id>              Draft task id for draft-task",
@@ -271,6 +274,10 @@ function parseArgs(argv: string[]): CliOptions {
     }
     if (arg === "--json") {
       options.json = true;
+      continue;
+    }
+    if (arg === "--dynamic") {
+      options.dynamicValidation = true;
       continue;
     }
     if (arg === "--keep-workspaces") {
@@ -764,38 +771,140 @@ async function compareResults(options: CliOptions): Promise<void> {
   }
 }
 
-async function validateTask(options: CliOptions): Promise<number> {
+async function validateTask(options: CliOptions, deps: CliDependencies): Promise<number> {
   if (!options.taskDir) {
     throw new Error("validate-task requires --task-dir");
   }
 
-  const result = await validateTaskDirectory(resolve(options.taskDir));
+  const staticResult = await validateTaskDirectory(resolve(options.taskDir));
+  if (!options.dynamicValidation) {
+    const report = {
+      taskDir: staticResult.taskDir,
+      valid: staticResult.valid,
+      taskId: staticResult.taskId,
+      issues: staticResult.issues,
+    };
+
+    if (options.json) {
+      console.log(JSON.stringify(report, null, 2));
+      return staticResult.valid ? 0 : 1;
+    }
+
+    if (staticResult.valid) {
+      console.log(
+        `Task is valid: ${staticResult.taskId ?? "unknown-id"} (${staticResult.taskDir})`,
+      );
+      return 0;
+    }
+
+    console.log(`Task is invalid: ${staticResult.taskDir}`);
+    if (staticResult.taskId) {
+      console.log(`Task ID: ${staticResult.taskId}`);
+    }
+    for (const issue of staticResult.issues) {
+      console.log(`- ${issue}`);
+    }
+    return 1;
+  }
+
+  let dynamicReport:
+    | {
+        attempted: boolean;
+        valid: boolean;
+        status: "passed" | "failed" | "skipped";
+        reason?: string;
+        issues: string[];
+        artifactDir?: string;
+        promptPath?: string;
+        diffPath?: string;
+        workspacePath?: string;
+        preflight?: Awaited<ReturnType<typeof validateTaskPreflight>>["preflight"];
+        failedVerificationCommands?: Awaited<ReturnType<typeof validateTaskPreflight>>["failureAnalysis"]["failedVerificationCommands"];
+        firstFailedVerification?: Awaited<ReturnType<typeof validateTaskPreflight>>["failureAnalysis"]["firstFailedVerification"];
+      }
+    | undefined;
+
+  if (staticResult.valid) {
+    const generatedAt = (deps.now ?? (() => new Date()))().toISOString();
+    const runId = `validate-task-${timestampForFile(generatedAt)}`;
+    const task = await loadTaskFromDirectory(staticResult.taskDir);
+    const dynamicResult = await validateTaskPreflight(task, {
+      runId,
+      artifactsRoot: join(resolve(options.workspaceRoot), "validate-task-artifacts", runId),
+      workspaceRoot: resolve(options.workspaceRoot),
+      keepWorkspaces: options.keepWorkspaces,
+    });
+    dynamicReport = {
+      attempted: true,
+      valid: dynamicResult.valid,
+      status: dynamicResult.valid ? "passed" : "failed",
+      reason: dynamicResult.failureAnalysis.reason,
+      issues: dynamicResult.valid ? [] : dynamicResult.notes,
+      artifactDir: dynamicResult.artifacts.artifactDir,
+      promptPath: dynamicResult.artifacts.promptPath,
+      diffPath: dynamicResult.artifacts.diffPath,
+      workspacePath: dynamicResult.artifacts.workspacePath,
+      preflight: dynamicResult.preflight,
+      failedVerificationCommands: dynamicResult.failureAnalysis.failedVerificationCommands,
+      firstFailedVerification: dynamicResult.failureAnalysis.firstFailedVerification,
+    };
+  } else {
+    dynamicReport = {
+      attempted: false,
+      valid: false,
+      status: "skipped",
+      reason: "skipped",
+      issues: ["Dynamic validation skipped because static validation failed."],
+    };
+  }
+
+  const overallValid = staticResult.valid && dynamicReport.valid;
   const report = {
-    taskDir: result.taskDir,
-    valid: result.valid,
-    taskId: result.taskId,
-    issues: result.issues,
+    taskDir: staticResult.taskDir,
+    valid: overallValid,
+    taskId: staticResult.taskId,
+    issues: [...staticResult.issues, ...dynamicReport.issues],
+    static: {
+      valid: staticResult.valid,
+      issues: staticResult.issues,
+    },
+    dynamic: dynamicReport,
   };
 
   if (options.json) {
     console.log(JSON.stringify(report, null, 2));
-    return result.valid ? 0 : 1;
+    return overallValid ? 0 : 1;
   }
 
-  if (result.valid) {
-    console.log(
-      `Task is valid: ${result.taskId ?? "unknown-id"} (${result.taskDir})`,
-    );
+  console.log(`Task: ${staticResult.taskId ?? "unknown-id"} (${staticResult.taskDir})`);
+  console.log(`Static validation: ${staticResult.valid ? "passed" : "failed"}`);
+  if (staticResult.issues.length > 0) {
+    for (const issue of staticResult.issues) {
+      console.log(`- ${issue}`);
+    }
+  }
+  console.log(
+    `Dynamic validation: ${
+      dynamicReport.status === "passed"
+        ? "passed"
+        : dynamicReport.status === "skipped"
+          ? "skipped"
+          : `failed (${dynamicReport.reason ?? "unknown"})`
+    }`,
+  );
+  if (dynamicReport.issues.length > 0) {
+    for (const issue of dynamicReport.issues) {
+      console.log(`- ${issue}`);
+    }
+  }
+  if (dynamicReport.attempted && dynamicReport.artifactDir) {
+    console.log(`Dynamic artifacts: ${dynamicReport.artifactDir}`);
+  }
+  if (overallValid) {
+    console.log("Task is valid.");
     return 0;
   }
-
-  console.log(`Task is invalid: ${result.taskDir}`);
-  if (result.taskId) {
-    console.log(`Task ID: ${result.taskId}`);
-  }
-  for (const issue of result.issues) {
-    console.log(`- ${issue}`);
-  }
+  console.log("Task is invalid.");
   return 1;
 }
 
@@ -956,7 +1065,7 @@ export async function runCli(argv: string[], deps: CliDependencies = {}): Promis
       return 0;
     }
     if (options.command === "validate-task") {
-      return await validateTask(options);
+      return await validateTask(options, deps);
     }
     if (options.command === "draft-task") {
       await draftTaskFromChatLog(options);

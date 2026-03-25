@@ -32,6 +32,7 @@ Fast validation loops:
 
 ```bash
 npm run dev:validate-task -- --task-dir ./tasks/<task-id>
+npm run dev:validate-task -- --task-dir ./tasks/<task-id> --dynamic
 npm run dev:list -- --tasks ./tasks
 npm run dev:gaps -- --tasks ./tasks
 ```
@@ -70,7 +71,7 @@ Each task gets one primary suite:
 
 - `gemini-core`: direct Gemini CLI quality evidence such as JSON mode regressions, repo triage, and debugging workflows
 - `contributor-workflows`: maintainer replies, regression triage, eval maintenance, and contributor-facing summaries
-- `harness-calibration`: generic deterministic fixtures that validate the harness itself
+- `harness-calibration`: generic deterministic fixtures that validate the harness itself as support infrastructure
 
 Use taxonomy tags for cross-cutting behavior; do not multi-home one task across several suites.
 
@@ -192,6 +193,7 @@ Starter shared vocabulary:
 - Every command in `verification.failToPass` must fail before the agent runs and pass after the expected fix or response.
 - Every command in `verification.passToPass` must already pass before the agent runs and remain passing after the run.
 - If that contract is broken on the pristine task, the harness marks the task as `invalid_task`.
+- Use `validate-task --dynamic` when you want to check that contract in a temp workspace without invoking a live agent.
 
 ## Smallest Acceptable Task
 

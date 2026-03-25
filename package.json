@@ -16,11 +16,15 @@
     "gcli-benchmark": "dist/cli.js"
   },
   "files": [
+    ".gemini/skills",
     "dist",
     "tasks",
     "baseline",
     "docs/ADDING_TASKS.md",
+    "docs/case-studies",
     "docs/IMPLEMENTATION_LOG.md",
+    "docs/issue-packets",
+    "docs/REVIEWER_GUIDE.md",
     "docs/ROADMAP.md",
     "docs/ROADMAP_ISSUES.md",
     "docs/examples",

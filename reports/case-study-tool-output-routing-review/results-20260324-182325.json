@@ -1,0 +1,228 @@
+{
+  "metadata": {
+    "runId": "20260324-182325",
+    "generatedAt": "2026-03-24T18:23:25.182Z",
+    "mode": "gemini-cli",
+    "gitCommitSha": "2f8d363",
+    "geminiCliVersion": "0.32.1",
+    "model": "Gemini CLI default",
+    "approvalMode": "yolo",
+    "suites": [
+      "gemini-core"
+    ],
+    "selectedTaskIds": [
+      "gemini-tool-output-routing-review"
+    ],
+    "environment": {
+      "platform": "win32",
+      "arch": "x64",
+      "nodeVersion": "v20.19.0",
+      "workingDirectory": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype"
+    }
+  },
+  "summary": {
+    "generatedAt": "2026-03-24T18:23:25.182Z",
+    "total": 1,
+    "passed": 0,
+    "failed": 0,
+    "infraFailed": 1,
+    "invalidTasks": 0,
+    "passRate": 0,
+    "averageDurationMs": 125487,
+    "categories": [
+      {
+        "category": "code-review",
+        "total": 1,
+        "passed": 0,
+        "failed": 0,
+        "infraFailed": 1,
+        "invalidTasks": 0,
+        "passRate": 0
+      }
+    ],
+    "suites": [
+      {
+        "suite": "gemini-core",
+        "count": 1
+      }
+    ],
+    "taskKinds": [
+      {
+        "taskKind": "tool-use",
+        "count": 1
+      }
+    ],
+    "taxonomyCoverage": {
+      "tasksWithTaxonomy": 1,
+      "tasksWithoutTaxonomy": 0,
+      "scopes": [
+        {
+          "scope": "multi-file",
+          "count": 1
+        }
+      ],
+      "tags": [
+        {
+          "tag": "output-format",
+          "count": 1
+        },
+        {
+          "tag": "review-feedback",
+          "count": 1
+        },
+        {
+          "tag": "tool-use",
+          "count": 1
+        }
+      ]
+    },
+    "efficiency": {
+      "measuredTasks": 1,
+      "averageAgentDurationMs": 120639,
+      "averageFilesChanged": 2,
+      "averageChangedLines": 8,
+      "totalInsertions": 6,
+      "totalDeletions": 2
+    },
+    "failureBreakdown": {
+      "byReason": [
+        {
+          "label": "agent-error",
+          "count": 1
+        }
+      ],
+      "bySuite": [
+        {
+          "label": "gemini-core",
+          "count": 1
+        }
+      ],
+      "byTaskKind": [
+        {
+          "label": "tool-use",
+          "count": 1
+        }
+      ],
+      "byCategory": [
+        {
+          "label": "code-review",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "taskId": "gemini-tool-output-routing-review",
+      "title": "Inspect the expected routing path before reviewing a Gemini CLI output regression",
+      "taskKind": "tool-use",
+      "suite": "gemini-core",
+      "category": "code-review",
+      "difficulty": "medium",
+      "language": "text",
+      "taxonomy": {
+        "scope": "multi-file",
+        "tags": [
+          "tool-use",
+          "review-feedback",
+          "output-format"
+        ]
+      },
+      "policy": "always",
+      "status": "infra_failed",
+      "durationMs": 125487,
+      "efficiency": {
+        "agentDurationMs": 120639,
+        "filesChanged": 2,
+        "insertions": 6,
+        "deletions": 2,
+        "changedLines": 8
+      },
+      "notes": [
+        "Gemini CLI timed out after 120000ms"
+      ],
+      "failureAnalysis": {
+        "reason": "agent-error",
+        "failedVerificationCommands": [],
+        "firstObservedToolCall": {
+          "index": 1,
+          "name": "read_file",
+          "target": "package.json"
+        },
+        "missingExpectedInspections": [],
+        "toolExpectationFailures": [],
+        "baselineStatus": "passed",
+        "baselineDelta": "regressed"
+      },
+      "preflight": {
+        "failToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-output-routing-review/verify-output.js\" \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\case-study-tool-output-routing-review\\artifacts\\20260324-182325\\gemini-tool-output-routing-review/agent-stdout.txt\"",
+            "passed": false,
+            "exitCode": 1,
+            "durationMs": 308,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\case-study-tool-output-routing-review\\artifacts\\20260324-182325\\gemini-tool-output-routing-review\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\case-study-tool-output-routing-review\\artifacts\\20260324-182325\\gemini-tool-output-routing-review\\preflight-fail-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ],
+        "passToPass": [
+          {
+            "command": "node \"C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks\\gemini-tool-output-routing-review/verify-fixtures.js\" \"C:\\Users\\Giuseppe\\AppData\\Local\\Temp\\gcli-benchmark-workspaces\\20260324-182325\\gemini-tool-output-routing-review-OAdla3/test/models-json.test.js\" \"C:\\Users\\Giuseppe\\AppData\\Local\\Temp\\gcli-benchmark-workspaces\\20260324-182325\\gemini-tool-output-routing-review-OAdla3/src/commands/models.js\" \"C:\\Users\\Giuseppe\\AppData\\Local\\Temp\\gcli-benchmark-workspaces\\20260324-182325\\gemini-tool-output-routing-review-OAdla3/src/renderers/output.js\"",
+            "passed": true,
+            "exitCode": 0,
+            "durationMs": 182,
+            "timedOut": false,
+            "stdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\case-study-tool-output-routing-review\\artifacts\\20260324-182325\\gemini-tool-output-routing-review\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stdout.txt",
+            "stderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\case-study-tool-output-routing-review\\artifacts\\20260324-182325\\gemini-tool-output-routing-review\\preflight-pass-to-pass-01-node-C-Users-Giuseppe-Documents-GitHub-gcli-be.stderr.txt"
+          }
+        ]
+      },
+      "artifacts": {
+        "artifactDir": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\case-study-tool-output-routing-review\\artifacts\\20260324-182325\\gemini-tool-output-routing-review",
+        "promptPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\case-study-tool-output-routing-review\\artifacts\\20260324-182325\\gemini-tool-output-routing-review\\prompt.txt",
+        "diffPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\case-study-tool-output-routing-review\\artifacts\\20260324-182325\\gemini-tool-output-routing-review\\git-diff.patch",
+        "agentStdoutPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\case-study-tool-output-routing-review\\artifacts\\20260324-182325\\gemini-tool-output-routing-review\\agent-stdout.txt",
+        "agentStderrPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\case-study-tool-output-routing-review\\artifacts\\20260324-182325\\gemini-tool-output-routing-review\\agent-stderr.txt",
+        "activityLogPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\case-study-tool-output-routing-review\\artifacts\\20260324-182325\\gemini-tool-output-routing-review\\activity.jsonl",
+        "activitySummaryPath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\reports\\case-study-tool-output-routing-review\\artifacts\\20260324-182325\\gemini-tool-output-routing-review\\activity-summary.json"
+      },
+      "agent": {
+        "exitCode": 1,
+        "timedOut": true,
+        "error": "Gemini CLI timed out after 120000ms"
+      }
+    }
+  ],
+  "regressions": [
+    {
+      "scope": "overall-pass-rate",
+      "severity": "high",
+      "message": "Overall pass rate regressed.",
+      "baselineValue": 1,
+      "currentValue": 0,
+      "delta": -1
+    },
+    {
+      "scope": "task-status",
+      "severity": "medium",
+      "message": "Task 'gemini-tool-output-routing-review' regressed from passed to infra_failed.",
+      "baselineValue": "passed",
+      "currentValue": "infra_failed",
+      "taskId": "gemini-tool-output-routing-review"
+    }
+  ],
+  "baselinePath": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\baseline\\baseline.json",
+  "config": {
+    "mode": "gemini-cli",
+    "tasksDir": "C:\\Users\\Giuseppe\\Documents\\GitHub\\gcli-benchmark-prototype\\tasks",
+    "workspaceRoot": "C:\\Users\\Giuseppe\\AppData\\Local\\Temp\\gcli-benchmark-workspaces",
+    "keepWorkspaces": false,
+    "selectedTaskIds": [
+      "gemini-tool-output-routing-review"
+    ],
+    "geminiBin": "C:\\nvm4w\\nodejs\\gemini.cmd",
+    "geminiArgs": [],
+    "liveOutput": false
+  }
+}

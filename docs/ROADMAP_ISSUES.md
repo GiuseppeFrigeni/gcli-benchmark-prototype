@@ -1,39 +1,14 @@
-# Roadmap Issue Mirror
+# Roadmap Issue Index
 
-The canonical public backlog belongs in GitHub issues. This file mirrors the intended issue titles, labels, and acceptance criteria so the repo can still be reviewed or synced from an offline/local-only environment. Two items are intentionally sized as `good first task` candidates.
+The canonical backlog for review still lives in `docs/issue-packets/`, and each packet now includes a direct GitHub issue-editor link so publication does not depend on local GitHub CLI tooling.
 
-## 1. Archive Fresh Live Gemini Suite Runs
+Two packets are intentionally sized as `good first task` candidates.
 
-- Labels: `evaluation`, `reporting`
-- Goal: check in one current `gemini-core` live run and one current `contributor-workflows` live run with run metadata, per-task outcome tables, and README links
-- Done when: README tables and archived report/result artifacts are refreshed together
-
-## 2. Add More Gemini JSON-Mode Regressions
-
-- Labels: `evaluation`, `gemini-core`
-- Goal: add at least four more deterministic tasks around JSON mode regressions, repo triage, and debugging workflow sequencing
-- Done when: `gemini-core` coverage expands without increasing generic calibration fixtures first
-
-## 3. Publish Package Dry-Run Guardrail
-
-- Labels: `packaging`, `good first task`
-- Goal: add a CI smoke check that validates npm package contents and documents which runtime assets must ship
-- Done when: `npm pack --dry-run` is part of CI and unexpected files are caught before release
-
-## 4. Task Authoring Validation Command
-
-- Labels: `authoring`, `good first task`
-- Goal: add a dedicated CLI command for validating one task directory against the schema plus loader checks
-- Done when: contributors can validate a new task without loading the whole corpus
-
-## 5. Live Run Dashboard Summary
-
-- Labels: `reporting`, `documentation`
-- Goal: generate a compact machine-readable summary for archived live Gemini runs so README evidence tables stay easy to refresh
-- Done when: archived runs can be summarized without hand-editing README tables
-
-## 6. Contributor Helper Skill Or Subagent For Eval Work
-
-- Labels: `authoring`, `evaluation`
-- Goal: add one concrete contributor helper focused on eval authoring, prompt changes, or investigation workflows so the repo covers the deferred skills/subagents angle directly
-- Done when: contributors have one tracked helper workflow that materially reduces setup or diagnosis friction for agent-intelligence quality work
+| Packet | Labels | Status | Notes | GitHub issue editor |
+| --- | --- | --- | --- | --- |
+| [`Archive Fresh Live Gemini Suite Runs`](./issue-packets/01-archive-fresh-live-gemini-suite-runs.md) | `evaluation`, `reporting` | Ready to publish | Refresh the public live-evidence snapshots. | [Open draft](https://github.com/GiuseppeFrigeni/gcli-benchmark-prototype/issues/new?title=Archive%20Fresh%20Live%20Gemini%20Suite%20Runs&body=Packet%20source:%20docs%2Fissue-packets%2F01-archive-fresh-live-gemini-suite-runs.md%0A%0APaste%20the%20packet%20contents%20here%20before%20publishing.) |
+| [`Add More Gemini JSON-Mode Regressions`](./issue-packets/02-add-more-gemini-json-mode-regressions.md) | `evaluation`, `gemini-core` | Ready to publish | Grow Gemini-heavy coverage before generic fixtures. | [Open draft](https://github.com/GiuseppeFrigeni/gcli-benchmark-prototype/issues/new?title=Add%20More%20Gemini%20JSON-Mode%20Regressions&body=Packet%20source:%20docs%2Fissue-packets%2F02-add-more-gemini-json-mode-regressions.md%0A%0APaste%20the%20packet%20contents%20here%20before%20publishing.) |
+| [`Publish Hosted GitHub Issue Backlog`](./issue-packets/03-publish-hosted-github-issue-backlog.md) | `documentation`, `good first task` | Ready to publish | Mirror the packet set into hosted issues. | [Open draft](https://github.com/GiuseppeFrigeni/gcli-benchmark-prototype/issues/new?title=Publish%20Hosted%20GitHub%20Issue%20Backlog&body=Packet%20source:%20docs%2Fissue-packets%2F03-publish-hosted-github-issue-backlog.md%0A%0APaste%20the%20packet%20contents%20here%20before%20publishing.) |
+| [`Add Dynamic validate-task Preflight`](./issue-packets/04-add-dynamic-validate-task-preflight.md) | `authoring`, `evaluation` | Implemented in repo | Kept as an archived planning artifact because `validate-task --dynamic` now exists. | n/a |
+| [`Live Run Dashboard Summary`](./issue-packets/05-live-run-dashboard-summary.md) | `reporting`, `documentation`, `good first task` | Ready to publish | Generate compact summaries for archived live runs. | [Open draft](https://github.com/GiuseppeFrigeni/gcli-benchmark-prototype/issues/new?title=Live%20Run%20Dashboard%20Summary&body=Packet%20source:%20docs%2Fissue-packets%2F05-live-run-dashboard-summary.md%0A%0APaste%20the%20packet%20contents%20here%20before%20publishing.) |
+| [`Expand Contributor Helper Workflows`](./issue-packets/06-expand-contributor-helper-workflows.md) | `authoring`, `evaluation` | Implemented in repo | Kept as an archived planning artifact because the second helper workflow now exists. | n/a |

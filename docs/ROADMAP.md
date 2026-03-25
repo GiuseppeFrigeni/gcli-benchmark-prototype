@@ -1,18 +1,20 @@
 # Contributor Eval Harness Roadmap
 
-The core harness is now organized around three suites:
+The core harness is organized around three suites:
 
 - `gemini-core` for direct Gemini CLI quality evidence
 - `contributor-workflows` for maintainer and eval-maintenance flows
-- `harness-calibration` for deterministic harness validation
+- `harness-calibration` as support infrastructure for deterministic harness validation
 
 ## Near-Term Priorities
 
-- Keep live Gemini evidence current for `gemini-core` and `contributor-workflows`.
-- Expand Gemini-heavy coverage before adding more generic coding fixtures.
-- Keep the mock baseline trustworthy as a harness-calibration signal.
-- Tighten authoring ergonomics through schema-backed manifests, `validate-task`, and clearer draft-task scaffolds.
+- Keep the live Gemini evidence current for `gemini-core` and `contributor-workflows`.
+- Expand Gemini-heavy coverage before adding more generic calibration fixtures.
+- Keep the mock baseline trustworthy as a harness-integrity signal.
+- Tighten contributor ergonomics through schema-backed manifests, `validate-task --dynamic`, clearer draft workflows, and report-to-follow-up helper docs.
 
 ## Tracked Work
 
-The canonical public backlog belongs in GitHub issues. [`docs/ROADMAP_ISSUES.md`](./ROADMAP_ISSUES.md) mirrors the intended issue titles, labels, and acceptance criteria so the repo stays reviewable even when GitHub-side access is unavailable in the current environment.
+- Reviewable packet backlog: [`docs/issue-packets/README.md`](./issue-packets/README.md)
+- Direct GitHub issue-editor links: [`docs/ROADMAP_ISSUES.md`](./ROADMAP_ISSUES.md)
+- Reviewer overview: [`docs/REVIEWER_GUIDE.md`](./REVIEWER_GUIDE.md)

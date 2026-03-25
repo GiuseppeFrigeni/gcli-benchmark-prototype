@@ -59,6 +59,26 @@ export interface RunTasksOptions {
   defaultTaskTimeoutMs: number;
 }
 
+export interface ValidateTaskPreflightOptions {
+  runId: string;
+  artifactsRoot: string;
+  workspaceRoot: string;
+  keepWorkspaces: boolean;
+}
+
+export interface DynamicTaskValidationResult {
+  valid: boolean;
+  notes: string[];
+  preflight: VerificationSnapshot;
+  failureAnalysis: TaskFailureAnalysis;
+  artifacts: {
+    artifactDir: string;
+    promptPath: string;
+    diffPath: string;
+    workspacePath?: string;
+  };
+}
+
 function terminateChildProcess(pid: number | undefined): void {
   if (!pid || pid <= 0) {
     return;
@@ -303,6 +323,65 @@ function buildPrompt(task: WorkspaceTask, problemStatement: string, context: Tas
   return sections.join("\n");
 }
 
+async function createTaskWorkspaceContext(
+  task: WorkspaceTask,
+  options: Pick<RunTasksOptions, "artifactsRoot" | "workspaceRoot" | "runId">,
+): Promise<TaskCommandContext & { prompt: string; promptPath: string }> {
+  const artifactDir = join(options.artifactsRoot, task.id);
+  await ensureDir(artifactDir);
+  const workspaceParent = join(options.workspaceRoot, options.runId);
+  await ensureDir(workspaceParent);
+  const workspaceDir = await mkdtemp(join(workspaceParent, `${sanitizeFileName(task.id)}-`));
+  if (task.repoDir) {
+    await copyDir(task.repoDir, workspaceDir);
+  }
+
+  const commandContext: TaskCommandContext = {
+    task,
+    workspaceDir,
+    artifactDir,
+  };
+
+  const problemStatement = await readTextFile(task.issuePath);
+  const prompt = buildPrompt(task, problemStatement, commandContext);
+  const promptPath = join(artifactDir, "prompt.txt");
+  await writeTextFile(promptPath, `${prompt}\n`);
+  await writeTextFile(join(artifactDir, "agent-stdout.txt"), "");
+  await writeTextFile(join(artifactDir, "agent-stderr.txt"), "");
+  await writeTextFile(join(artifactDir, "activity.jsonl"), "");
+  await writeJsonFile(join(artifactDir, "activity-summary.json"), {
+    rawEvents: 0,
+    parsedEmbeddedEvents: 0,
+    calls: [],
+    counts: {},
+  });
+
+  return {
+    ...commandContext,
+    prompt,
+    promptPath,
+  };
+}
+
+function buildInvalidPreflightNotes(preflight: VerificationSnapshot): string[] {
+  const notes: string[] = [];
+  const failToPassAlreadyPassing = preflight.failToPass.filter((result) => result.passed);
+  const passToPassAlreadyFailing = preflight.passToPass.filter((result) => !result.passed);
+
+  if (failToPassAlreadyPassing.length > 0) {
+    notes.push(
+      `Expected failing checks already pass: ${failToPassAlreadyPassing.map((result) => result.command).join(", ")}`,
+    );
+  }
+  if (passToPassAlreadyFailing.length > 0) {
+    notes.push(
+      `Expected stable checks already fail: ${passToPassAlreadyFailing.map((result) => result.command).join(", ")}`,
+    );
+  }
+
+  return notes;
+}
+
 function summarizeFailedVerification(
   snapshot: VerificationSnapshot | undefined,
 ): FailedVerificationSummary[] {
@@ -494,34 +573,12 @@ async function runTask(
   options: RunTasksOptions,
 ): Promise<TaskRunResult> {
   const startedAt = Date.now();
-  const artifactDir = join(options.artifactsRoot, task.id);
-  await ensureDir(artifactDir);
-  const workspaceParent = join(options.workspaceRoot, options.runId);
-  await ensureDir(workspaceParent);
-  const workspaceDir = await mkdtemp(join(workspaceParent, `${sanitizeFileName(task.id)}-`));
-  if (task.repoDir) {
-    await copyDir(task.repoDir, workspaceDir);
-  }
-
+  const { artifactDir, workspaceDir, prompt, promptPath } = await createTaskWorkspaceContext(task, options);
   const commandContext: TaskCommandContext = {
     task,
     workspaceDir,
     artifactDir,
   };
-
-  const problemStatement = await readTextFile(task.issuePath);
-  const prompt = buildPrompt(task, problemStatement, commandContext);
-  const promptPath = join(artifactDir, "prompt.txt");
-  await writeTextFile(promptPath, `${prompt}\n`);
-  await writeTextFile(join(artifactDir, "agent-stdout.txt"), "");
-  await writeTextFile(join(artifactDir, "agent-stderr.txt"), "");
-  await writeTextFile(join(artifactDir, "activity.jsonl"), "");
-  await writeJsonFile(join(artifactDir, "activity-summary.json"), {
-    rawEvents: 0,
-    parsedEmbeddedEvents: 0,
-    calls: [],
-    counts: {},
-  });
 
   const setupResults = await initializeGitRepo(workspaceDir, artifactDir);
   const failedSetup = setupResults.find((result) => !result.passed);
@@ -594,26 +651,14 @@ async function runTask(
     ),
   };
 
-  const failToPassAlreadyPassing = preflight.failToPass.filter((result) => result.passed);
-  const passToPassAlreadyFailing = preflight.passToPass.filter((result) => !result.passed);
-  if (failToPassAlreadyPassing.length > 0 || passToPassAlreadyFailing.length > 0) {
-    const notes: string[] = [];
-    if (failToPassAlreadyPassing.length > 0) {
-      notes.push(
-        `Expected failing checks already pass: ${failToPassAlreadyPassing.map((result) => result.command).join(", ")}`,
-      );
-    }
-    if (passToPassAlreadyFailing.length > 0) {
-      notes.push(
-        `Expected stable checks already fail: ${passToPassAlreadyFailing.map((result) => result.command).join(", ")}`,
-      );
-    }
+  const invalidPreflightNotes = buildInvalidPreflightNotes(preflight);
+  if (invalidPreflightNotes.length > 0) {
     const diffPath = await captureDiff(workspaceDir, artifactDir);
     const result = makeResult(
       task,
       "invalid_task",
       Date.now() - startedAt,
-      notes,
+      invalidPreflightNotes,
       buildFailureAnalysis("invalid-task", { verification: preflight }),
       artifactDir,
       promptPath,
@@ -734,6 +779,103 @@ async function runTask(
     await removeDir(workspaceDir);
   }
   return result;
+}
+
+export async function validateTaskPreflight(
+  task: WorkspaceTask,
+  options: ValidateTaskPreflightOptions,
+): Promise<DynamicTaskValidationResult> {
+  const { artifactDir, workspaceDir, promptPath } = await createTaskWorkspaceContext(task, options);
+  const commandContext: TaskCommandContext = {
+    task,
+    workspaceDir,
+    artifactDir,
+  };
+
+  const finalize = async (
+    valid: boolean,
+    notes: string[],
+    failureAnalysis: TaskFailureAnalysis,
+    preflight: VerificationSnapshot,
+  ): Promise<DynamicTaskValidationResult> => {
+    const diffPath = await captureDiff(workspaceDir, artifactDir);
+    const result: DynamicTaskValidationResult = {
+      valid,
+      notes,
+      preflight,
+      failureAnalysis,
+      artifacts: {
+        artifactDir,
+        promptPath,
+        diffPath,
+        workspacePath: options.keepWorkspaces ? workspaceDir : undefined,
+      },
+    };
+    if (!options.keepWorkspaces) {
+      await removeDir(workspaceDir);
+    }
+    return result;
+  };
+
+  const setupResults = await initializeGitRepo(workspaceDir, artifactDir);
+  const failedSetup = setupResults.find((result) => !result.passed);
+  if (failedSetup) {
+    return await finalize(
+      false,
+      [`Workspace setup failed: ${failedSetup.command}`],
+      buildFailureAnalysis("workspace-setup-failed", {
+        verification: { failToPass: setupResults, passToPass: [] },
+      }),
+      { failToPass: setupResults, passToPass: [] },
+    );
+  }
+
+  if (task.setupCommands && task.setupCommands.length > 0) {
+    const taskSetup = await runCommandList(task.setupCommands, "task-setup", commandContext, 30000);
+    const failedTaskSetup = taskSetup.find((result) => !result.passed);
+    if (failedTaskSetup) {
+      return await finalize(
+        false,
+        [`Task setup failed: ${failedTaskSetup.command}`],
+        buildFailureAnalysis("task-setup-failed", {
+          verification: { failToPass: taskSetup, passToPass: [] },
+        }),
+        { failToPass: taskSetup, passToPass: [] },
+      );
+    }
+  }
+
+  const preflight: VerificationSnapshot = {
+    failToPass: await runCommandList(
+      task.verification.failToPass,
+      "preflight-fail-to-pass",
+      commandContext,
+      30000,
+    ),
+    passToPass: await runCommandList(
+      task.verification.passToPass,
+      "preflight-pass-to-pass",
+      commandContext,
+      30000,
+    ),
+  };
+
+  const invalidPreflightNotes = buildInvalidPreflightNotes(preflight);
+  if (invalidPreflightNotes.length > 0) {
+    return await finalize(
+      false,
+      invalidPreflightNotes,
+      buildFailureAnalysis("invalid-task", { verification: preflight }),
+      preflight,
+    );
+  }
+
+  return await finalize(
+    true,
+    ["Dynamic preflight checks matched the expected task contract."],
+    buildFailureAnalysis("passed", { verification: preflight }),
+    preflight,
+  );
 }
 
 function buildCategorySummaries(results: TaskRunResult[]): CategorySummary[] {

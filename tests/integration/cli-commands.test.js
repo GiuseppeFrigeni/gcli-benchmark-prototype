@@ -154,6 +154,275 @@ test("validate-task supports human output, JSON output, and invalid paths", asyn
   });
 });
 
+test("validate-task --dynamic checks preflight contracts across task kinds", async () => {
+  await withTempDir("gcli-validate-dynamic", async (tempRoot) => {
+    const workspaceRoot = join(tempRoot, "workspaces");
+
+    await createTaskFixture(tempRoot, "dynamic-valid-workspace", {
+      manifest: makeWorkspaceManifest({ id: "dynamic-valid-workspace" }),
+      repoFiles: {
+        "src/value.js": "module.exports = { value: 1 };\n",
+        "test/fail.test.js": [
+          "const test = require('node:test');",
+          "const assert = require('node:assert/strict');",
+          "const { value } = require('../src/value');",
+          "test('fails until fixed', () => {",
+          "  assert.equal(value, 2);",
+          "});",
+          "",
+        ].join("\n"),
+        "test/pass.test.js": [
+          "const test = require('node:test');",
+          "const assert = require('node:assert/strict');",
+          "const { value } = require('../src/value');",
+          "test('already passing', () => {",
+          "  assert.equal(value, 1);",
+          "});",
+          "",
+        ].join("\n"),
+      },
+      goldPatch: "",
+    });
+
+    const humanResult = await captureCliLogs([
+      "validate-task",
+      "--task-dir",
+      join(tempRoot, "dynamic-valid-workspace"),
+      "--dynamic",
+      "--workspace-root",
+      workspaceRoot,
+    ]);
+    assert.equal(humanResult.exitCode, 0);
+    assert.match(humanResult.output, /Static validation: passed/);
+    assert.match(humanResult.output, /Dynamic validation: passed/);
+    assert.match(humanResult.output, /Task is valid\./);
+    assert.match(humanResult.output, /Dynamic artifacts:/);
+
+    await createTaskFixture(tempRoot, "dynamic-fail-to-pass-green", {
+      manifest: makeWorkspaceManifest({ id: "dynamic-fail-to-pass-green" }),
+      repoFiles: {
+        "src/value.js": "module.exports = { value: 2 };\n",
+        "test/fail.test.js": [
+          "const test = require('node:test');",
+          "const assert = require('node:assert/strict');",
+          "const { value } = require('../src/value');",
+          "test('unexpectedly passing', () => {",
+          "  assert.equal(value, 2);",
+          "});",
+          "",
+        ].join("\n"),
+        "test/pass.test.js": [
+          "const test = require('node:test');",
+          "const assert = require('node:assert/strict');",
+          "const { value } = require('../src/value');",
+          "test('still passing', () => {",
+          "  assert.equal(value, 2);",
+          "});",
+          "",
+        ].join("\n"),
+      },
+      goldPatch: "",
+    });
+
+    const failToPassResult = await captureCliLogs([
+      "validate-task",
+      "--task-dir",
+      join(tempRoot, "dynamic-fail-to-pass-green"),
+      "--dynamic",
+      "--workspace-root",
+      workspaceRoot,
+      "--json",
+    ]);
+    assert.equal(failToPassResult.exitCode, 1);
+    const failToPassReport = JSON.parse(failToPassResult.output);
+    assert.equal(failToPassReport.valid, false);
+    assert.equal(failToPassReport.static.valid, true);
+    assert.equal(failToPassReport.dynamic.valid, false);
+    assert.equal(failToPassReport.dynamic.reason, "invalid-task");
+    assert.match(failToPassReport.dynamic.issues[0], /Expected failing checks already pass/);
+
+    await createTaskFixture(tempRoot, "dynamic-pass-to-pass-red", {
+      manifest: makeWorkspaceManifest({ id: "dynamic-pass-to-pass-red" }),
+      repoFiles: {
+        "src/value.js": "module.exports = { value: 1 };\n",
+        "test/fail.test.js": [
+          "const test = require('node:test');",
+          "const assert = require('node:assert/strict');",
+          "const { value } = require('../src/value');",
+          "test('still failing', () => {",
+          "  assert.equal(value, 2);",
+          "});",
+          "",
+        ].join("\n"),
+        "test/pass.test.js": [
+          "const test = require('node:test');",
+          "const assert = require('node:assert/strict');",
+          "const { value } = require('../src/value');",
+          "test('unexpected failure', () => {",
+          "  assert.equal(value, 3);",
+          "});",
+          "",
+        ].join("\n"),
+      },
+      goldPatch: "",
+    });
+
+    const passToPassResult = await captureCliLogs([
+      "validate-task",
+      "--task-dir",
+      join(tempRoot, "dynamic-pass-to-pass-red"),
+      "--dynamic",
+      "--workspace-root",
+      workspaceRoot,
+      "--json",
+    ]);
+    assert.equal(passToPassResult.exitCode, 1);
+    const passToPassReport = JSON.parse(passToPassResult.output);
+    assert.equal(passToPassReport.dynamic.reason, "invalid-task");
+    assert.match(passToPassReport.dynamic.issues[0], /Expected stable checks already fail/);
+
+    await createTaskFixture(tempRoot, "dynamic-setup-failure", {
+      manifest: makeWorkspaceManifest({
+        id: "dynamic-setup-failure",
+        setupCommands: ['node -e "process.exit(1)"'],
+      }),
+      repoFiles: {
+        "src/value.js": "module.exports = { value: 1 };\n",
+        "test/fail.test.js": "require('node:test').test('fails', () => { throw new Error('expected'); });\n",
+        "test/pass.test.js": "require('node:test').test('passes', () => {});\n",
+      },
+      goldPatch: "",
+    });
+
+    const setupFailureResult = await captureCliLogs([
+      "validate-task",
+      "--task-dir",
+      join(tempRoot, "dynamic-setup-failure"),
+      "--dynamic",
+      "--workspace-root",
+      workspaceRoot,
+      "--json",
+    ]);
+    assert.equal(setupFailureResult.exitCode, 1);
+    const setupFailureReport = JSON.parse(setupFailureResult.output);
+    assert.equal(setupFailureReport.dynamic.reason, "task-setup-failed");
+
+    await createTaskFixture(tempRoot, "dynamic-prompt-task", {
+      manifest: {
+        $schema: "../../docs/task.schema.json",
+        id: "dynamic-prompt-task",
+        title: "Prompt task",
+        taskKind: "prompt-output",
+        suite: "contributor-workflows",
+        category: "debugging",
+        difficulty: "medium",
+        language: "text",
+        problemStatementFile: "issue.md",
+        verification: {
+          failToPass: [
+            "node \"${taskDir}/verify-output.js\" \"${artifactDir}/agent-stdout.txt\" \"${taskDir}/expected.json\"",
+          ],
+          passToPass: [
+            "node \"${taskDir}/verify-summary.js\" \"${artifactDir}/activity-summary.json\"",
+          ],
+        },
+        policy: "always",
+      },
+      goldStdout: "{\"status\":\"ok\"}\n",
+      extraFiles: {
+        "expected.json": "{\n  \"status\": \"ok\"\n}\n",
+        "verify-output.js": [
+          "const assert = require('node:assert/strict');",
+          "const { readFileSync } = require('node:fs');",
+          "const actual = JSON.parse(readFileSync(process.argv[2], 'utf8'));",
+          "const expected = JSON.parse(readFileSync(process.argv[3], 'utf8'));",
+          "assert.deepEqual(actual, expected);",
+          "",
+        ].join("\n"),
+        "verify-summary.js": [
+          "const assert = require('node:assert/strict');",
+          "const { readFileSync } = require('node:fs');",
+          "const summary = JSON.parse(readFileSync(process.argv[2], 'utf8'));",
+          "assert.equal(Array.isArray(summary.calls), true);",
+          "",
+        ].join("\n"),
+      },
+    });
+
+    const promptTaskResult = await captureCliLogs([
+      "validate-task",
+      "--task-dir",
+      join(tempRoot, "dynamic-prompt-task"),
+      "--dynamic",
+      "--workspace-root",
+      workspaceRoot,
+      "--json",
+    ]);
+    assert.equal(promptTaskResult.exitCode, 0);
+    const promptTaskReport = JSON.parse(promptTaskResult.output);
+    assert.equal(promptTaskReport.dynamic.attempted, true);
+    assert.equal(promptTaskReport.dynamic.valid, true);
+    assert.equal(existsSync(promptTaskReport.dynamic.artifactDir), true);
+
+    await createTaskFixture(tempRoot, "dynamic-tool-task", {
+      manifest: {
+        $schema: "../../docs/task.schema.json",
+        id: "dynamic-tool-task",
+        title: "Tool task",
+        taskKind: "tool-use",
+        suite: "gemini-core",
+        category: "code-review",
+        difficulty: "medium",
+        language: "text",
+        problemStatementFile: "issue.md",
+        verification: {
+          failToPass: [
+            "node \"${taskDir}/verify-tool.js\" \"${artifactDir}/agent-stdout.txt\" \"${artifactDir}/activity-summary.json\"",
+          ],
+          passToPass: [
+            "node \"${taskDir}/verify-fixture.js\" \"${taskDir}/notes.txt\"",
+          ],
+        },
+        policy: "always",
+      },
+      goldStdout: "Finding: inspected both artifacts before answering.\n",
+      goldActivity: "{\"functionCall\":{\"name\":\"read_file\",\"args\":{\"file_path\":\"notes.txt\"}}}\n",
+      extraFiles: {
+        "notes.txt": "artifact one\n",
+        "verify-tool.js": [
+          "const assert = require('node:assert/strict');",
+          "const { readFileSync } = require('node:fs');",
+          "const stdout = readFileSync(process.argv[2], 'utf8').trim();",
+          "const summary = JSON.parse(readFileSync(process.argv[3], 'utf8'));",
+          "assert.equal(stdout, 'Finding: inspected both artifacts before answering.');",
+          "assert.ok(summary.calls.some((call) => String(call.target).includes('notes.txt')));",
+          "",
+        ].join("\n"),
+        "verify-fixture.js": [
+          "const assert = require('node:assert/strict');",
+          "const { existsSync } = require('node:fs');",
+          "assert.equal(existsSync(process.argv[2]), true);",
+          "",
+        ].join("\n"),
+      },
+    });
+
+    const toolTaskResult = await captureCliLogs([
+      "validate-task",
+      "--task-dir",
+      join(tempRoot, "dynamic-tool-task"),
+      "--dynamic",
+      "--workspace-root",
+      workspaceRoot,
+      "--json",
+    ]);
+    assert.equal(toolTaskResult.exitCode, 0);
+    const toolTaskReport = JSON.parse(toolTaskResult.output);
+    assert.equal(toolTaskReport.dynamic.attempted, true);
+    assert.equal(toolTaskReport.dynamic.valid, true);
+  });
+});
+
 test("cli commands emit suite-aware reports and draft tasks", async () => {
   const tasksDir = resolve("tasks");
 

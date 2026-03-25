@@ -406,7 +406,7 @@ async function parseTaskFromManifest(
   };
 }
 
-async function loadTaskFromDirectory(taskDir: string): Promise<WorkspaceTask> {
+export async function loadTaskFromDirectory(taskDir: string): Promise<WorkspaceTask> {
   const { manifestPath, raw } = await readTaskManifest(taskDir);
   return await parseTaskFromManifest(taskDir, manifestPath, raw);
 }
